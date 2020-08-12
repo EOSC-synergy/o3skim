@@ -8,7 +8,7 @@ setup(
     name='cicd',  # TODO
     version="0.1.0",  # TODO
     packages=find_packages(),
-    scripts=["main"],
+    scripts=["main"], #TODO
 
     # Project dependencies and comments
     install_requires=[], #TODO
@@ -29,6 +29,13 @@ setup(
     #     "Documentation": "https://docs.example.com/HelloWorld/",
     #     "Source Code": "https://code.example.com/HelloWorld/",
     },
+
+    # Entry points
+    entry_points={
+        "console_scripts": [
+            "hello_world = cicd.module_template:hello_world", #TODO
+        ]
+    } 
 
     # could also include long_description, download_url, etc.
 )
