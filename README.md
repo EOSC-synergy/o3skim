@@ -61,8 +61,27 @@ until finished
 
 End with an example of getting some data out of the system or using it for a little demo.
 
+Installation is done using 
+[Setuptools](https://setuptools.readthedocs.io/en/latest/setuptools.html#)
+package:
+
+- For installation from sources: `setup.py install`  
+- For simple installation: `pip install {name}`  
+
 ## 🔧 Running the tests <a name = "tests"></a>
 Explain how to run the automated tests for this system.
+
+Tests run using 
+[tox](https://tox.readthedocs.io/en/latest/)
+package and 
+[pytest](https://docs.pytest.org/en/stable/)
+
+```sh
+$ tox
+...
+py37: commands succeeded
+py38: commands succeeded
+```
 
 ### Break down into end to end tests
 Explain what these tests test and why
