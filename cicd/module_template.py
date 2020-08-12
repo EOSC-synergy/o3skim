@@ -6,3 +6,4 @@ def hello_world(*arg, **kvarg):
     if arg or kvarg:
         print(f"  - Arguments as inputs: {arg}")
         print(f"  - Key-Value arguments: {kvarg}")
+    return True
