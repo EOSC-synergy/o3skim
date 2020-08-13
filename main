@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
+#
+# Main application script template
+#
+
+echo "Hello World!"
+
