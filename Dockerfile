@@ -22,7 +22,7 @@ LABEL maintainer='Borja Esteban'
 ARG branch=python
 
 # Which user and group to use 
-ARG user=worker
+ARG user=application
 ARG group=standard
 
 # Install system updates and tools
@@ -43,6 +43,7 @@ RUN git clone --depth 1 -b ${branch} https://github.com/BorjaEst/cicd.git app &&
     cd app && \
     pip3 install --no-cache-dir -e . && \
     pip3 install --no-cache-dir gunicorn && \
+    pip3 install --no-cache-dir tox && \
 # Clean up
     rm -rf /root/.cache/pip/* && \
     rm -rf /tmp/*
@@ -57,7 +58,8 @@ EXPOSE 8080
 
 # Change user context and drop root privileges
 RUN groupadd -r ${group} && \
-    useradd --no-log-init -r -g ${group} ${user}
+    useradd --no-log-init -r -d /app -g ${group} ${user} && \
+    chown -R ${user} . 
 USER ${user}
 
 # Start default script
