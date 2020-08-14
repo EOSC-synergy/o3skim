@@ -10,6 +10,13 @@
 .history/
 
 
+### Datafiles
+data/*
+!data/.gitignore
+output/*
+!output/.gitignore
+
+
 ### Python
 # Byte-compiled / optimized / DLL files
 __pycache__/
