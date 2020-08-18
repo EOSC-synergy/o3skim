@@ -1,25 +1,25 @@
 # Dockerfile has three Arguments: base, tag, branch
-# base - base image (default: debian)
+# base - base image (default: python)
 # tag - tag for base mage (default: stable-slim)
-# branch - user repository branch to clone (default: master)
+# branch - user repository branch to clone (default: python)
 #
 # To build the image:
 # $ docker build -t <dockerhub_user>/<dockerhub_repo> --build-arg arg=value .
 # or using default args:
 # $ docker build -t <dockerhub_user>/<dockerhub_repo> .
 
-# set the base image. default is debian, optional ubuntu
-ARG base=debian
-# set the tag (e.g. latest, stable, stable-slim : for debian)
-ARG tag=stable-slim
+# set the base image. default is python
+ARG base=python
+# set the tag (e.g. latest, 3.8, 3.7 : for python)
+ARG tag=3.8-slim
 
-# Base image, e.g. debian:stable-slim
+# Base image, e.g. python:3.8-slim
 FROM ${base}:${tag}
 
 LABEL maintainer='Borja Esteban'
 
 # What branch to clone (!)
-ARG branch=master
+ARG branch=python
 
 # Which user and group to use 
 ARG user=application
@@ -42,6 +42,10 @@ ENV DEBIAN_FRONTEND=dialog
 
 # Install user app:
 RUN git clone --depth 1 -b ${branch} https://github.com/BorjaEst/cicd.git app && \
+# Install python application
+    cd app && \
+    pip3 install --no-cache-dir -e . && \
+    pip3 install --no-cache-dir tox && \
 # Clean up
     rm -rf /root/.cache/pip/* && \
     rm -rf /tmp/*
@@ -58,6 +62,6 @@ RUN groupadd -r ${group} && \
 USER ${user}
 
 # Start default script
-ENTRYPOINT [ "/app/main" ]
-CMD [ "" ]
+ENTRYPOINT [ "main" ]
+CMD [ "-v 1" ]
 
