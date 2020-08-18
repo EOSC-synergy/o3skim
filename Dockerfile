@@ -25,6 +25,9 @@ ARG branch=master
 ARG user=worker
 ARG group=standard
 
+# Set environments
+ENV LANG C.UTF-8
+
 # Install system updates and tools
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -43,9 +46,6 @@ RUN git clone --depth 1 -b ${branch} https://github.com/BorjaEst/cicd.git app &&
     rm -rf /root/.cache/pip/* && \
     rm -rf /tmp/*
 WORKDIR /app
-
-# Set environments
-ENV LANG C.UTF-8
 
 # Ports to expose
 EXPOSE 8443
