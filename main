@@ -5,7 +5,7 @@ Main function description - To show in command help
 import sys
 import argparse
 
-from cicd import module_template
+from o3skim import module_template
 
 
 def cmdline_args():

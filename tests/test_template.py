@@ -3,10 +3,10 @@
 
 import unittest
 
-from cicd import module_template
+from o3skim import module_template
 
 
-class TestCICD_module_template(unittest.TestCase):
+class TestO3SKIM_module_template(unittest.TestCase):
     """Tests for `module_template` package."""
 
     def setUp(self):

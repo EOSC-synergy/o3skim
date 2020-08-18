@@ -41,7 +41,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV DEBIAN_FRONTEND=dialog
 
 # Install user app:
-RUN git clone --depth 1 -b ${branch} https://github.com/BorjaEst/cicd.git app && \
+RUN git clone --depth 1 -b ${branch} https://git.scc.kit.edu/synergy.o3as/o3skim.git app && \
 # Install python application
     cd app && \
     pip3 install --no-cache-dir -e . && \
