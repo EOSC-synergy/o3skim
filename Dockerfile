@@ -22,7 +22,7 @@ LABEL maintainer='Borja Esteban'
 ARG branch=master
 
 # Which user and group to use 
-ARG user=worker
+ARG user=application
 ARG group=standard
 
 # Set environments
