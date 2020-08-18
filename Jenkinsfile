@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        registry = "boressan/cicd"
+        registry = "boressan/o3skim"
         registryCredential = 'dockerhub_id'
     }
     agent any
@@ -20,7 +20,7 @@ pipeline {
         stage('Docker-hub upload') {
             steps {
                 echo '====================uploading docker-hub=============================='
-                script { docker.withRegistry('', registryCredential) { customImage.push('python') } }
+                script { docker.withRegistry('', registryCredential) { customImage.push() } }
             }
         }
     }
