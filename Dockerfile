@@ -53,7 +53,8 @@ EXPOSE 8080
 
 # Change user context and drop root privileges
 RUN groupadd -r ${group} && \
-    useradd --no-log-init -r -g ${group} ${user}
+    useradd --no-log-init -r -d /app -g ${group} ${user} && \
+    chown -R ${user} . 
 USER ${user}
 
 # Start default script
