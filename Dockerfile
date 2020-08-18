@@ -42,7 +42,6 @@ RUN git clone --depth 1 -b ${branch} https://github.com/BorjaEst/cicd.git app &&
 # Install python application
     cd app && \
     pip3 install --no-cache-dir -e . && \
-    pip3 install --no-cache-dir gunicorn && \
     pip3 install --no-cache-dir tox && \
 # Clean up
     rm -rf /root/.cache/pip/* && \
