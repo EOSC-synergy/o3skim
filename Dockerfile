@@ -16,7 +16,7 @@ ARG tag=3.8-slim
 # Base image, e.g. python:3.8-slim
 FROM ${base}:${tag}
 
-LABEL maintainer='Borja Esteban'
+LABEL maintainer='B.Esteban, T.Kerzenmacher, V.Kozlov (KIT)'
 
 # What branch to clone (!)
 ARG branch=python
