@@ -20,7 +20,7 @@ pipeline {
         stage('Docker-hub upload') {
             steps {
                 echo '====================uploading docker-hub=============================='
-                script { docker.withRegistry('', registryCredential) { customImage.push() } }
+                script { docker.withRegistry('', registryCredential) { customImage.push('python') } }
             }
         }
     }
