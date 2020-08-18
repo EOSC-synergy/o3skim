@@ -12,9 +12,9 @@
 
 ### Datafiles
 data/*
-!data/.gitignore
+!data/.keep
 output/*
-!output/.gitignore
+!output/.keep
 
 
 ### Python
