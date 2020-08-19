@@ -1,0 +1,24 @@
+CCMI-1:
+    IPSL:
+        tco3_zm:
+            name: toz
+            dir: Ccmi/mon/toz
+            coordinades:
+                time: time
+                lat: lat
+                lon: lon
+        vrm_zm:
+            name: vmro3
+            dir: Ccmi/mon/toz
+            coordinades:
+                time: time
+                plev: plev
+                lat: lat
+                lon: lon
+                
+
+
+
+
+
+                
