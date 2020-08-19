@@ -1,3 +1,7 @@
+### Project files
+sources.yaml
+
+
 ### VisualStudioCode
 .vscode/*
 !.vscode/settings.json
