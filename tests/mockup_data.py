@@ -2,6 +2,8 @@
 
 import xarray as xr
 import numpy as np
+import netCDF4
+import os.path
 
 
 start = {'time':  0, 'plev':    0, 'lat': -90, 'lon': -180}
@@ -21,9 +23,18 @@ def map_coord(coordinades):
             for c, alias in coordinades.items()}
 
 
-def netcdf(path, name, coordinades, **kwarg):
+def netcdf(fname, name, coordinades, **kwarg):
+    if not os.path.isfile(fname):
+        create_empty_netCDF(fname)
+
     dataset = xr.Dataset(
         {name: data_vars(coordinades)},
         coords=map_coord(coordinades)
     )
-    dataset.to_netcdf(path=path, mode='a')
+    dataset.to_netcdf(path=fname, mode='a')
+
+
+def create_empty_netCDF(fname):
+    root_grp = netCDF4.Dataset(fname, 'w', format='NETCDF4')
+    root_grp.description = 'Example simulation data'
+    root_grp.close()
