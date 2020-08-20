@@ -4,26 +4,30 @@ Main function description - To show in command help
 """
 import sys
 import argparse
+import logging
 
-from o3skim import module_template
+from o3skim import sources
 
 
 def cmdline_args():
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-
-    p.add_argument("non_required_int", nargs='?', type=int,
-                   help="non_required_int description")
-    p.add_argument("-v", "--verbosity", type=int, choices=[0, 1, 2], default=0,
-                   help="increase output verbosity (default: %(default)s)")
-
-    group1 = p.add_mutually_exclusive_group(required=False)
-    group1.add_argument('--enable', action="store_true")
-    group1.add_argument('--disable', action="store_false")
-
+    # Arguments
+    p.add_argument("-f", "--sources_file", type=str, default="./sources.yaml",
+                   help="custom sources YAML configuration (default: %(default)s)")
+    p.add_argument("-v", "--verbosity", type=str, default='ERROR',
+                   choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], 
+                   help="Sets the logging level (default: %(default)s)")
     return(p.parse_args())
 
 
 if __name__ == '__main__':
     args = cmdline_args()
-    module_template.hello_world(args, **vars(args))
+
+    # Set logging level
+    logging.basicConfig(level=getattr(logging, args.verbosity))
+
+    # Configuration load
+    config = sources.load(args.sources_file) 
+    logging.info(config)
+

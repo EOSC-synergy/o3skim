@@ -1,0 +1,42 @@
+CCMI-1:
+    IPSL:
+        tco3_zm:
+            name: toz
+            dir: Ccmi/mon/toz
+            coordinades:
+                time: time
+                lat: lat
+                lon: lon
+        vrm_zm:
+            name: vmro3
+            dir: Ccmi/mon/vmro3
+            coordinades:
+                time: time
+                plev: plev
+                lat: lat
+                lon: lon
+ECMWF:
+    ERA-5:
+        tco3_zm:
+            name: toc3
+            dir: Ecmwf/Era5
+            coordinades:
+                lon: longitude 
+                lat: latitude
+                time: time
+    ERA-interim:
+        tco3_zm:
+            name: toz
+            dir: Ecmwf/Erai
+            coordinades:
+                time: time
+                lat: latitude
+                lon: longitude 
+        vrm_zm:
+            name: vmro3
+            dir: Ecmwf/Erai
+            coordinades:
+                time: time
+                plev: level
+                lat: latitude
+                lon: longitude
