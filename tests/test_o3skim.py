@@ -15,6 +15,7 @@ class TestO3SKIM_sources(unittest.TestCase):
     def setUp(self):
         """Loads and creates the test folders and files from test_sources.yaml"""
         self.config = sources.load("tests/test_sources.yaml")
+        self.assertTrue(type(self.config) is dict)
 
         for source, collection in self.config.items():
             for model, variables in collection.items():
