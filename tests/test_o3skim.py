@@ -28,9 +28,9 @@ class TestO3SKIM_sources(unittest.TestCase):
 
     def create_mock_datasets(self):
         """Creates mock data files according to the loaded configuration"""
-        for source, collection in self.config.items():
-            for model, variables in collection.items():
-                for v, vinfo in variables.items():
+        for _, collection in self.config.items():
+            for _, variables in collection.items():
+                for _, vinfo in variables.items():
                     path = "data/" + vinfo["dir"]
                     os.makedirs(path, exist_ok=True)
                     mockup_data.netcdf(path, **vinfo)
@@ -60,19 +60,43 @@ class TestO3SKIM_sources(unittest.TestCase):
     def test_000_SourcesFromConfig(self):
         """Creates the different sources from the configuration file"""
         with utils.cd("data"):
-            ds = {source: sources.Source(collection) for
-                  source, collection in self.config.items()}
+            ds = {name: sources.Source(name, collection) for
+                  name, collection in self.config.items()}
 
         # CCMI-1 tco3_zm asserts
-        self.assertTrue('time' in ds['CCMI-1'].model['IPSL'].tco3_zm.coords)
-        self.assertTrue('lon' in ds['CCMI-1'].model['IPSL'].tco3_zm.coords)
-        self.assertTrue('lat' in ds['CCMI-1'].model['IPSL'].tco3_zm.coords)
+        self.assertTrue('time' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
+        self.assertTrue('lon' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
+        self.assertTrue('lat' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
 
         # CCMI-1 vrm_zm asserts
-        self.assertTrue('time' in ds['CCMI-1'].model['IPSL'].vrm_zm.coords)
-        self.assertTrue('plev' in ds['CCMI-1'].model['IPSL'].vrm_zm.coords)
-        self.assertTrue('lon' in ds['CCMI-1'].model['IPSL'].vrm_zm.coords)
-        self.assertTrue('lat' in ds['CCMI-1'].model['IPSL'].vrm_zm.coords)
+        self.assertTrue('time' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
+        self.assertTrue('plev' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
+        self.assertTrue('lon' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
+        self.assertTrue('lat' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
+
+        # Checks the original data has not been modified
+        self.assert_with_backup()
+
+    def test_000_OutputFromSources(self):
+        """Skims the data into the output folder"""
+        with utils.cd("data"):
+            ds = {name: sources.Source(name, collection) for
+                  name, collection in self.config.items()}
+
+        with utils.cd("output"):
+            [source.skim() for source in ds.values()]
+
+        # CCMI-1 data skim asserts
+        self.assertTrue(os.path.isdir("output/CCMI-1_IPSL"))
+        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/tco3_zm_2000.nc"))
+        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/vrm_zm_2000.nc"))
+
+        # ECMWF data skim asserts
+        self.assertTrue(os.path.isdir("output/ECMWF_ERA-5"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-5/tco3_zm_2000.nc"))
+        self.assertTrue(os.path.isdir("output/ECMWF_ERA-i"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/tco3_zm_2000.nc"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vrm_zm_2000.nc"))
 
         # Checks the original data has not been modified
         self.assert_with_backup()
