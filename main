@@ -2,11 +2,12 @@
 """
 Main function description - To show in command help
 """
+from o3skim import sources, utils
 import sys
 import argparse
 import logging
-
-from o3skim import sources, utils
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 def cmdline_args():
@@ -16,7 +17,7 @@ def cmdline_args():
     p.add_argument("-f", "--sources_file", type=str, default="./sources.yaml",
                    help="custom sources YAML configuration (default: %(default)s)")
     p.add_argument("-v", "--verbosity", type=str, default='ERROR',
-                   choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], 
+                   choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                    help="Sets the logging level (default: %(default)s)")
     return(p.parse_args())
 
@@ -28,7 +29,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=getattr(logging, args.verbosity))
 
     # Configuration load
-    config = utils.load(args.sources_file) 
+    config = utils.load(args.sources_file)
     logging.info("Configuration found at: %s", args.sources_file)
     logging.debug("Configuration info: %s", config)
 
@@ -42,5 +43,4 @@ if __name__ == '__main__':
     # Skim output
     logging.info("Skimming data to './output' ")
     with utils.cd("output"):
-        [source.skim() for source in ds.values()] 
-
+        [source.skim() for source in ds.values()]
