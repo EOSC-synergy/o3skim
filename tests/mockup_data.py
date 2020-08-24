@@ -5,7 +5,7 @@ import numpy as np
 import netCDF4
 import os.path
 import datetime
-from o3skim import sources
+from o3skim import utils
 
 
 base = datetime.datetime(2000, 1, 1)
@@ -40,4 +40,4 @@ def dataset(name, coordinades):
 def netcdf(path, name, coordinades, **kwarg):
     """Creates or appends data to a mock netcdf file"""
     ds = dataset(name, coordinades)
-    sources.to_netcdf(path, name, ds)
+    utils.to_netcdf(path, name, ds)
