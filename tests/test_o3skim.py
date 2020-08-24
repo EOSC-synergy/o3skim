@@ -65,14 +65,14 @@ class TestO3SKIM_sources(unittest.TestCase):
 
         # CCMI-1 tco3_zm asserts
         self.assertTrue('time' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
-        self.assertTrue('lon' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
         self.assertTrue('lat' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
+        self.assertFalse('lon' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
 
         # CCMI-1 vrm_zm asserts
         self.assertTrue('time' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
         self.assertTrue('plev' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
-        self.assertTrue('lon' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
         self.assertTrue('lat' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
+        self.assertFalse('lon' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
 
         # Checks the original data has not been modified
         self.assert_with_backup()
