@@ -52,10 +52,10 @@ class Model:
             fnames = glob.glob(vrm_zm['dir'] + "/*.nc")
             with xr.open_mfdataset(fnames) as ds:
                 self._vrm_zm = ds.rename({
-                    vrm_zm['name']: 'tco3_zm',
+                    vrm_zm['name']: 'vrm_zm',
                     vrm_zm['coordinades']['time']: 'time',
                     vrm_zm['coordinades']['lat']: 'lat',
                     vrm_zm['coordinades']['lon']: 'lon'
-                })['tco3_zm'].to_dataset()
+                })['vrm_zm'].to_dataset()
 
 
