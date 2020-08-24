@@ -54,6 +54,7 @@ class Model:
                 self._vrm_zm = ds.rename({
                     vrm_zm['name']: 'vrm_zm',
                     vrm_zm['coordinades']['time']: 'time',
+                    vrm_zm['coordinades']['plev']: 'plev',
                     vrm_zm['coordinades']['lat']: 'lat',
                     vrm_zm['coordinades']['lon']: 'lon'
                 })['vrm_zm'].to_dataset()
