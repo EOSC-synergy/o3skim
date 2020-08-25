@@ -33,6 +33,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install system updates and tools
         ca-certificates \
+        gcc \
+        g++ \
         git && \
 # Clean up & back to dialog front end
     apt-get autoremove -y && \
