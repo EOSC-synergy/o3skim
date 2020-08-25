@@ -38,20 +38,21 @@ This project provides the tools to preprocess, standarise and reduce ozone data 
 See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ## Prerequisites
-To run the project as container, install one of the following container technologies in your system:
-- [docker](https://docs.docker.com/engine/install/)
-- [udocker](https://indigo-dc.gitbook.io/udocker/installation_manual)
+To run the project as container, you need the following systems and container technologies:
+- __Build machine__ with [docker](https://docs.docker.com/engine/install/) 
+- __Runtime machine__ with [udocker](https://indigo-dc.gitbook.io/udocker/installation_manual)
 
 > Note udocker cannot be used to build containers, only to run them. 
 
 
 ## Built using docker <a name = "built_using"></a>
-Download the repository using git.
+Download the repository at the __Build machine__ using git.
 ```sh
 $ git clone git@git.scc.kit.edu:synergy.o3as/o3skim.git
+Cloning into 'o3skim'...
+...
 ```
-To run as container, installation is not needed, however an image has to be build (if not downloaded form the official repository).
-To build it using docker, run the following command:
+Build the docker image at the __Build machine__ using docker.
 ```sh
 $ docker build --tag o3skim .
 ...
@@ -96,20 +97,47 @@ py38: commands succeeded
 ```
 
 # Deployment <a name = "deployment"></a>
-If an image was build using docker, then just deploy the container passing the desired arguments.
-For example:
+To deploy the the application using __udocker__ at the __Runtime machine__ you need:
+ - Input path with data to skim, to be mounter on `/app/data` inside the container.
+ - Output path for skimmed results, to be mounted on `/app/output` inside the container.
+ - Configuration file with a data structure desctiption at the input path in [YAML](https://yaml.org/) format. This configuration file has to be mounted on `/app/sources.yaml` inside the container. See [sources_example.yaml](/sources_example.yaml) for a configuration example.
+
+Once the requierement are needed, pull the image from the image registry.
+For example, to pull it from the synergy-imk official registry use:
 ```sh
-$ docker run \
-  -v ${PWD}/sources.yaml:/app/sources.yaml \
-  -v ${PWD}/data:/app/data \
-  -v ${PWD}/output:/app/output \
+$ udocker pull synergyimk/o3skim
+...
+Downloading layer: sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4
+...
+```
+
+Once the repository is added and the image downloaded, create the local container: 
+```sh
+$ udocker create --name=o3skim synergyimk/o3skim
+fa42a912-b0d4-3bfb-987f-1c243863802d
+```
+
+Finally, run the container. Note the described _data_, _output_ and _sources.yaml_ have to be provided. Also it is needed to specify the user _application_ should run inside the container:
+```sh
+$ udocker run \
+  --user=application \
+  --volume=${PWD}/sources.yaml:/app/sources.yaml \
+  --volume=${PWD}/data:/app/data \
+  --volume=${PWD}/output:/app/output \
   o3skim --verbosity INFO
 ...
-INFO:root:Configuration found at: './sources.yaml'
-INFO:root:Loading data from './data' 
-INFO:root:Skimming data to './output' 
+executing: main
+...
+2020-08-25 12:42:34,151 - INFO     - Configuration found at: './sources.yaml'
+2020-08-25 12:42:34,152 - INFO     - Loading data from './data' 
+2020-08-25 12:42:34,261 - INFO     - Skimming data to './output' 
 ```
-For arguments description you can run `docker run o3skim --help`
+
+For the main function description and commands help you can call:
+```sh  
+$ udocker run --user=application o3skim --help
+...
+```
 
 
 # Authors <a name = "authors"></a>
