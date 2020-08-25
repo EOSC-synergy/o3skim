@@ -26,7 +26,8 @@ if __name__ == '__main__':
     args = cmdline_args()
 
     # Set logging level
-    logging.basicConfig(level=getattr(logging, args.verbosity))
+    logging.basicConfig(level=getattr(logging, args.verbosity),
+                        format='%(asctime)s - %(levelname)-8s - %(message)s')
 
     # Configuration load
     config = utils.load(args.sources_file)
