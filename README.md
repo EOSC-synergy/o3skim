@@ -30,11 +30,11 @@
 - [Acknowledgments](#acknowledgement)
 - [TODO](https://git.scc.kit.edu/synergy.o3as/o3skim/-/issues)
 
-# 🧐 About <a name = "about"></a>
+# About <a name = "about"></a>
 This project provides the tools to preprocess, standarise and reduce ozone data for later transfer and plot. 
 
 
-# 🏁 Getting Started <a name = "getting_started"></a>
+# Getting Started <a name = "getting_started"></a>
 See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ## Prerequisites
@@ -44,13 +44,8 @@ To run the project as container, install one of the following container technolo
 
 > Note udocker cannot be used to build containers, only to run them. 
 
-> For local install and testing you need at least:
-- [python 3.8](https://www.python.org/downloads/release/python-385/)
-- [pip 20.0.2](https://pypi.org/)
-- [gcc](https://gcc.gnu.org/)
-- [g++]()
 
-## ⛏️ Built using docker <a name = "built_using"></a>
+## Built using docker <a name = "built_using"></a>
 Download the repository using git.
 ```sh
 $ git clone git@git.scc.kit.edu:synergy.o3as/o3skim.git
@@ -71,15 +66,23 @@ o3skim                             latest              69587025a70a        xx se
 ...
 ```
 
-## 🔧 Running the tests <a name = "tests"></a>
-First install in your system without docker, after download, use pip:
+## Running the tests <a name = "tests"></a>
+To run tests, you need to install the tool in your system without docker.
+
+As first step ensure you have the following dependencies:
+- [python 3.8](https://www.python.org/downloads/release/python-385/)
+- [pip 20.0.2](https://pypi.org/)
+- [gcc](https://gcc.gnu.org/)
+- [g++]()
+
+After download and dependencies check, install with pip:
 ```sh
 $ pip install -e .
 ```
 
-After, tests can be run using 
-[tox](https://tox.readthedocs.io/en/latest/)
-to install it with pip run:
+Tests should run using 
+[tox](https://tox.readthedocs.io/en/latest/).
+To install it with pip use:
 ```sh
 $ pip install tox
 ```
@@ -92,7 +95,7 @@ py37: commands succeeded
 py38: commands succeeded
 ```
 
-# 🚀 Deployment <a name = "deployment"></a>
+# Deployment <a name = "deployment"></a>
 If an image was build using docker, then just deploy the container passing the desired arguments.
 For example:
 ```sh
@@ -109,11 +112,11 @@ INFO:root:Skimming data to './output'
 For arguments description you can run `docker run o3skim --help`
 
 
-# ✍️ Authors <a name = "authors"></a>
+# Authors <a name = "authors"></a>
 - [@V.Kozlov](https://git.scc.kit.edu/eo9869) - TBD
 - [@T.Kerzenmacher](https://git.scc.kit.edu/px5501) - TBD
 - [@B.steban](https://git.scc.kit.edu/zr5094) - TBD
 
-# 🎉 Acknowledgements <a name = "acknowledgement"></a>
+# Acknowledgements <a name = "acknowledgement"></a>
 - 
 
