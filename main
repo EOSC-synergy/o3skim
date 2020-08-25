@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     # Configuration load
     config = utils.load(args.sources_file)
-    logging.info("Configuration found at: %s", args.sources_file)
+    logging.info("Configuration found at: '%s'", args.sources_file)
     logging.debug("Configuration info: %s", config)
 
     # Create sources
