@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Main function description - To show in command help
+o3skim is a tool for data pre-processing of ozone applications
 """
 from o3skim import sources, utils
 import sys
