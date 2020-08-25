@@ -96,10 +96,17 @@ py38: commands succeeded
 If an image was build using docker, then just deploy the container passing the desired arguments.
 For example:
 ```sh
-$ docker run o3skim --verbosity INFO
-...TBD
+$ docker run \
+  -v ${PWD}/sources.yaml:/app/sources.yaml \
+  -v ${PWD}/data:/app/data \
+  -v ${PWD}/output:/app/output \
+  o3skim --verbosity INFO
+...
+INFO:root:Configuration found at: './sources.yaml'
+INFO:root:Loading data from './data' 
+INFO:root:Skimming data to './output' 
 ```
-> For arguments description you can run `docker run o3skim --help
+For arguments description you can run `docker run o3skim --help`
 
 
 # ✍️ Authors <a name = "authors"></a>
