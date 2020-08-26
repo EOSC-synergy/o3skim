@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        registry = "boressan/o3skim"
+        registry = "synergyimk/o3skim"
         registryCredential = 'dockerhub_id'
     }
     agent any

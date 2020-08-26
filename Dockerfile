@@ -53,10 +53,6 @@ RUN git clone --depth 1 -b ${branch} https://git.scc.kit.edu/synergy.o3as/o3skim
     rm -rf /tmp/*
 WORKDIR /app
 
-# Ports to expose
-EXPOSE 8443
-EXPOSE 8080
-
 # Change user context and drop root privileges
 RUN groupadd -r ${group} && \
     useradd --no-log-init -r -d /app -g ${group} ${user} && \
