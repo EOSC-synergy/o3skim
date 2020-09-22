@@ -46,6 +46,7 @@ class Model:
             logger.debug("Skim 'vrm_zm' data")
             utils.to_netcdf(path, "vrm_zm", self._vrm_zm)
 
+    @utils.return_on_failure("Error when loading 'tco3_zm'")
     def __get_tco3_zm(self, tco3_zm, **kwarg):
         """Gets and standarises the tco3_zm data"""
         fnames = glob.glob(tco3_zm['dir'] + "/*.nc")
@@ -58,6 +59,7 @@ class Model:
             })['tco3_zm'].to_dataset()
             self._tco3_zm = dataset.mean(dim='lon')
 
+    @utils.return_on_failure("Error when loading 'vrm_zm'")
     def __get_vrm_zm(self, vrm_zm, **kwarg):
         """Gets and standarises the vrm_zm data"""
         fnames = glob.glob(vrm_zm['dir'] + "/*.nc")
