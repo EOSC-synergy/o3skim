@@ -21,6 +21,20 @@ def cd(newdir):
         os.chdir(prevdir)
         logger.debug("Restore directory: '%s'", prevdir)
 
+
+def return_on_failure(message):
+    """Decorator to do not break but log"""
+    def decorate(function):
+        def applicator(*args, **kwargs):
+            try:
+                function(*args, **kwargs)
+            except:
+                # Log error with stak using root (not utils)
+                logging.error(message, exc_info=True)
+        return applicator
+    return decorate
+
+
 def load(yaml_file):
     """Loads the .yaml file with the sources configurations"""
     with open(yaml_file, "r") as ymlfile:
