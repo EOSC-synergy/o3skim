@@ -2,6 +2,7 @@
 
 
 import os
+import shutil
 import unittest
 import xarray as xr
 import glob
@@ -36,6 +37,13 @@ class TestO3SKIM_sources(unittest.TestCase):
                     path = "data/" + vinfo["dir"]
                     os.makedirs(path, exist_ok=True)
                     mockup_data.netcdf(path, **vinfo)
+
+    def clean_output(self):
+        """Cleans output removing all folders at output"""
+        with utils.cd("output"):
+            directories = (d for d in os.listdir() if os.path.isdir(d))
+            for directory in directories:
+                shutil.rmtree(directory) 
 
     def backup_datasets(self):
         """Loads the mock datasets into an internal variable"""
@@ -102,31 +110,23 @@ class TestO3SKIM_sources(unittest.TestCase):
 
         # Checks the original data has not been modified
         self.assert_with_backup()
+        # Removes output data for other tests
+        self.clean_output()
 
-
-
-
-    def test_002_OutputFromSources(self):
-        """Skims the data into the output folder"""
+    def test_003_SourceErrorDontBreak(self):
+        """The execution does not stop by an error in source"""
         with utils.cd("data"):
             ds = {name: sources.Source(name, collection) for
-                  name, collection in self.config_base.items()}
+                  name, collection in self.config_err.items()}
 
         with utils.cd("output"):
             [source.skim() for source in ds.values()]
 
-        # CCMI-1 data skim asserts
-        self.assertTrue(os.path.isdir("output/CCMI-1_IPSL"))
-        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/tco3_zm_2000.nc"))
-        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/vrm_zm_2000.nc"))
-
         # ECMWF data skim asserts
-        self.assertTrue(os.path.isdir("output/ECMWF_ERA-5"))
-        self.assertTrue(os.path.exists("output/ECMWF_ERA-5/tco3_zm_2000.nc"))
         self.assertTrue(os.path.isdir("output/ECMWF_ERA-i"))
-        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/tco3_zm_2000.nc"))
         self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vrm_zm_2000.nc"))
 
         # Checks the original data has not been modified
         self.assert_with_backup()
-
+        # Removes output data for other tests
+        self.clean_output()
