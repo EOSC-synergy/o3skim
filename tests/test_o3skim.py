@@ -57,7 +57,7 @@ class TestO3SKIM_sources(unittest.TestCase):
                         xr.testing.assert_identical(
                             self.ds_backup[source][model][v], ds)
 
-    def test_000_SourcesFromConfig(self):
+    def test_001_SourcesFromConfig(self):
         """Creates the different sources from the configuration file"""
         with utils.cd("data"):
             ds = {name: sources.Source(name, collection) for
@@ -77,7 +77,7 @@ class TestO3SKIM_sources(unittest.TestCase):
         # Checks the original data has not been modified
         self.assert_with_backup()
 
-    def test_000_OutputFromSources(self):
+    def test_002_OutputFromSources(self):
         """Skims the data into the output folder"""
         with utils.cd("data"):
             ds = {name: sources.Source(name, collection) for
