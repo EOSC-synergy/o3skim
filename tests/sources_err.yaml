@@ -1,0 +1,17 @@
+ECMWF:
+    ERA-i:
+        vrm_zm: # Correct variable
+            name: vmro3
+            dir: Ecmwf/Erai
+            coordinades:
+                time: time
+                plev: level
+                lat: latitude
+                lon: longitude
+        tco3_zm: # Incorrect variable
+            name: non_existing_var
+            dir: Ecmwf/Erai
+            coordinades:
+                time: time
+                lat: latitude
+                lon: longitude 

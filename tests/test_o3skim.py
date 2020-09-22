@@ -18,6 +18,8 @@ class TestO3SKIM_sources(unittest.TestCase):
         """Loads and creates the test folders and files from test_sources.yaml"""
         self.config_base = utils.load("tests/sources_base.yaml")
         self.assertTrue(type(self.config_base) is dict)
+        self.config_err = utils.load("tests/sources_err.yaml")
+        self.assertTrue(type(self.config_err) is dict)
 
         self.create_mock_datasets()
         self.backup_datasets()
