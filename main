@@ -26,20 +26,18 @@ if __name__ == '__main__':
     args = cmdline_args()
 
     # Set logging level
-    logging.basicConfig(level=getattr(logging, args.verbosity),
-                        format='%(asctime)s - %(levelname)-8s - %(message)s')
+    logformat = '%(asctime)s %(name)-16s %(levelname)-8s %(message)s'
+    logging.basicConfig(level=getattr(logging, args.verbosity), format=logformat)
 
     # Configuration load
+    logging.info("Lookinf for config at: '%s'", args.sources_file)
     config = utils.load(args.sources_file)
-    logging.info("Configuration found at: '%s'", args.sources_file)
-    logging.debug("Configuration info: %s", config)
 
     # Create sources
     logging.info("Loading data from './data' ")
     with utils.cd("data"):
         ds = {name: sources.Source(name, collection) for
               name, collection in config.items()}
-    logging.debug("Sources loaded: %s", [k for k in config.keys()])
 
     # Skim output
     logging.info("Skimming data to './output' ")

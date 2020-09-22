@@ -4,6 +4,9 @@ import os
 import yaml
 import netCDF4
 import xarray as xr
+import logging
+
+logger = logging.getLogger('o3skim.utils')
 
 
 @contextmanager
@@ -12,15 +15,32 @@ def cd(newdir):
     prevdir = os.getcwd()
     os.chdir(os.path.expanduser(newdir))
     try:
+        logger.debug("Temp dir change to: '%s'", newdir)
         yield
     finally:
         os.chdir(prevdir)
+        logger.debug("Restore directory: '%s'", prevdir)
+
+
+def return_on_failure(message):
+    """Decorator to do not break but log"""
+    def decorate(function):
+        def applicator(*args, **kwargs):
+            try:
+                function(*args, **kwargs)
+            except:
+                # Log error with stak using root (not utils)
+                logging.error(message, exc_info=True)
+        return applicator
+    return decorate
 
 
 def load(yaml_file):
     """Loads the .yaml file with the sources configurations"""
     with open(yaml_file, "r") as ymlfile:
-        return yaml.load(ymlfile)
+        config = yaml.load(ymlfile)
+        logging.debug("Configuration data: %s", config)
+        return config
 
 
 def create_empty_netCDF(fname):
@@ -34,5 +54,6 @@ def to_netcdf(path, name, dataset):
     """Creates or appends data to named netcdf files"""
     years, dsx = zip(*dataset.groupby("time.year"))
     fnames = [path + "/" + name + "_%s.nc" % y for y in years]
+    logging.info("Save dataset into: %s", fnames)
     [create_empty_netCDF(fn) for fn in fnames if not os.path.isfile(fn)]
     xr.save_mfdataset(dsx, fnames, mode='a')
