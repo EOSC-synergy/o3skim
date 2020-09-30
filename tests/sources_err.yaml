@@ -1,6 +1,6 @@
 ECMWF:
     ERA-i:
-        vrm_zm: # Correct variable
+        vmro3_zm: # Correct variable
             name: vmro3
             dir: Ecmwf/Erai
             coordinades:

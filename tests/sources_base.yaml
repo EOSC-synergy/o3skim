@@ -7,7 +7,7 @@ CCMI-1:
                 time: time
                 lat: lat
                 lon: lon
-        vrm_zm:
+        vmro3_zm:
             name: vmro3
             dir: Ccmi/mon/vmro3
             coordinades:
@@ -18,7 +18,7 @@ CCMI-1:
 ECMWF:
     ERA-5:
         tco3_zm:
-            name: toc3
+            name: tco3
             dir: Ecmwf/Era5
             coordinades:
                 lon: longitude 
@@ -32,7 +32,7 @@ ECMWF:
                 time: time
                 lat: latitude
                 lon: longitude 
-        vrm_zm:
+        vmro3_zm:
             name: vmro3
             dir: Ecmwf/Erai
             coordinades:

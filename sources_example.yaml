@@ -22,12 +22,12 @@
 # In this example, the data source has only one model, therefore it is
 # expected to have only one folder output named "CCMI-1_IPSL".
 #
-# This model has 2 variables (tco3_zm and vrm_zm) which datasets are 
+# This model has 2 variables (tco3_zm and vmro3_zm) which datasets are 
 # located in different directories. Therefore the key 'dir' is different
 # in both of them. Therefore, the output expected at "CCMI-1_IPSL" is 
 # 2 type of files: 
 #   - tco3_zm_[YEAR].nc: With tco3 skimmed data
-#   - vrm_zm_[YEAR].nc: With vrm skimmed data
+#   - vmro3_zm_[YEAR].nc: With vmro3 skimmed data
 #
 
 # This is the precedded -x1- string at the output folder: '[x1]_[y-]'
@@ -54,16 +54,16 @@ CCMI-1:
                 lat: lat
                 # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
                 lon: lon
-        # Represents the information related to vrm data
+        # Represents the information related to vmro3 data
         # [FIXED_KEY -- OPTIONAL]
-        vrm_zm:
-            # Variable name for vrm array inside the dataset
+        vmro3_zm:
+            # Variable name for vmro3 array inside the dataset
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY] 
             name: vmro3
             # Path where to find the netCDF files
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
             dir: Ccmi/mon/vmro3
-            # Coordinades description for vrm data. 
+            # Coordinades description for vmro3 data. 
             # [FIXED_KEY -- MANDATORY]: 
             coordinades:
                 # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
@@ -79,16 +79,16 @@ CCMI-1:
 # In this example, the data source has two models, therefore it is
 # expected to have two folder outputs ["ECMWF_ERA-5", "ECMWF_ERA-i"].
 #
-# The model ERA-5 has only information tco3 data, there is no vrm data.
+# The model ERA-5 has only information tco3 data, there is no vmro3 data.
 # Therefore, only one type of files is expected at "ECMWF_ERA-5": 
 #   - tco3_zm_[YEAR].nc: With tco3 skimmed data
 #
-# This case of ERA-i indeed has 2 variables (tco3_zm and vrm_zm) but in
+# This case of ERA-i indeed has 2 variables (tco3_zm and vmro3_zm) but in
 # this case, are located inside the same dataset files, therefore the 
 # key 'dir' is the same in both variables. The output expected at 
 # "ECMWF_ERA-5" is 2 type of files: 
 #   - tco3_zm_[YEAR].nc: With tco3 skimmed data
-#   - vrm_zm_[YEAR].nc: With vrm skimmed data
+#   - vmro3_zm_[YEAR].nc: With vmro3 skimmed data
 #
 
 # This is the precedded -x2- string at the output folder: '[x2]_[y-]'
@@ -102,7 +102,7 @@ ECMWF:
         tco3_zm:
             # Variable name for tco3 array inside the dataset
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-            name: toc3
+            name: tco3
             # Path where to find the netCDF files
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
             dir: Ecmwf/Era5
@@ -133,16 +133,16 @@ ECMWF:
                 lat: latitude
                 # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
                 lon: longitude 
-        # Represents the information related to vrm data
+        # Represents the information related to vmro3 data
         # [FIXED_KEY -- OPTIONAL]
-        vrm_zm:
-            # Variable name for vrm array inside the dataset
+        vmro3_zm:
+            # Variable name for vmro3 array inside the dataset
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]         
             name: vmro3
             # Path where to find the netCDF files
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
             dir: Ecmwf/Erai
-            # Coordinades description for vrm data. 
+            # Coordinades description for vmro3 data. 
             # [FIXED_KEY -- MANDATORY]: 
             coordinades:
                 # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]

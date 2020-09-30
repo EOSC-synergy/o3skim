@@ -78,11 +78,11 @@ class TestO3SKIM_sources(unittest.TestCase):
         self.assertTrue('lat' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
         self.assertFalse('lon' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
 
-        # CCMI-1 vrm_zm asserts
-        self.assertTrue('time' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
-        self.assertTrue('plev' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
-        self.assertTrue('lat' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
-        self.assertFalse('lon' in ds['CCMI-1']._models['IPSL']._vrm_zm.coords)
+        # CCMI-1 vmro3_zm asserts
+        self.assertTrue('time' in ds['CCMI-1']._models['IPSL']._vmro3_zm.coords)
+        self.assertTrue('plev' in ds['CCMI-1']._models['IPSL']._vmro3_zm.coords)
+        self.assertTrue('lat' in ds['CCMI-1']._models['IPSL']._vmro3_zm.coords)
+        self.assertFalse('lon' in ds['CCMI-1']._models['IPSL']._vmro3_zm.coords)
 
         # Checks the original data has not been modified
         self.assert_with_backup()
@@ -99,14 +99,14 @@ class TestO3SKIM_sources(unittest.TestCase):
         # CCMI-1 data skim asserts
         self.assertTrue(os.path.isdir("output/CCMI-1_IPSL"))
         self.assertTrue(os.path.exists("output/CCMI-1_IPSL/tco3_zm_2000.nc"))
-        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/vrm_zm_2000.nc"))
+        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/vmro3_zm_2000.nc"))
 
         # ECMWF data skim asserts
         self.assertTrue(os.path.isdir("output/ECMWF_ERA-5"))
         self.assertTrue(os.path.exists("output/ECMWF_ERA-5/tco3_zm_2000.nc"))
         self.assertTrue(os.path.isdir("output/ECMWF_ERA-i"))
         self.assertTrue(os.path.exists("output/ECMWF_ERA-i/tco3_zm_2000.nc"))
-        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vrm_zm_2000.nc"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vmro3_zm_2000.nc"))
 
         # Checks the original data has not been modified
         self.assert_with_backup()
@@ -124,7 +124,7 @@ class TestO3SKIM_sources(unittest.TestCase):
 
         # ECMWF data skim asserts
         self.assertTrue(os.path.isdir("output/ECMWF_ERA-i"))
-        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vrm_zm_2000.nc"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vmro3_zm_2000.nc"))
 
         # Checks the original data has not been modified
         self.assert_with_backup()
