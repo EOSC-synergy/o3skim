@@ -34,17 +34,17 @@ class Model:
         if 'tco3_zm' in variables:
             logger.debug("Load 'tco3_zm' data")
             self.__get_tco3_zm(**variables)
-        if 'vrm_zm' in variables:
-            logger.debug("Load 'vrm_zm' data")
-            self.__get_vrm_zm(**variables)
+        if 'vmro3_zm' in variables:
+            logger.debug("Load 'vmro3_zm' data")
+            self.__get_vmro3_zm(**variables)
 
     def skim(self, path):
         if hasattr(self, '_tco3_zm'):
             logger.debug("Skim 'tco3_zm' data")
             utils.to_netcdf(path, "tco3_zm", self._tco3_zm)
-        if hasattr(self, '_vrm_zm'):
-            logger.debug("Skim 'vrm_zm' data")
-            utils.to_netcdf(path, "vrm_zm", self._vrm_zm)
+        if hasattr(self, '_vmro3_zm'):
+            logger.debug("Skim 'vmro3_zm' data")
+            utils.to_netcdf(path, "vmro3_zm", self._vmro3_zm)
 
     @utils.return_on_failure("Error when loading 'tco3_zm'")
     def __get_tco3_zm(self, tco3_zm, **kwarg):
@@ -59,16 +59,16 @@ class Model:
             })['tco3_zm'].to_dataset()
             self._tco3_zm = dataset.mean(dim='lon')
 
-    @utils.return_on_failure("Error when loading 'vrm_zm'")
-    def __get_vrm_zm(self, vrm_zm, **kwarg):
-        """Gets and standarises the vrm_zm data"""
-        fnames = glob.glob(vrm_zm['dir'] + "/*.nc")
+    @utils.return_on_failure("Error when loading 'vmro3_zm'")
+    def __get_vmro3_zm(self, vmro3_zm, **kwarg):
+        """Gets and standarises the vmro3_zm data"""
+        fnames = glob.glob(vmro3_zm['dir'] + "/*.nc")
         with xr.open_mfdataset(fnames) as dataset:
             dataset = dataset.rename({
-                vrm_zm['name']: 'vrm_zm',
-                vrm_zm['coordinades']['time']: 'time',
-                vrm_zm['coordinades']['plev']: 'plev',
-                vrm_zm['coordinades']['lat']: 'lat',
-                vrm_zm['coordinades']['lon']: 'lon'
-            })['vrm_zm'].to_dataset()
-            self._vrm_zm = dataset.mean(dim='lon')
+                vmro3_zm['name']: 'vmro3_zm',
+                vmro3_zm['coordinades']['time']: 'time',
+                vmro3_zm['coordinades']['plev']: 'plev',
+                vmro3_zm['coordinades']['lat']: 'lat',
+                vmro3_zm['coordinades']['lon']: 'lon'
+            })['vmro3_zm'].to_dataset()
+            self._vmro3_zm = dataset.mean(dim='lon')
