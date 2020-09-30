@@ -102,7 +102,7 @@ ECMWF:
         tco3_zm:
             # Variable name for tco3 array inside the dataset
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-            name: toc3
+            name: tco3
             # Path where to find the netCDF files
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
             dir: Ecmwf/Era5

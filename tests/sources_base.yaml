@@ -18,7 +18,7 @@ CCMI-1:
 ECMWF:
     ERA-5:
         tco3_zm:
-            name: toc3
+            name: tco3
             dir: Ecmwf/Era5
             coordinades:
                 lon: longitude 
