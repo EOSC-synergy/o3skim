@@ -10,6 +10,7 @@ import glob
 from o3skim import sources, utils
 # from pyfakefs.fake_filesystem_unittest import TestCase
 from . import mockup_data
+from . import mockup_noise
 
 
 class TestO3SKIM_sources(unittest.TestCase):
@@ -25,22 +26,30 @@ class TestO3SKIM_sources(unittest.TestCase):
         self.create_mock_datasets()
         self.backup_datasets()
         self.assert_with_backup()
+        self.create_noise_datasets()
 
     def tearDown(self):
         """Tear down test fixtures, if any."""
 
     def create_mock_datasets(self):
         """Creates mock data files according to the loaded configuration"""
-        for _, collection in self.config_base.items():
-            for _, variables in collection.items():
-                for _, vinfo in variables.items():
-                    path = "data/" + vinfo["dir"]
-                    os.makedirs(path, exist_ok=True)
-                    mockup_data.netcdf(path, **vinfo)
+        with utils.cd('data'):
+            for _, collection in self.config_base.items():
+                for _, variables in collection.items():
+                    for _, vinfo in variables.items():
+                        os.makedirs(vinfo["dir"], exist_ok=True)
+                        mockup_data.netcdf(vinfo["dir"], **vinfo)
+
+    def create_noise_datasets(self):
+        """Creates noise data files according to the noise configuration"""
+        config_noise = utils.load("tests/noise_files.yaml")
+        with utils.cd('data'):
+            for ninfo in config_noise:
+                mockup_noise.netcdf(**ninfo)
 
     def clean_output(self):
         """Cleans output removing all folders at output"""
-        with utils.cd("output"):
+        with utils.cd('output'):
             directories = (d for d in os.listdir() if os.path.isdir(d))
             for directory in directories:
                 shutil.rmtree(directory) 
@@ -48,24 +57,26 @@ class TestO3SKIM_sources(unittest.TestCase):
     def backup_datasets(self):
         """Loads the mock datasets into an internal variable"""
         self.ds_backup = {}
-        for source, collection in self.config_base.items():
-            self.ds_backup[source] = {}
-            for model, variables in collection.items():
-                self.ds_backup[source][model] = {}
-                for v, vinfo in variables.items():
-                    paths = "data/" + vinfo["dir"] + "/*.nc"
-                    with xr.open_mfdataset(paths) as ds:
-                        self.ds_backup[source][model][v] = ds
+        with utils.cd('data'): 
+            for source, collection in self.config_base.items():
+                self.ds_backup[source] = {}
+                for model, variables in collection.items():
+                    self.ds_backup[source][model] = {}
+                    for v, vinfo in variables.items():
+                        paths = vinfo["dir"] + "/" + vinfo["name"] + "_????.nc"
+                        with xr.open_mfdataset(paths) as ds:
+                            self.ds_backup[source][model][v] = ds
 
     def assert_with_backup(self):
         """Asserts the dataset in the backup is equal to the config load"""
-        for source, collection in self.config_base.items():
-            for model, variables in collection.items():
-                for v, vinfo in variables.items():
-                    paths = "data/" + vinfo["dir"] + "/*.nc"
-                    with xr.open_mfdataset(paths) as ds:
-                        xr.testing.assert_identical(
-                            self.ds_backup[source][model][v], ds)
+        with utils.cd('data'): 
+            for source, collection in self.config_base.items():
+                for model, variables in collection.items():
+                    for v, vinfo in variables.items():
+                        paths = vinfo["dir"] + "/" + vinfo["name"] + "_????.nc"
+                        with xr.open_mfdataset(paths) as ds:
+                            xr.testing.assert_identical(
+                                self.ds_backup[source][model][v], ds)
 
     def test_001_SourcesFromConfig(self):
         """Creates the different sources from the configuration file"""
