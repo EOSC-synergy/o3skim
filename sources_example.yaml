@@ -23,7 +23,7 @@
 # expected to have only one folder output named "CCMI-1_IPSL".
 #
 # This model has 2 variables (tco3_zm and vmro3_zm) which datasets are 
-# located in different directories. Therefore the key 'dir' is different
+# located in different directories. Therefore the key 'paths' is different
 # in both of them. Therefore, the output expected at "CCMI-1_IPSL" is 
 # 2 type of files: 
 #   - tco3_zm_[YEAR].nc: With tco3 skimmed data
@@ -44,7 +44,7 @@ CCMI-1:
             name: toz
             # Path where to find the netCDF files
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-            dir: Ccmi/mon/toz
+            paths: Ccmi/mon/toz/*.nc
             # Coordinades description for tco3 data. 
             # [FIXED_KEY -- MANDATORY]:
             coordinades:
@@ -62,7 +62,7 @@ CCMI-1:
             name: vmro3
             # Path where to find the netCDF files
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-            dir: Ccmi/mon/vmro3
+            paths: Ccmi/mon/vmro3/*_????.nc
             # Coordinades description for vmro3 data. 
             # [FIXED_KEY -- MANDATORY]: 
             coordinades:
@@ -85,7 +85,7 @@ CCMI-1:
 #
 # This case of ERA-i indeed has 2 variables (tco3_zm and vmro3_zm) but in
 # this case, are located inside the same dataset files, therefore the 
-# key 'dir' is the same in both variables. The output expected at 
+# key 'paths' is the same in both variables. The output expected at 
 # "ECMWF_ERA-5" is 2 type of files: 
 #   - tco3_zm_[YEAR].nc: With tco3 skimmed data
 #   - vmro3_zm_[YEAR].nc: With vmro3 skimmed data
@@ -105,7 +105,7 @@ ECMWF:
             name: tco3
             # Path where to find the netCDF files
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-            dir: Ecmwf/Era5
+            paths: Ecmwf/Era5/*.nc
             # Coordinades description for tco3 data. 
             # [FIXED_KEY -- MANDATORY]:
             coordinades:
@@ -123,7 +123,7 @@ ECMWF:
             name: toz
             # Path where to find the netCDF files
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-            dir: Ecmwf/Erai
+            paths: Ecmwf/Erai/*.nc
             # Coordinades description for tco3 data. 
             # [FIXED_KEY -- MANDATORY]:
             coordinades:
@@ -141,7 +141,7 @@ ECMWF:
             name: vmro3
             # Path where to find the netCDF files
             # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-            dir: Ecmwf/Erai
+            paths: Ecmwf/Erai/*.nc
             # Coordinades description for vmro3 data. 
             # [FIXED_KEY -- MANDATORY]: 
             coordinades:

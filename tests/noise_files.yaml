@@ -1,7 +1,5 @@
 - name: toz
   path: Ccmi/mon/toz/toz_noise.nc
-- name: vmro3
-  path: Ccmi/mon/vmro3/vmro3_noise.nc
 - name: tco3
   path: Ecmwf/Era5/tco3_noise.nc
 - name: toz

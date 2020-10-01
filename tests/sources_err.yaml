@@ -2,7 +2,7 @@ ECMWF:
     ERA-i:
         vmro3_zm: # Correct variable
             name: vmro3
-            dir: Ecmwf/Erai
+            paths: Ecmwf/Erai/vmro3_????.nc
             coordinades:
                 time: time
                 plev: level
@@ -10,7 +10,7 @@ ECMWF:
                 lon: longitude
         tco3_zm: # Incorrect variable
             name: non_existing_var
-            dir: Ecmwf/Erai
+            paths: Ecmwf/Erai/toz_????.nc
             coordinades:
                 time: time
                 lat: latitude
