@@ -37,8 +37,9 @@ class TestO3SKIM_sources(unittest.TestCase):
             for _, collection in self.config_base.items():
                 for _, variables in collection.items():
                     for _, vinfo in variables.items():
-                        os.makedirs(vinfo["dir"], exist_ok=True)
-                        mockup_data.netcdf(vinfo["dir"], **vinfo)
+                        dirname = os.path.dirname(vinfo['paths'])
+                        os.makedirs(dirname, exist_ok=True)
+                        mockup_data.netcdf(dirname, **vinfo)
 
     def create_noise_datasets(self):
         """Creates noise data files according to the noise configuration"""
@@ -62,9 +63,8 @@ class TestO3SKIM_sources(unittest.TestCase):
                 self.ds_backup[source] = {}
                 for model, variables in collection.items():
                     self.ds_backup[source][model] = {}
-                    for v, vinfo in variables.items():
-                        paths = vinfo["dir"] + "/" + vinfo["name"] + "_????.nc"
-                        with xr.open_mfdataset(paths) as ds:
+                    for v, vinfo in variables.items(): 
+                        with xr.open_mfdataset(vinfo['paths']) as ds:
                             self.ds_backup[source][model][v] = ds
 
     def assert_with_backup(self):
@@ -73,8 +73,7 @@ class TestO3SKIM_sources(unittest.TestCase):
             for source, collection in self.config_base.items():
                 for model, variables in collection.items():
                     for v, vinfo in variables.items():
-                        paths = vinfo["dir"] + "/" + vinfo["name"] + "_????.nc"
-                        with xr.open_mfdataset(paths) as ds:
+                        with xr.open_mfdataset(vinfo['paths']) as ds:
                             xr.testing.assert_identical(
                                 self.ds_backup[source][model][v], ds)
 

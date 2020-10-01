@@ -50,10 +50,10 @@ def create_empty_netCDF(fname):
     root_grp.close()
 
 
-def to_netcdf(path, name, dataset):
+def to_netcdf(dirname, name, dataset):
     """Creates or appends data to named netcdf files"""
     years, dsx = zip(*dataset.groupby("time.year"))
-    fnames = [path + "/" + name + "_%s.nc" % y for y in years]
+    fnames = [dirname + "/" + name + "_%s.nc" % y for y in years]
     logging.info("Save dataset into: %s", fnames)
     [create_empty_netCDF(fn) for fn in fnames if not os.path.isfile(fn)]
     xr.save_mfdataset(dsx, fnames, mode='a')
