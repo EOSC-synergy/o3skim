@@ -108,6 +108,32 @@ class TestO3SKIM_sources(unittest.TestCase):
 
         # CCMI-1 data skim asserts
         self.assertTrue(os.path.isdir("output/CCMI-1_IPSL"))
+        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/tco3_zm.nc"))
+        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/vmro3_zm.nc"))
+
+        # ECMWF data skim asserts
+        self.assertTrue(os.path.isdir("output/ECMWF_ERA-5"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-5/tco3_zm.nc"))
+        self.assertTrue(os.path.isdir("output/ECMWF_ERA-i"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/tco3_zm.nc"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vmro3_zm.nc"))
+
+        # Checks the original data has not been modified
+        self.assert_with_backup()
+        # Removes output data for other tests
+        self.clean_output()
+
+    def test_003_OutputSplitByYear(self):
+        """Skims the data into the output folder spliting by year"""
+        with utils.cd("data"):
+            ds = {name: sources.Source(name, collection) for
+                  name, collection in self.config_base.items()}
+
+        with utils.cd("output"):
+            [source.skim(groupby="year") for source in ds.values()]
+
+        # CCMI-1 data skim asserts
+        self.assertTrue(os.path.isdir("output/CCMI-1_IPSL"))
         self.assertTrue(os.path.exists("output/CCMI-1_IPSL/tco3_zm_2000.nc"))
         self.assertTrue(os.path.exists("output/CCMI-1_IPSL/vmro3_zm_2000.nc"))
 
@@ -123,7 +149,7 @@ class TestO3SKIM_sources(unittest.TestCase):
         # Removes output data for other tests
         self.clean_output()
 
-    def test_003_SourceErrorDontBreak(self):
+    def test_004_SourceErrorDontBreak(self):
         """The execution does not stop by an error in source"""
         with utils.cd("data"):
             ds = {name: sources.Source(name, collection) for
@@ -134,7 +160,7 @@ class TestO3SKIM_sources(unittest.TestCase):
 
         # ECMWF data skim asserts
         self.assertTrue(os.path.isdir("output/ECMWF_ERA-i"))
-        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vmro3_zm_2000.nc"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vmro3_zm.nc"))
 
         # Checks the original data has not been modified
         self.assert_with_backup()
