@@ -1,0 +1,8 @@
+- name: toz
+  path: Ccmi/mon/toz/toz_noise.nc
+- name: tco3
+  path: Ecmwf/Era5/tco3_noise.nc
+- name: toz
+  path: Ecmwf/Erai/toz_noise.nc
+- name: vmro3
+  path: Ecmwf/Erai/vmro3_noise.nc

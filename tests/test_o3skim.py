@@ -10,6 +10,7 @@ import glob
 from o3skim import sources, utils
 # from pyfakefs.fake_filesystem_unittest import TestCase
 from . import mockup_data
+from . import mockup_noise
 
 
 class TestO3SKIM_sources(unittest.TestCase):
@@ -25,22 +26,31 @@ class TestO3SKIM_sources(unittest.TestCase):
         self.create_mock_datasets()
         self.backup_datasets()
         self.assert_with_backup()
+        self.create_noise_datasets()
 
     def tearDown(self):
         """Tear down test fixtures, if any."""
 
     def create_mock_datasets(self):
         """Creates mock data files according to the loaded configuration"""
-        for _, collection in self.config_base.items():
-            for _, variables in collection.items():
-                for _, vinfo in variables.items():
-                    path = "data/" + vinfo["dir"]
-                    os.makedirs(path, exist_ok=True)
-                    mockup_data.netcdf(path, **vinfo)
+        with utils.cd('data'):
+            for _, collection in self.config_base.items():
+                for _, variables in collection.items():
+                    for _, vinfo in variables.items():
+                        dirname = os.path.dirname(vinfo['paths'])
+                        os.makedirs(dirname, exist_ok=True)
+                        mockup_data.netcdf(dirname, **vinfo)
+
+    def create_noise_datasets(self):
+        """Creates noise data files according to the noise configuration"""
+        config_noise = utils.load("tests/noise_files.yaml")
+        with utils.cd('data'):
+            for ninfo in config_noise:
+                mockup_noise.netcdf(**ninfo)
 
     def clean_output(self):
         """Cleans output removing all folders at output"""
-        with utils.cd("output"):
+        with utils.cd('output'):
             directories = (d for d in os.listdir() if os.path.isdir(d))
             for directory in directories:
                 shutil.rmtree(directory) 
@@ -48,24 +58,24 @@ class TestO3SKIM_sources(unittest.TestCase):
     def backup_datasets(self):
         """Loads the mock datasets into an internal variable"""
         self.ds_backup = {}
-        for source, collection in self.config_base.items():
-            self.ds_backup[source] = {}
-            for model, variables in collection.items():
-                self.ds_backup[source][model] = {}
-                for v, vinfo in variables.items():
-                    paths = "data/" + vinfo["dir"] + "/*.nc"
-                    with xr.open_mfdataset(paths) as ds:
-                        self.ds_backup[source][model][v] = ds
+        with utils.cd('data'): 
+            for source, collection in self.config_base.items():
+                self.ds_backup[source] = {}
+                for model, variables in collection.items():
+                    self.ds_backup[source][model] = {}
+                    for v, vinfo in variables.items(): 
+                        with xr.open_mfdataset(vinfo['paths']) as ds:
+                            self.ds_backup[source][model][v] = ds
 
     def assert_with_backup(self):
         """Asserts the dataset in the backup is equal to the config load"""
-        for source, collection in self.config_base.items():
-            for model, variables in collection.items():
-                for v, vinfo in variables.items():
-                    paths = "data/" + vinfo["dir"] + "/*.nc"
-                    with xr.open_mfdataset(paths) as ds:
-                        xr.testing.assert_identical(
-                            self.ds_backup[source][model][v], ds)
+        with utils.cd('data'): 
+            for source, collection in self.config_base.items():
+                for model, variables in collection.items():
+                    for v, vinfo in variables.items():
+                        with xr.open_mfdataset(vinfo['paths']) as ds:
+                            xr.testing.assert_identical(
+                                self.ds_backup[source][model][v], ds)
 
     def test_001_SourcesFromConfig(self):
         """Creates the different sources from the configuration file"""
@@ -98,6 +108,32 @@ class TestO3SKIM_sources(unittest.TestCase):
 
         # CCMI-1 data skim asserts
         self.assertTrue(os.path.isdir("output/CCMI-1_IPSL"))
+        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/tco3_zm.nc"))
+        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/vmro3_zm.nc"))
+
+        # ECMWF data skim asserts
+        self.assertTrue(os.path.isdir("output/ECMWF_ERA-5"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-5/tco3_zm.nc"))
+        self.assertTrue(os.path.isdir("output/ECMWF_ERA-i"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/tco3_zm.nc"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vmro3_zm.nc"))
+
+        # Checks the original data has not been modified
+        self.assert_with_backup()
+        # Removes output data for other tests
+        self.clean_output()
+
+    def test_003_OutputSplitByYear(self):
+        """Skims the data into the output folder spliting by year"""
+        with utils.cd("data"):
+            ds = {name: sources.Source(name, collection) for
+                  name, collection in self.config_base.items()}
+
+        with utils.cd("output"):
+            [source.skim(groupby="year") for source in ds.values()]
+
+        # CCMI-1 data skim asserts
+        self.assertTrue(os.path.isdir("output/CCMI-1_IPSL"))
         self.assertTrue(os.path.exists("output/CCMI-1_IPSL/tco3_zm_2000.nc"))
         self.assertTrue(os.path.exists("output/CCMI-1_IPSL/vmro3_zm_2000.nc"))
 
@@ -113,7 +149,7 @@ class TestO3SKIM_sources(unittest.TestCase):
         # Removes output data for other tests
         self.clean_output()
 
-    def test_003_SourceErrorDontBreak(self):
+    def test_004_SourceErrorDontBreak(self):
         """The execution does not stop by an error in source"""
         with utils.cd("data"):
             ds = {name: sources.Source(name, collection) for
@@ -124,7 +160,7 @@ class TestO3SKIM_sources(unittest.TestCase):
 
         # ECMWF data skim asserts
         self.assertTrue(os.path.isdir("output/ECMWF_ERA-i"))
-        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vmro3_zm_2000.nc"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vmro3_zm.nc"))
 
         # Checks the original data has not been modified
         self.assert_with_backup()
