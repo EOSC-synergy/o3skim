@@ -17,7 +17,7 @@ def cmdline_args():
     p.add_argument("-f", "--sources_file", type=str, default="./sources.yaml",
                    help="custom sources YAML configuration (default: %(default)s)")
     p.add_argument("-s", "--split_by", type=str, default=None,
-                   choices=['year'],
+                   choices=['year', 'decade'],
                    help="Period time to split output (default: %(default)s)")
     p.add_argument("-v", "--verbosity", type=str, default='ERROR',
                    choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],

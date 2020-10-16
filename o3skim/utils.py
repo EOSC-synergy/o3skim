@@ -58,6 +58,13 @@ def to_netcdf(dirname, name, dataset, groupby=None):
         fnames = [dirname + "/" + name + "_%s.nc" % y for y in years]
         return fnames, dsx
 
+    def split_by_decade(dataset):
+        """Splits a dataset by decade"""
+        decades = dataset.indexes["time"].year//10*10
+        decades, dsx = zip(*dataset.groupby(xr.DataArray(decades)))
+        fnames = [dirname + "/" + name + "_%s-%s.nc" % (d, d+10) for d in decades]
+        return fnames, dsx
+
     def no_split(dataset):
         """Does not split a dataset"""
         dsx = (dataset,)
@@ -65,7 +72,8 @@ def to_netcdf(dirname, name, dataset, groupby=None):
         return fnames, dsx
 
     split_by = {
-        "year":    split_by_year
+        "year": split_by_year,
+        "decade": split_by_decade        
     }
     fnames, dsx = split_by.get(groupby, no_split)(dataset)
     
