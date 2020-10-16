@@ -68,15 +68,15 @@ def to_netcdf(dirname, name, dataset, groupby=None):
     def no_split(dataset):
         """Does not split a dataset"""
         dsx = (dataset,)
-        fnames = [dirname + "/" + name  + ".nc"]
+        fnames = [dirname + "/" + name + ".nc"]
         return fnames, dsx
 
     split_by = {
         "year": split_by_year,
-        "decade": split_by_decade        
+        "decade": split_by_decade
     }
     fnames, dsx = split_by.get(groupby, no_split)(dataset)
-    
+
     logging.info("Save dataset into: %s", fnames)
     [create_empty_netCDF(fn) for fn in fnames if not os.path.isfile(fn)]
     xr.save_mfdataset(dsx, fnames, mode='a')
