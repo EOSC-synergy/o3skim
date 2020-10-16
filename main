@@ -16,6 +16,9 @@ def cmdline_args():
     # Arguments
     p.add_argument("-f", "--sources_file", type=str, default="./sources.yaml",
                    help="custom sources YAML configuration (default: %(default)s)")
+    p.add_argument("-s", "--split_by", type=str, default=None,
+                   choices=['year'],
+                   help="Period time to split output (default: %(default)s)")
     p.add_argument("-v", "--verbosity", type=str, default='ERROR',
                    choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                    help="Sets the logging level (default: %(default)s)")
@@ -42,4 +45,4 @@ if __name__ == '__main__':
     # Skim output
     logging.info("Skimming data to './output' ")
     with utils.cd("output"):
-        [source.skim() for source in ds.values()]
+        [source.skim(groupby=args.split_by) for source in ds.values()]
