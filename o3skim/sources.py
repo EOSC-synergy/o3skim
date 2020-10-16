@@ -19,12 +19,12 @@ class Source:
             logging.info("Load model '%s'", name)
             self._models[name] = Model(variables)
 
-    def skim(self):
+    def skim(self, groupby=None):
         for name, model in self._models.items():
             dirname = self._name + "_" + name
             os.makedirs(dirname, exist_ok=True)
             logger.info("Skim data from '%s'", dirname)
-            model.skim(dirname)
+            model.skim(dirname, groupby)
 
 
 class Model:
@@ -38,13 +38,13 @@ class Model:
             logger.debug("Load 'vmro3_zm' data")
             self.__get_vmro3_zm(**variables)
 
-    def skim(self, dirname):
+    def skim(self, dirname, groupby=None):
         if hasattr(self, '_tco3_zm'):
             logger.debug("Skim 'tco3_zm' data")
-            utils.to_netcdf(dirname, "tco3_zm", self._tco3_zm)
+            utils.to_netcdf(dirname, "tco3_zm", self._tco3_zm, groupby)
         if hasattr(self, '_vmro3_zm'):
             logger.debug("Skim 'vmro3_zm' data")
-            utils.to_netcdf(dirname, "vmro3_zm", self._vmro3_zm)
+            utils.to_netcdf(dirname, "vmro3_zm", self._vmro3_zm, groupby)
 
     @utils.return_on_failure("Error when loading 'tco3_zm'")
     def __get_tco3_zm(self, tco3_zm, **kwarg):

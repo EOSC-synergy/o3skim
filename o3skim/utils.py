@@ -50,10 +50,25 @@ def create_empty_netCDF(fname):
     root_grp.close()
 
 
-def to_netcdf(dirname, name, dataset):
+def to_netcdf(dirname, name, dataset, groupby=None):
     """Creates or appends data to named netcdf files"""
-    years, dsx = zip(*dataset.groupby("time.year"))
-    fnames = [dirname + "/" + name + "_%s.nc" % y for y in years]
+    def split_by_year(dataset):
+        """Splits a dataset by year"""
+        years, dsx = zip(*dataset.groupby("time.year"))
+        fnames = [dirname + "/" + name + "_%s.nc" % y for y in years]
+        return fnames, dsx
+
+    def no_split(dataset):
+        """Does not split a dataset"""
+        dsx = (dataset,)
+        fnames = [dirname + "/" + name  + ".nc"]
+        return fnames, dsx
+
+    split_by = {
+        "year":    split_by_year
+    }
+    fnames, dsx = split_by.get(groupby, no_split)(dataset)
+    
     logging.info("Save dataset into: %s", fnames)
     [create_empty_netCDF(fn) for fn in fnames if not os.path.isfile(fn)]
     xr.save_mfdataset(dsx, fnames, mode='a')

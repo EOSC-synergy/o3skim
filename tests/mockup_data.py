@@ -39,4 +39,4 @@ def dataset(name, coordinades):
 def netcdf(dirname, name, coordinades, **kwarg):
     """Creates or appends data to a mock netcdf file"""
     ds = dataset(name, coordinades)
-    utils.to_netcdf(dirname, name, ds)
+    utils.to_netcdf(dirname, name, ds, groupby="year")
