@@ -1,2 +1,2 @@
-Reduce data (Skim)
+Local installation
 ==================================
