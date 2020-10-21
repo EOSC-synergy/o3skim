@@ -143,7 +143,7 @@ $ udocker run --user=application o3skim --help
 # Authors <a name = "authors"></a>
 - [@V.Kozlov](https://git.scc.kit.edu/eo9869) - TBD
 - [@T.Kerzenmacher](https://git.scc.kit.edu/px5501) - TBD
-- [@B.steban](https://git.scc.kit.edu/zr5094) - TBD
+- [@B.Esteban](https://git.scc.kit.edu/zr5094) - TBD
 
 # Acknowledgements <a name = "acknowledgement"></a>
 - 
