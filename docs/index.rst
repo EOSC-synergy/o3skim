@@ -20,7 +20,7 @@ Documentation
 * How to use the o3skim :doc:`getting_started/cli`
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :hidden:
    :caption: Getting started
 
@@ -33,15 +33,15 @@ Documentation
 **User guide**
 
 * Create your :doc:`user_guide/source-file` to point what to skim.
-* Learn how to skim by reading the :doc:`user_guide/API-reference`
+* Learn how to skim by reading the :doc:`user_guide/o3skim`
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :hidden:
    :caption: User guide:
 
    user_guide/source-file
-   user_guide/API-reference
+   user_guide/o3skim
 
 
 **Developer guide**
@@ -50,7 +50,7 @@ Documentation
 * How to run and create new :doc:`dev_guide/tests`
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :hidden:
    :caption: Developer guide:
 
