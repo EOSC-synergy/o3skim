@@ -1,0 +1,19 @@
+# For more information see the documentation at
+#   ./docs/user_guide/source-file.rst
+CCMI-1:
+    IPSL:
+        tco3_zm:
+            name: toz
+            paths: Ccmi/mon/toz/*.nc
+            coordinades:
+                time: time
+                lat: lat
+                lon: lon
+        vmro3_zm:
+            name: vmro3
+            paths: Ccmi/mon/toz/*.nc
+            coordinades:
+                time: time
+                plev: plev
+                lat: lat
+                lon: lon
