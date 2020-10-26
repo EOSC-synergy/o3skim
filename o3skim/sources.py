@@ -1,4 +1,13 @@
-"""This module creates the sources objects"""
+"""Module in charge of creating the sources objects.
+This objects are responsible of loading and the netCDF
+files from data and do the standardization during the
+process.
+
+After the data are loaded and the instances created, 
+it is possible to use the internal methods to produce
+the desired output.
+"""
+
 import glob
 import xarray as xr
 import os.path
@@ -9,7 +18,18 @@ logger = logging.getLogger('o3skim.sources')
 
 
 class Source:
-    """Standarized datasets and methods from a data source"""
+    """Conceptual class for a data source. It is produced by the loading 
+    and generation of internal instances from each data source model.
+
+    :param sname: Name to provide to the source. The folder name with the 
+        skimmed output data is preceded with this name before '_'.
+    :type sname: str
+    
+    :param collections: Dictionary where each 'key' is a name and its 
+        value another dictionary with the variables contained at this
+        model. See :class:`o3skim.sources.Model` for further details.
+    :type collections: dict
+    """
 
     def __init__(self, sname, collections):
         self._name = sname
@@ -20,6 +40,11 @@ class Source:
             self._models[name] = Model(variables)
 
     def skim(self, groupby=None):
+        """Request to skim all source data into the current folder
+
+        :param groupby: How to group output (None, year, decade).
+        :type groupby: str, optional
+        """
         for name, model in self._models.items():
             dirname = self._name + "_" + name
             os.makedirs(dirname, exist_ok=True)
@@ -28,7 +53,14 @@ class Source:
 
 
 class Model:
-    """Standarised model with standarised variables"""
+    """Conceptual class for model with variables. It is produced by the 
+    loading of the variables to be skimmed.
+
+    :param variables: Dictionary with information about how to load
+        the source where each 'key' is the name of the variable to 
+        load and the value is the load details.
+    :type variables: dict
+    """
 
     def __init__(self, variables):
         if 'tco3_zm' in variables:
@@ -39,6 +71,14 @@ class Model:
             self.__get_vmro3_zm(**variables)
 
     def skim(self, dirname, groupby=None):
+        """Request to skim all source data into the specified path
+
+        :param dirname: Path where to place the output files.
+        :type dirname: str
+        
+        :param groupby: How to group output (None, year, decade).
+        :type groupby: str, optional
+        """
         if hasattr(self, '_tco3_zm'):
             logger.debug("Skim 'tco3_zm' data")
             utils.to_netcdf(dirname, "tco3_zm", self._tco3_zm, groupby)
@@ -52,9 +92,9 @@ class Model:
         with xr.open_mfdataset(tco3_zm['paths']) as dataset:
             dataset = dataset.rename({
                 tco3_zm['name']: 'tco3_zm',
-                tco3_zm['coordinades']['time']: 'time',
-                tco3_zm['coordinades']['lat']: 'lat',
-                tco3_zm['coordinades']['lon']: 'lon'
+                tco3_zm['coordinates']['time']: 'time',
+                tco3_zm['coordinates']['lat']: 'lat',
+                tco3_zm['coordinates']['lon']: 'lon'
             })['tco3_zm'].to_dataset()
             self._tco3_zm = dataset.mean(dim='lon')
 
@@ -64,9 +104,9 @@ class Model:
         with xr.open_mfdataset(vmro3_zm['paths']) as dataset:
             dataset = dataset.rename({
                 vmro3_zm['name']: 'vmro3_zm',
-                vmro3_zm['coordinades']['time']: 'time',
-                vmro3_zm['coordinades']['plev']: 'plev',
-                vmro3_zm['coordinades']['lat']: 'lat',
-                vmro3_zm['coordinades']['lon']: 'lon'
+                vmro3_zm['coordinates']['time']: 'time',
+                vmro3_zm['coordinates']['plev']: 'plev',
+                vmro3_zm['coordinates']['lat']: 'lat',
+                vmro3_zm['coordinates']['lon']: 'lon'
             })['vmro3_zm'].to_dataset()
             self._vmro3_zm = dataset.mean(dim='lon')
