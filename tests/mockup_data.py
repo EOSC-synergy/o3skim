@@ -2,9 +2,8 @@
 
 import xarray as xr
 import numpy as np
-import netCDF4
-import os.path
 import datetime
+import os
 from o3skim import utils
 
 
@@ -30,14 +29,15 @@ def map_coord(coordinates):
 
 
 def dataset(name, coordinates):
-    """Creates a dataset acording to the global module indexes"""
+    """Creates a dataset according to the global module indexes"""
     return xr.Dataset(
         {name: data_vars(coordinates)},
         coords=map_coord(coordinates)
     )
 
 
-def netcdf(path, name, coordinates, **kwarg):
+def netcdf(dirname, name, coordinates, **kwarg):
     """Creates or appends data to a mock netcdf file"""
     ds = dataset(name, coordinates)
-    utils.to_netcdf(path, name, ds)
+    utils.to_netcdf(dirname, name, ds, groupby="year")
+

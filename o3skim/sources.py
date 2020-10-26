@@ -39,14 +39,17 @@ class Source:
             logging.info("Load model '%s'", name)
             self._models[name] = Model(variables)
 
-    def skim(self):
+    def skim(self, groupby=None):
         """Request to skim all source data into the current folder
+
+        :param groupby: How to group output (None, year, decade).
+        :type groupby: str, optional
         """
         for name, model in self._models.items():
-            path = self._name + "_" + name
-            os.makedirs(path, exist_ok=True)
-            logger.info("Skim data from '%s'", path)
-            model.skim(path)
+            dirname = self._name + "_" + name
+            os.makedirs(dirname, exist_ok=True)
+            logger.info("Skim data from '%s'", dirname)
+            model.skim(dirname, groupby)
 
 
 class Model:
@@ -67,24 +70,26 @@ class Model:
             logger.debug("Load 'vmro3_zm' data")
             self.__get_vmro3_zm(**variables)
 
-    def skim(self, path):
+    def skim(self, dirname, groupby=None):
         """Request to skim all source data into the specified path
 
-        :param path: Path where to place the output files
-        :type path: str
+        :param dirname: Path where to place the output files.
+        :type dirname: str
+        
+        :param groupby: How to group output (None, year, decade).
+        :type groupby: str, optional
         """
         if hasattr(self, '_tco3_zm'):
             logger.debug("Skim 'tco3_zm' data")
-            utils.to_netcdf(path, "tco3_zm", self._tco3_zm)
+            utils.to_netcdf(dirname, "tco3_zm", self._tco3_zm, groupby)
         if hasattr(self, '_vmro3_zm'):
             logger.debug("Skim 'vmro3_zm' data")
-            utils.to_netcdf(path, "vmro3_zm", self._vmro3_zm)
+            utils.to_netcdf(dirname, "vmro3_zm", self._vmro3_zm, groupby)
 
     @utils.return_on_failure("Error when loading 'tco3_zm'")
     def __get_tco3_zm(self, tco3_zm, **kwarg):
         """Gets and standarises the tco3_zm data"""
-        fnames = glob.glob(tco3_zm['dir'] + "/*.nc")
-        with xr.open_mfdataset(fnames) as dataset:
+        with xr.open_mfdataset(tco3_zm['paths']) as dataset:
             dataset = dataset.rename({
                 tco3_zm['name']: 'tco3_zm',
                 tco3_zm['coordinates']['time']: 'time',
@@ -96,8 +101,7 @@ class Model:
     @utils.return_on_failure("Error when loading 'vmro3_zm'")
     def __get_vmro3_zm(self, vmro3_zm, **kwarg):
         """Gets and standarises the vmro3_zm data"""
-        fnames = glob.glob(vmro3_zm['dir'] + "/*.nc")
-        with xr.open_mfdataset(fnames) as dataset:
+        with xr.open_mfdataset(vmro3_zm['paths']) as dataset:
             dataset = dataset.rename({
                 vmro3_zm['name']: 'vmro3_zm',
                 vmro3_zm['coordinates']['time']: 'time',

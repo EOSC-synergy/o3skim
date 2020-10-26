@@ -2,14 +2,14 @@ CCMI-1:
     IPSL:
         tco3_zm:
             name: toz
-            dir: Ccmi/mon/toz
+            paths: Ccmi/mon/toz/toz_????.nc
             coordinates:
                 time: time
                 lat: lat
                 lon: lon
         vmro3_zm:
             name: vmro3
-            dir: Ccmi/mon/vmro3
+            paths: Ccmi/mon/vmro3/*.nc
             coordinates:
                 time: time
                 plev: plev
@@ -19,7 +19,7 @@ ECMWF:
     ERA-5:
         tco3_zm:
             name: tco3
-            dir: Ecmwf/Era5
+            paths: Ecmwf/Era5/tco3_????.nc
             coordinates:
                 lon: longitude 
                 lat: latitude
@@ -27,14 +27,14 @@ ECMWF:
     ERA-i:
         tco3_zm:
             name: toz
-            dir: Ecmwf/Erai
+            paths: Ecmwf/Erai/toz_????.nc
             coordinates:
                 time: time
                 lat: latitude
                 lon: longitude 
         vmro3_zm:
             name: vmro3
-            dir: Ecmwf/Erai
+            paths: Ecmwf/Erai/vmro3_????.nc
             coordinates:
                 time: time
                 plev: level
