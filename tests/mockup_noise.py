@@ -16,18 +16,18 @@ indexes = {
 
 
 def data_vars():
-    """Creates a mock n-array with coordinade values"""
+    """Creates a mock n-array with coordinate values"""
     dim = [len(axis) for _, axis in indexes.items()]
     return tuple(indexes), np.ones(dim),
 
 
 def data_coord(): 
-    """Creates a mock coordinades"""
+    """Creates a mock coordinates"""
     return indexes
 
 
 def dataset(name):
-    """Creates a dataset acording to the global module indexes"""
+    """Creates a dataset according to the global module indexes"""
     return xr.Dataset(
         {name: data_vars()},
         coords = data_coord()
