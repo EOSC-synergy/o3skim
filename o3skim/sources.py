@@ -1,4 +1,13 @@
-"""This module creates the sources objects"""
+"""Module in charge of creating the sources objects.
+This objects are responsible of loading and the netCDF
+files from data and do the standardization during the
+process.
+
+After the data are loaded and the instances created, 
+it is possible to use the internal methods to produce
+the desired output.
+"""
+
 import glob
 import xarray as xr
 import os.path
@@ -9,7 +18,18 @@ logger = logging.getLogger('o3skim.sources')
 
 
 class Source:
-    """Standarized datasets and methods from a data source"""
+    """Conceptual class for a data source. It is produced by the loading 
+    and generation of internal instances from each data source model.
+
+    :param sname: Name to provide to the source. The folder name with the 
+        skimmed output data is preceded with this name before '_'.
+    :type sname: str
+    
+    :param collections: Dictionary where each 'key' is a name and its 
+        value another dictionary with the variables contained at this
+        model. See :class:`o3skim.sources.Model` for further details.
+    :type collections: dict
+    """
 
     def __init__(self, sname, collections):
         self._name = sname
@@ -20,6 +40,8 @@ class Source:
             self._models[name] = Model(variables)
 
     def skim(self):
+        """Request to skim all source data into the current folder
+        """
         for name, model in self._models.items():
             path = self._name + "_" + name
             os.makedirs(path, exist_ok=True)
@@ -28,7 +50,14 @@ class Source:
 
 
 class Model:
-    """Standarised model with standarised variables"""
+    """Conceptual class for model with variables. It is produced by the 
+    loading of the variables to be skimmed.
+
+    :param variables: Dictionary with information about how to load
+        the source where each 'key' is the name of the variable to 
+        load and the value is the load details.
+    :type variables: dict
+    """
 
     def __init__(self, variables):
         if 'tco3_zm' in variables:
@@ -39,6 +68,11 @@ class Model:
             self.__get_vmro3_zm(**variables)
 
     def skim(self, path):
+        """Request to skim all source data into the specified path
+
+        :param path: Path where to place the output files
+        :type path: str
+        """
         if hasattr(self, '_tco3_zm'):
             logger.debug("Skim 'tco3_zm' data")
             utils.to_netcdf(path, "tco3_zm", self._tco3_zm)
