@@ -17,27 +17,27 @@ indexes = {
 }
 
 
-def data_vars(coordinades):
-    """Creates a mock n-array with coordinade values"""
-    alias = tuple(coordinades.values())
-    dim = tuple(len(indexes[c]) for c in coordinades)
+def data_vars(coordinates):
+    """Creates a mock n-array with coordinate values"""
+    alias = tuple(coordinates.values())
+    dim = tuple(len(indexes[c]) for c in coordinates)
     return alias, np.ones(dim),
 
 
-def map_coord(coordinades):
-    """Creates a mock array by coordinade"""
-    return {alias: indexes[c] for c, alias in coordinades.items()}
+def map_coord(coordinates):
+    """Creates a mock array by coordinate"""
+    return {alias: indexes[c] for c, alias in coordinates.items()}
 
 
-def dataset(name, coordinades):
+def dataset(name, coordinates):
     """Creates a dataset acording to the global module indexes"""
     return xr.Dataset(
-        {name: data_vars(coordinades)},
-        coords=map_coord(coordinades)
+        {name: data_vars(coordinates)},
+        coords=map_coord(coordinates)
     )
 
 
-def netcdf(path, name, coordinades, **kwarg):
+def netcdf(path, name, coordinates, **kwarg):
     """Creates or appends data to a mock netcdf file"""
-    ds = dataset(name, coordinades)
+    ds = dataset(name, coordinates)
     utils.to_netcdf(path, name, ds)

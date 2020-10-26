@@ -5,14 +5,14 @@ CCMI-1:
         tco3_zm:
             name: toz
             paths: Ccmi/mon/toz/*.nc
-            coordinades:
+            coordinates:
                 time: time
                 lat: lat
                 lon: lon
         vmro3_zm:
             name: vmro3
             paths: Ccmi/mon/toz/*.nc
-            coordinades:
+            coordinates:
                 time: time
                 plev: plev
                 lat: lat

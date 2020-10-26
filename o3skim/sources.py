@@ -53,9 +53,9 @@ class Model:
         with xr.open_mfdataset(fnames) as dataset:
             dataset = dataset.rename({
                 tco3_zm['name']: 'tco3_zm',
-                tco3_zm['coordinades']['time']: 'time',
-                tco3_zm['coordinades']['lat']: 'lat',
-                tco3_zm['coordinades']['lon']: 'lon'
+                tco3_zm['coordinates']['time']: 'time',
+                tco3_zm['coordinates']['lat']: 'lat',
+                tco3_zm['coordinates']['lon']: 'lon'
             })['tco3_zm'].to_dataset()
             self._tco3_zm = dataset.mean(dim='lon')
 
@@ -66,9 +66,9 @@ class Model:
         with xr.open_mfdataset(fnames) as dataset:
             dataset = dataset.rename({
                 vmro3_zm['name']: 'vmro3_zm',
-                vmro3_zm['coordinades']['time']: 'time',
-                vmro3_zm['coordinades']['plev']: 'plev',
-                vmro3_zm['coordinades']['lat']: 'lat',
-                vmro3_zm['coordinades']['lon']: 'lon'
+                vmro3_zm['coordinates']['time']: 'time',
+                vmro3_zm['coordinates']['plev']: 'plev',
+                vmro3_zm['coordinates']['lat']: 'lat',
+                vmro3_zm['coordinates']['lon']: 'lon'
             })['vmro3_zm'].to_dataset()
             self._vmro3_zm = dataset.mean(dim='lon')
