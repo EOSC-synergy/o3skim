@@ -1,8 +1,11 @@
 o3skim package
 ==============
 
-Submodules
-----------
+.. automodule:: o3skim
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 o3skim.sources module
 ---------------------
@@ -21,10 +24,4 @@ o3skim.utils module
    :show-inheritance:
 
 
-Module contents
----------------
 
-.. automodule:: o3skim
-   :members:
-   :undoc-members:
-   :show-inheritance:
