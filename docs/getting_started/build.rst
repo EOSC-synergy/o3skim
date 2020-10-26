@@ -29,7 +29,7 @@ For example, using docker_:
 .. _docker: https://docs.docker.com/engine/reference/commandline/build
 
 
-If the build process succeded, then you should see the image name on the container images list:
+If the build process succeeded, then you should see the image name on the container images list:
 
 .. code-block:: bash
 
@@ -45,7 +45,6 @@ push to a dockerhub repository. For example, with docker_:
 .. code-block:: bash
 
     $ docker push <repository>/o3skim:<tag>
-
     The push refers to repository [docker.io/........./o3skim]
     ...
     7e84795fccac: Preparing 

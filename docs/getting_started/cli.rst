@@ -14,7 +14,7 @@ you need to provide the following volumes to the container:
  - --volume, mount `/app/data`: Input path with data to skim.
  - --volume, mount `/app/output`: Output path for skimmed results.
  - --volume, mount `/app/sources.yaml`: Configuration file with a data structure 
-   desctiption at the input path in YAML_ format.
+   description at the input path in YAML_ format.
    See :doc:`/user_guide/source-file` for a configuration example.
 
 .. _YAML: https://yaml.org/
@@ -58,6 +58,6 @@ As optional arguments, it is possible to indicate:
  - -s, --split_by {year,decade}: Period time to split output (default: None)
  - -v, --verbosity {DEBUG,INFO,WARNING,ERROR,CRITICAL}: Sets the logging level (default: ERROR)
 
-Note that SOURCES_FILE is only modifyed for development purposes as usually any 
+Note that SOURCES_FILE is only modified for development purposes as usually any 
 file from host can be mounted using the container directive '--volume'. 
 
