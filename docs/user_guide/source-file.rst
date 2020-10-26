@@ -63,7 +63,7 @@ argument is configured at the :doc:`/getting_started/cli` call.
 
                 # Reg expression, how to load the netCDF files
                 # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                path: Ccmi/mon/toz/*.nc
+                paths: Ccmi/mon/toz/*.nc
 
                 # Coordinates description for tco3 data. 
                 # [FIXED_KEY -- MANDATORY]:
@@ -88,7 +88,7 @@ argument is configured at the :doc:`/getting_started/cli` call.
 
                 # Reg expression, how to load the netCDF files
                 # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                path: Ccmi/mon/vmro3
+                paths: Ccmi/mon/vmro3
 
                 # Coordinates description for vmro3 data. 
                 # [FIXED_KEY -- MANDATORY]: 
@@ -147,7 +147,7 @@ key *path* should be the same for both variables. The output expected at
 
               # Reg expression, how to load the netCDF files
               # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-              path: Ecmwf/Era5
+              paths: Ecmwf/Era5
 
               # Coordinates description for tco3 data. 
               # [FIXED_KEY -- MANDATORY]:
@@ -176,7 +176,7 @@ key *path* should be the same for both variables. The output expected at
 
               # Reg expression, how to load the netCDF files
               # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-              path: Ecmwf/Erai
+              paths: Ecmwf/Erai
 
               # Coordinates description for tco3 data. 
               # [FIXED_KEY -- MANDATORY]:
@@ -201,7 +201,7 @@ key *path* should be the same for both variables. The output expected at
 
               # Reg expression, how to load the netCDF files
               # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-              path: Ecmwf/Erai
+              paths: Ecmwf/Erai
 
               # Coordinates description for vmro3 data. 
               # [FIXED_KEY -- MANDATORY]: 
