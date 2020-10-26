@@ -1,10 +1,10 @@
 =========================================
 o3skim
 =========================================
-.. rubric:: Data skiming for ozone assessment.
+.. rubric:: Data skimming for ozone assessment.
 
 **o3skim** is an open source project and Python package that provides the 
-tools to preprocess, standarise and reduce ozone data from netCDF_ models to
+tools to pre-process, standardize and reduce ozone data from netCDF_ models to
 simplify and speed up ozone data transfer and plot.
 
 .. _netCDF: http://www.unidata.ucar.edu/software/netcdf
@@ -68,9 +68,10 @@ See also
 
 Authors
 -------
-- [@V.Kozlov](https://git.scc.kit.edu/eo9869) - TBD
-- [@T.Kerzenmacher](https://git.scc.kit.edu/px5501) - TBD
-- [@B.Esteban](https://git.scc.kit.edu/zr5094) - TBD
+
+- `@V.Kozlov <https://git.scc.kit.edu/eo9869>`_ - TBD
+- `@T.Kerzenmacher <https://git.scc.kit.edu/px5501>`_ - TBD
+- `@B.Esteban <https://git.scc.kit.edu/zr5094>`_ - TBD
 
 
 Acknowledgements
