@@ -66,7 +66,7 @@ def load(yaml_file):
     :rtype: dict
     """
     with open(yaml_file, "r") as ymlfile:
-        config = yaml.load(ymlfile)
+        config = yaml.safe_load(ymlfile)
         logging.debug("Configuration data: %s", config)
         return config
 
