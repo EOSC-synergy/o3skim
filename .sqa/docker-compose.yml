@@ -1,0 +1,10 @@
+version: "3.6"
+
+services:
+  o3skim-testing:
+    image: "indigodatacloud/ci-images:python3.6"
+    hostname: "o3skim-testing"
+    volumes:
+     - type: bind
+       source: ./o3skim
+       target: /o3skim-testing
