@@ -40,7 +40,7 @@ in both of them. Therefore, the output expected at "CCMI-1_IPSL" is
  - vmro3_zm_[YEAR]-[YEAR].nc: With vmro3 skimmed data
 
 Where [YEAR] are optional text output depending on how the `–split_by` 
-argument is configured at the :doc:`/getting_started/cli` call.
+argument is configured at the :doc:`../getting_started/cli` call.
 
 
 .. code-block:: yaml
