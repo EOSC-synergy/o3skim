@@ -15,7 +15,7 @@ you need to provide the following volumes to the container:
  - --volume, mount `/app/output`: Output path for skimmed results.
  - --volume, mount `/app/sources.yaml`: Configuration file with a data structure 
    description at the input path in YAML_ format.
-   See :doc:`/user_guide/source-file` for a configuration example.
+   See :doc:`../user_guide/source-file` for a configuration example.
 
 .. _YAML: https://yaml.org/
 
