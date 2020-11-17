@@ -11,9 +11,9 @@
 # set the base image. default is python
 ARG base=python
 # set the tag (e.g. latest, 3.8, 3.7 : for python)
-ARG tag=3.8-slim
+ARG tag=3.6-slim
 
-# Base image, e.g. python:3.8-slim
+# Base image, e.g. python:3.6-slim
 FROM ${base}:${tag}
 
 LABEL maintainer='B.Esteban, T.Kerzenmacher, V.Kozlov (KIT)'
