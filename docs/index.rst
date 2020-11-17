@@ -1,6 +1,3 @@
-=========================================
-o3skim
-=========================================
 .. rubric:: Data skimming for ozone assessment.
 
 **o3skim** is an open source project and Python package that provides the 
@@ -9,10 +6,9 @@ simplify and speed up ozone data transfer and plot.
 
 .. _netCDF: http://www.unidata.ucar.edu/software/netcdf
 
-Documentation
--------------
 
-**Getting started**
+Getting started
+=========================================
 
 * Which :doc:`getting_started/prerequisites` you need to start.
 * How to :doc:`getting_started/build` your o3skim container.
@@ -30,7 +26,8 @@ Documentation
    getting_started/cli
    
 
-**User guide**
+User guide
+=========================================
 
 * Create your :doc:`user_guide/source-file` to point what to skim.
 * Learn how to skim by reading the :doc:`user_guide/o3skim`
@@ -44,7 +41,8 @@ Documentation
    user_guide/o3skim
 
 
-**Developer guide**
+Developer guide
+=========================================
 
 * How to do a :doc:`dev_guide/local-install`
 * How to run and create new :doc:`dev_guide/tests`
@@ -59,7 +57,10 @@ Documentation
 
 
 See also
---------
+=========================================
+
+Indices and tables
+---------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
@@ -67,7 +68,7 @@ See also
 
 
 Authors
--------
+---------------------
 
 - `@V.Kozlov <https://git.scc.kit.edu/eo9869>`_ - TBD
 - `@T.Kerzenmacher <https://git.scc.kit.edu/px5501>`_ - TBD
@@ -75,6 +76,6 @@ Authors
 
 
 Acknowledgements
-----------------
+---------------------
 
 
