@@ -2,7 +2,7 @@ config:
   project_repos:
     o3skim:
       repo: 'https://git.scc.kit.edu/synergy.o3as/o3skim.git'
-      branch: master 
+      branch: dev 
       dockerhub: synergyimk/o3as
       dockertag: latest
 
