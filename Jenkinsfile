@@ -1,26 +1,24 @@
+#!/usr/bin/groovy
+
+@Library(['github.com/indigo-dc/jenkins-pipeline-library@2.0.0']) _
+
+def projectConfig
+
 pipeline {
-    environment {
-        registry = "synergyimk/o3skim"
-        registryCredential = 'dockerhub_id'
-    }
     agent any
+
     stages {
-        stage('Image build') {
+        stage('SQA baseline dynamic stages') {
             steps {
-                echo '====================building image===================================='
-                script { customImage = docker.build(registry) }
+                script {
+                    projectConfig = pipelineConfig()
+                    buildStages(projectConfig)
+                }
             }
-        }
-        stage('Unit testing') {
-            steps {
-                echo '====================executing unittest================================'
-                script { customImage.inside("--entrypoint=''") {sh 'tox'} }
-            }
-        }
-        stage('Docker-hub upload') {
-            steps {
-                echo '====================uploading docker-hub=============================='
-                script { docker.withRegistry('', registryCredential) { customImage.push() } }
+            post {
+                cleanup {
+                    cleanWs()
+                }
             }
         }
     }

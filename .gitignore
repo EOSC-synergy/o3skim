@@ -62,6 +62,7 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+.stestr
 nosetests.xml
 coverage.xml
 *.cover
@@ -69,4 +70,4 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
-
+flake8.log

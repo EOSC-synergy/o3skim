@@ -1,0 +1,39 @@
+config:
+  project_repos:
+    o3skim:
+      repo: 'https://git.scc.kit.edu/synergy.o3as/o3skim.git'
+      branch: master 
+      dockerhub: synergyimk/o3as
+      dockertag: latest
+
+sqa_criteria:
+  qc_style:
+    repos:
+      o3as:
+        container: o3skim-testing
+        tox:
+          tox_file: /o3skim-testing/tox.ini
+          testenv:
+            - pep8
+  qc_coverage:
+    repos:
+      o3as:
+        container: o3skim-testing
+        tox:
+          tox_file: /o3skim-testing/tox.ini
+          testenv: 
+            - cover
+            - cobertura
+  qc_security:
+    repos:
+      o3as:
+        container: o3skim-testing
+        tox:
+          tox_file: /o3skim-testing/tox.ini
+          testenv:
+            - bandit
+
+#environment:
+#  LANG: C.UTF-8
+
+timeout: 900

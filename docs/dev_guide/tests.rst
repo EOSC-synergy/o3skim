@@ -19,6 +19,5 @@ To start testing simply run:
 
     $ tox
     ...
-    py37: commands succeeded
-    py38: commands succeeded
+    py36: commands succeeded
 
