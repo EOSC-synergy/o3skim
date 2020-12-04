@@ -159,8 +159,10 @@ class TestO3SKIM_sources(unittest.TestCase):
             [source.skim() for source in ds.values()]
 
         # ECMWF data skim asserts
-        self.assertTrue(os.path.isdir("output/ECMWF_ERA-i"))
-        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vmro3_zm.nc"))
+        self.assertTrue(os.path.isdir("output/ErrorModels_correct_variable"))
+        self.assertTrue(os.path.exists("output/ErrorModels_correct_variable/vmro3_zm.nc"))
+        self.assertTrue(os.path.isdir("output/ErrorModels_non_existing_variable"))
+        self.assertTrue(len(os.listdir("output/ErrorModels_non_existing_variable")) == 0)
 
         # Checks the original data has not been modified
         self.assert_with_backup()
