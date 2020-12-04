@@ -9,8 +9,8 @@ import glob
 
 from o3skim import sources, utils
 # from pyfakefs.fake_filesystem_unittest import TestCase
-from . import mockup_data
-from . import mockup_noise
+from tests import mockup_data
+from tests import mockup_noise
 
 
 class TestO3SKIM_sources(unittest.TestCase):
