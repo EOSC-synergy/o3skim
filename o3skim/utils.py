@@ -45,9 +45,9 @@ def return_on_failure(message):
     def decorate(function):
         def applicator(*args, **kwargs):
             try:
-                function(*args, **kwargs)
+                return function(*args, **kwargs)
             except:
-                # Log error with stak using root (not utils)
+                # Log error with stack using root (not utils)
                 logging.error(message, exc_info=True)
         return applicator
     return decorate
