@@ -1,14 +1,15 @@
-"""Unittest module template."""
+"""Unittest module template.
+"""
 
 
 import os
 import shutil
 import unittest
-import xarray as xr
 import glob
 
+import xarray as xr
+
 from o3skim import sources, utils
-# from pyfakefs.fake_filesystem_unittest import TestCase
 from tests import mockup_data
 from tests import mockup_noise
 
@@ -53,23 +54,23 @@ class TestO3SKIM_sources(unittest.TestCase):
         with utils.cd('output'):
             directories = (d for d in os.listdir() if os.path.isdir(d))
             for directory in directories:
-                shutil.rmtree(directory) 
+                shutil.rmtree(directory)
 
     def backup_datasets(self):
         """Loads the mock datasets into an internal variable"""
         self.ds_backup = {}
-        with utils.cd('data'): 
+        with utils.cd('data'):
             for source, collection in self.config_base.items():
                 self.ds_backup[source] = {}
                 for model, variables in collection.items():
                     self.ds_backup[source][model] = {}
-                    for v, vinfo in variables.items(): 
+                    for v, vinfo in variables.items():
                         with xr.open_mfdataset(vinfo['paths']) as ds:
                             self.ds_backup[source][model][v] = ds
 
     def assert_with_backup(self):
         """Asserts the dataset in the backup is equal to the config load"""
-        with utils.cd('data'): 
+        with utils.cd('data'):
             for source, collection in self.config_base.items():
                 for model, variables in collection.items():
                     for v, vinfo in variables.items():
@@ -84,15 +85,22 @@ class TestO3SKIM_sources(unittest.TestCase):
                   name, collection in self.config_base.items()}
 
         # CCMI-1 tco3_zm asserts
-        self.assertTrue('time' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
-        self.assertTrue('lat' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
-        self.assertFalse('lon' in ds['CCMI-1']._models['IPSL']._tco3_zm.coords)
+        self.assertTrue(
+            'time' in ds['CCMI-1']._models['IPSL']['tco3_zm'].coords)
+        self.assertTrue(
+            'lat' in ds['CCMI-1']._models['IPSL']['tco3_zm'].coords)
+        self.assertFalse(
+            'lon' in ds['CCMI-1']._models['IPSL']['tco3_zm'].coords)
 
         # CCMI-1 vmro3_zm asserts
-        self.assertTrue('time' in ds['CCMI-1']._models['IPSL']._vmro3_zm.coords)
-        self.assertTrue('plev' in ds['CCMI-1']._models['IPSL']._vmro3_zm.coords)
-        self.assertTrue('lat' in ds['CCMI-1']._models['IPSL']._vmro3_zm.coords)
-        self.assertFalse('lon' in ds['CCMI-1']._models['IPSL']._vmro3_zm.coords)
+        self.assertTrue(
+            'time' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
+        self.assertTrue(
+            'plev' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
+        self.assertTrue(
+            'lat' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
+        self.assertFalse(
+            'lon' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
 
         # Checks the original data has not been modified
         self.assert_with_backup()
@@ -160,9 +168,14 @@ class TestO3SKIM_sources(unittest.TestCase):
 
         # ECMWF data skim asserts
         self.assertTrue(os.path.isdir("output/ErrorModels_correct_variable"))
-        self.assertTrue(os.path.exists("output/ErrorModels_correct_variable/vmro3_zm.nc"))
-        self.assertTrue(os.path.isdir("output/ErrorModels_non_existing_variable"))
-        self.assertTrue(len(os.listdir("output/ErrorModels_non_existing_variable")) == 0)
+        self.assertTrue(os.path.exists(
+            "output/ErrorModels_correct_variable/vmro3_zm.nc"))
+        self.assertTrue(os.path.isdir(
+            "output/ErrorModels_non_existing_variable"))
+        self.assertTrue(
+            len(os.listdir("output/ErrorModels_non_existing_variable")) == 0)
+        # self.assertTrue(os.path.isdir("output/ECMWF_wrong_coordinates"))
+        # self.assertTrue(len(os.listdir("output/ECMWF_wrong_coordinates")) == 0)
 
         # Checks the original data has not been modified
         self.assert_with_backup()
