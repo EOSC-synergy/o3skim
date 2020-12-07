@@ -1,6 +1,4 @@
-"""Unittest module template.
-"""
-
+"""Unittest module template."""
 
 import os
 import shutil
@@ -85,22 +83,15 @@ class TestO3SKIM_sources(unittest.TestCase):
                   name, collection in self.config_base.items()}
 
         # CCMI-1 tco3_zm asserts
-        self.assertTrue(
-            'time' in ds['CCMI-1']._models['IPSL']['tco3_zm'].coords)
-        self.assertTrue(
-            'lat' in ds['CCMI-1']._models['IPSL']['tco3_zm'].coords)
-        self.assertFalse(
-            'lon' in ds['CCMI-1']._models['IPSL']['tco3_zm'].coords)
+        self.assertTrue( 'time' in ds['CCMI-1']._models['IPSL']['tco3_zm'].coords)
+        self.assertTrue( 'lat' in ds['CCMI-1']._models['IPSL']['tco3_zm'].coords)
+        self.assertFalse( 'lon' in ds['CCMI-1']._models['IPSL']['tco3_zm'].coords)
 
         # CCMI-1 vmro3_zm asserts
-        self.assertTrue(
-            'time' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
-        self.assertTrue(
-            'plev' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
-        self.assertTrue(
-            'lat' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
-        self.assertFalse(
-            'lon' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
+        self.assertTrue( 'time' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
+        self.assertTrue( 'plev' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
+        self.assertTrue( 'lat' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
+        self.assertFalse( 'lon' in ds['CCMI-1']._models['IPSL']['vmro3_zm'].coords)
 
         # Checks the original data has not been modified
         self.assert_with_backup()
@@ -142,15 +133,15 @@ class TestO3SKIM_sources(unittest.TestCase):
 
         # CCMI-1 data skim asserts
         self.assertTrue(os.path.isdir("output/CCMI-1_IPSL"))
-        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/tco3_zm_2000.nc"))
-        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/vmro3_zm_2000.nc"))
+        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/tco3_zm_2000-2001.nc"))
+        self.assertTrue(os.path.exists("output/CCMI-1_IPSL/vmro3_zm_2000-2001.nc"))
 
         # ECMWF data skim asserts
         self.assertTrue(os.path.isdir("output/ECMWF_ERA-5"))
-        self.assertTrue(os.path.exists("output/ECMWF_ERA-5/tco3_zm_2000.nc"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-5/tco3_zm_2000-2001.nc"))
         self.assertTrue(os.path.isdir("output/ECMWF_ERA-i"))
-        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/tco3_zm_2000.nc"))
-        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vmro3_zm_2000.nc"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/tco3_zm_2000-2001.nc"))
+        self.assertTrue(os.path.exists("output/ECMWF_ERA-i/vmro3_zm_2000-2001.nc"))
 
         # Checks the original data has not been modified
         self.assert_with_backup()
@@ -168,12 +159,9 @@ class TestO3SKIM_sources(unittest.TestCase):
 
         # ECMWF data skim asserts
         self.assertTrue(os.path.isdir("output/ErrorModels_correct_variable"))
-        self.assertTrue(os.path.exists(
-            "output/ErrorModels_correct_variable/vmro3_zm.nc"))
-        self.assertTrue(os.path.isdir(
-            "output/ErrorModels_non_existing_variable"))
-        self.assertTrue(
-            len(os.listdir("output/ErrorModels_non_existing_variable")) == 0)
+        self.assertTrue(os.path.exists( "output/ErrorModels_correct_variable/vmro3_zm.nc"))
+        self.assertTrue(os.path.isdir( "output/ErrorModels_non_existing_variable"))
+        self.assertTrue( len(os.listdir("output/ErrorModels_non_existing_variable")) == 0)
         # self.assertTrue(os.path.isdir("output/ECMWF_wrong_coordinates"))
         # self.assertTrue(len(os.listdir("output/ECMWF_wrong_coordinates")) == 0)
 

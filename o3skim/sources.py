@@ -13,7 +13,10 @@ import xarray as xr
 import os.path
 import datetime
 import logging
-from . import utils
+
+from o3skim import utils
+from o3skim import standardization
+
 
 logger = logging.getLogger('o3skim.sources')
 
@@ -40,7 +43,7 @@ class Source:
             logging.info("Load model '%s'", name)
             self._models[name] = Model(variables)
 
-    def skim(self, groupby=None):
+    def skim(self, groupby=None, **kwargs):
         """Request to skim all source data into the current folder
 
         :param groupby: How to group output (None, year, decade).
@@ -50,10 +53,8 @@ class Source:
             dirname = self._name + "_" + name
             os.makedirs(dirname, exist_ok=True)
             logger.info("Skim data from '%s'", dirname)
-            model.to_netcdf(dirname, groupby)
+            model.to_netcdf(dirname, groupby, **kwargs)
 
-
-xr.Dataset.__init__
 
 class Model(xr.Dataset):
     """Conceptual class for model with variables. It is produced by the 
@@ -65,18 +66,15 @@ class Model(xr.Dataset):
     :type variables: dict
     """
 
-    def __init__(self, variables):
+    def __init__(self, specifications):
         ds = xr.Dataset()
-        if 'tco3_zm' in variables:
-            logger.debug("Load 'tco3_zm' data")
-            ds = ds.merge(get_tco3_zm(**variables))
-        if 'vmro3_zm' in variables:
-            logger.debug("Load 'vmro3_zm' data")
-            ds = ds.merge(get_vmro3_zm(**variables))
+        for variable in specifications:
+            load = standardization.load(variable, specifications[variable])
+            ds = ds.merge(load)
         # Containment
         self.dataset = ds
 
-    def __getattr__(self,attr):
+    def __getattr__(self, attr):
         # Delegation
         return getattr(self.dataset, attr)
 
@@ -95,7 +93,7 @@ class Model(xr.Dataset):
         """
 
         if delta == None:
-            return "", self
+            return [("", self)]
 
         logger.debug("Group model by: '{0}' ".format(delta))
         if delta == 'year':
@@ -117,10 +115,10 @@ class Model(xr.Dataset):
         var_models = []
         for var in self.data_vars:
             logger.debug("Internal var: '{0}' to dataset".format(var))
-            var_models.extend((var, self[var].to_dataset()))
+            var_models.append((var, self[var].to_dataset()))
         return var_models
 
-    def to_netcdf(self, path, *arg, delta=None, **kwargs):
+    def to_netcdf(self, path, delta=None, **kwargs):
         """Request to save model data into the specified path
 
         :param path: Path where to place the output files.
@@ -137,38 +135,11 @@ class Model(xr.Dataset):
         paths = []
         for t_range, ds1 in self.groupby(delta=delta):
             for var, ds2 in ds1.split_variables():
-                datasets.extend(ds2)
+                datasets.append(ds2)
                 if t_range == "":
-                    paths.extend(path + "/" + var + ".nc")
+                    paths.append(path + "/" + var + ".nc")
                 else:
-                    paths.extend(path + "/" + var + "_" + t_range + ".nc")
+                    paths.append(path + "/" + var + "_" + t_range + ".nc")
 
         logging.info("Save dataset into: %s", paths)
-        xr.save_mfdataset(datasets, paths, *arg, **kwargs)
-
-
-@utils.return_on_failure("Error when loading 'tco3_zm'")
-def get_tco3_zm(tco3_zm, **kwarg):
-    """Gets and standarises the tco3_zm data"""
-    with xr.open_mfdataset(tco3_zm['paths']) as dataset:
-        dataset = dataset.rename({
-            tco3_zm['name']: 'tco3_zm',
-            tco3_zm['coordinates']['time']: 'time',
-            tco3_zm['coordinates']['lat']: 'lat',
-            tco3_zm['coordinates']['lon']: 'lon'
-        })['tco3_zm'].to_dataset()
-        return dataset.mean(dim='lon')
-
-
-@utils.return_on_failure("Error when loading 'vmro3_zm'")
-def get_vmro3_zm(vmro3_zm, **kwarg):
-    """Gets and standarises the vmro3_zm data"""
-    with xr.open_mfdataset(vmro3_zm['paths']) as dataset:
-        dataset = dataset.rename({
-            vmro3_zm['name']: 'vmro3_zm',
-            vmro3_zm['coordinates']['time']: 'time',
-            vmro3_zm['coordinates']['plev']: 'plev',
-            vmro3_zm['coordinates']['lat']: 'lat',
-            vmro3_zm['coordinates']['lon']: 'lon'
-        })['vmro3_zm'].to_dataset()
-        return dataset.mean(dim='lon')
+        xr.save_mfdataset(datasets, paths, **kwargs)
