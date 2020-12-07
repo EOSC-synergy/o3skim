@@ -26,7 +26,8 @@ vmro3_standard_coordinates = [
 ]
 
 
-@utils.return_on_failure("Error when loading '{0}'".format(tco3_standard_name))
+@utils.return_on_failure("Error when loading '{0}'".format(tco3_standard_name),
+                         xr.Dataset())
 def __load_tco3(name, paths, coordinates):
     """Loads and standarises the tco3 data"""
     logger.debug("Standard loading of '{0}' data".format(tco3_standard_name))
@@ -38,7 +39,8 @@ def __load_tco3(name, paths, coordinates):
         return dataset.mean(dim=tco3_mean_coordinate)
 
 
-@utils.return_on_failure("Error when loading '{0}'".format(vmro3_standard_name))
+@utils.return_on_failure("Error when loading '{0}'".format(vmro3_standard_name),
+                         xr.Dataset())
 def __load_vmro3(name, paths, coordinates):
     """Loads and standarises the vmro3 data"""
     logger.debug("Standard loading of '{0}' data".format(vmro3_standard_name))

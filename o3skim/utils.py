@@ -35,12 +35,15 @@ def cd(newdir):
         logger.debug("Restore directory: '%s'", prevdir)
 
 
-def return_on_failure(message):
+def return_on_failure(message, default=None):
     """Decorator to do not break but log. Note that the error stack
     is printed as well to do not lose relevant information.
 
     :param message: Additional message to log when the function fails.
     :type message: str
+
+    :param default: Value to return if fails.
+    :type default: any or None, optional
     """
     def decorate(function):
         def applicator(*args, **kwargs):
@@ -49,6 +52,7 @@ def return_on_failure(message):
             except:
                 # Log error with stack using root (not utils)
                 logging.error(message, exc_info=True)
+                return default
         return applicator
     return decorate
 
