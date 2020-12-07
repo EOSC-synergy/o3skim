@@ -11,6 +11,7 @@ the desired output.
 import glob
 import xarray as xr
 import os.path
+import datetime
 import logging
 from . import utils
 
@@ -24,7 +25,7 @@ class Source:
     :param sname: Name to provide to the source. The folder name with the 
         skimmed output data is preceded with this name before '_'.
     :type sname: str
-    
+
     :param collections: Dictionary where each 'key' is a name and its 
         value another dictionary with the variables contained at this
         model. See :class:`o3skim.sources.Model` for further details.
@@ -49,10 +50,12 @@ class Source:
             dirname = self._name + "_" + name
             os.makedirs(dirname, exist_ok=True)
             logger.info("Skim data from '%s'", dirname)
-            model.skim(dirname, groupby)
+            model.to_netcdf(dirname, groupby)
 
 
-class Model:
+xr.Dataset.__init__
+
+class Model(xr.Dataset):
     """Conceptual class for model with variables. It is produced by the 
     loading of the variables to be skimmed.
 
@@ -63,50 +66,109 @@ class Model:
     """
 
     def __init__(self, variables):
+        ds = xr.Dataset()
         if 'tco3_zm' in variables:
             logger.debug("Load 'tco3_zm' data")
-            self.__get_tco3_zm(**variables)
+            ds = ds.merge(get_tco3_zm(**variables))
         if 'vmro3_zm' in variables:
             logger.debug("Load 'vmro3_zm' data")
-            self.__get_vmro3_zm(**variables)
+            ds = ds.merge(get_vmro3_zm(**variables))
+        # Containment
+        self.dataset = ds
 
-    def skim(self, dirname, groupby=None):
-        """Request to skim all source data into the specified path
+    def __getattr__(self,attr):
+        # Delegation
+        return getattr(self.dataset, attr)
 
-        :param dirname: Path where to place the output files.
-        :type dirname: str
-        
-        :param groupby: How to group output (None, year, decade).
-        :type groupby: str, optional
+    def groupby(self, delta='year'):
+        """Returns a GroupBy object for performing grouped operations
+           over the time coordinate.
+
+        A groupby operation involves some combination of splitting 
+        the object, applying a function, and combining the results.
+
+        :param delta: How to group files (None, year, decade).
+        :type delta: str or None, optional
+
+        :return: A list of tuples (range, group model). 
+        :rtype: [(str, Model)] 
         """
-        if hasattr(self, '_tco3_zm'):
-            logger.debug("Skim 'tco3_zm' data")
-            utils.to_netcdf(dirname, "tco3_zm", self._tco3_zm, groupby)
-        if hasattr(self, '_vmro3_zm'):
-            logger.debug("Skim 'vmro3_zm' data")
-            utils.to_netcdf(dirname, "vmro3_zm", self._vmro3_zm, groupby)
 
-    @utils.return_on_failure("Error when loading 'tco3_zm'")
-    def __get_tco3_zm(self, tco3_zm, **kwarg):
-        """Gets and standarises the tco3_zm data"""
-        with xr.open_mfdataset(tco3_zm['paths']) as dataset:
-            dataset = dataset.rename({
-                tco3_zm['name']: 'tco3_zm',
-                tco3_zm['coordinates']['time']: 'time',
-                tco3_zm['coordinates']['lat']: 'lat',
-                tco3_zm['coordinates']['lon']: 'lon'
-            })['tco3_zm'].to_dataset()
-            self._tco3_zm = dataset.mean(dim='lon')
+        if delta == None:
+            return "", self
 
-    @utils.return_on_failure("Error when loading 'vmro3_zm'")
-    def __get_vmro3_zm(self, vmro3_zm, **kwarg):
-        """Gets and standarises the vmro3_zm data"""
-        with xr.open_mfdataset(vmro3_zm['paths']) as dataset:
-            dataset = dataset.rename({
-                vmro3_zm['name']: 'vmro3_zm',
-                vmro3_zm['coordinates']['time']: 'time',
-                vmro3_zm['coordinates']['plev']: 'plev',
-                vmro3_zm['coordinates']['lat']: 'lat',
-                vmro3_zm['coordinates']['lon']: 'lon'
-            })['vmro3_zm'].to_dataset()
-            self._vmro3_zm = dataset.mean(dim='lon')
+        logger.debug("Group model by: '{0}' ".format(delta))
+        if delta == 'year':
+            delta = 1
+        if delta == 'decade':
+            delta = 10
+
+        years = self.indexes['time'].map(lambda x: x.year // delta * delta)
+        group = super().groupby(xr.DataArray(years))
+
+        return [(str(y) + "-" + str(y + delta), ds) for y, ds in group]
+
+    def split_variables(self):
+        """Request to split model variables into individual models. 
+
+        :return: A list of tuples (variable, var Model). 
+        :rtype: [(str, Model)]
+        """
+        var_models = []
+        for var in self.data_vars:
+            logger.debug("Internal var: '{0}' to dataset".format(var))
+            var_models.extend((var, self[var].to_dataset()))
+        return var_models
+
+    def to_netcdf(self, path, *arg, delta=None, **kwargs):
+        """Request to save model data into the specified path
+
+        :param path: Path where to place the output files.
+        :type path: str
+
+        :param delta: How to group output (None, year, decade).
+        :type delta: str or None, optional
+
+        For extra inputs see also
+        -------------------------
+        xarray.save_mfdataset
+        """
+        datasets = []
+        paths = []
+        for t_range, ds1 in self.groupby(delta=delta):
+            for var, ds2 in ds1.split_variables():
+                datasets.extend(ds2)
+                if t_range == "":
+                    paths.extend(path + "/" + var + ".nc")
+                else:
+                    paths.extend(path + "/" + var + "_" + t_range + ".nc")
+
+        logging.info("Save dataset into: %s", paths)
+        xr.save_mfdataset(datasets, paths, *arg, **kwargs)
+
+
+@utils.return_on_failure("Error when loading 'tco3_zm'")
+def get_tco3_zm(tco3_zm, **kwarg):
+    """Gets and standarises the tco3_zm data"""
+    with xr.open_mfdataset(tco3_zm['paths']) as dataset:
+        dataset = dataset.rename({
+            tco3_zm['name']: 'tco3_zm',
+            tco3_zm['coordinates']['time']: 'time',
+            tco3_zm['coordinates']['lat']: 'lat',
+            tco3_zm['coordinates']['lon']: 'lon'
+        })['tco3_zm'].to_dataset()
+        return dataset.mean(dim='lon')
+
+
+@utils.return_on_failure("Error when loading 'vmro3_zm'")
+def get_vmro3_zm(vmro3_zm, **kwarg):
+    """Gets and standarises the vmro3_zm data"""
+    with xr.open_mfdataset(vmro3_zm['paths']) as dataset:
+        dataset = dataset.rename({
+            vmro3_zm['name']: 'vmro3_zm',
+            vmro3_zm['coordinates']['time']: 'time',
+            vmro3_zm['coordinates']['plev']: 'plev',
+            vmro3_zm['coordinates']['lat']: 'lat',
+            vmro3_zm['coordinates']['lon']: 'lon'
+        })['vmro3_zm'].to_dataset()
+        return dataset.mean(dim='lon')
