@@ -142,4 +142,5 @@ class Model(xr.Dataset):
                     paths.append(path + "/" + var + "_" + t_range + ".nc")
 
         logging.info("Save dataset into: %s", paths)
-        xr.save_mfdataset(datasets, paths, **kwargs)
+        if paths:
+            xr.save_mfdataset(datasets, paths, **kwargs)
