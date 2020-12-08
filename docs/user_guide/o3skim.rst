@@ -7,16 +7,16 @@ o3skim package
    :show-inheritance:
 
 
-o3skim.sources module
----------------------
+o3skim.standardization module
+-----------------------------
 
-.. automodule:: o3skim.sources
+.. automodule:: o3skim.standardization
    :members:
    :undoc-members:
    :show-inheritance:
 
 o3skim.utils module
--------------------
+------------------------------
 
 .. automodule:: o3skim.utils
    :members:
