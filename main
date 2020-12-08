@@ -32,7 +32,7 @@ if __name__ == '__main__':
     args = cmdline_args()
 
     # Set logging level
-    logformat = '%(asctime)s %(name)-16s %(levelname)-8s %(message)s'
+    logformat = '%(asctime)s %(name)-24s %(levelname)-8s %(message)s'
     logging.basicConfig(level=getattr(logging, args.verbosity), format=logformat)
 
     # Configuration load
