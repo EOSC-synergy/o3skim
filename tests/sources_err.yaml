@@ -1,5 +1,5 @@
-ECMWF:
-    ERA-i:
+ErrorModels:
+    correct_variable:
         vmro3_zm: # Correct variable
             name: vmro3
             paths: Ecmwf/Erai/vmro3_????.nc
@@ -8,6 +8,7 @@ ECMWF:
                 plev: level
                 lat: latitude
                 lon: longitude
+    non_existing_variable:
         tco3_zm: # Incorrect variable
             name: non_existing_var
             paths: Ecmwf/Erai/toz_????.nc
