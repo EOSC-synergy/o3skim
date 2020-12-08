@@ -2,11 +2,14 @@
 """
 o3skim is a tool for data pre-processing of ozone applications
 """
-from o3skim import sources, utils
 import sys
 import argparse
 import logging
 import warnings
+
+import o3skim
+from o3skim import utils
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
@@ -39,7 +42,7 @@ if __name__ == '__main__':
     # Create sources
     logging.info("Loading data from './data' ")
     with utils.cd("data"):
-        ds = {name: sources.Source(name, collection) for
+        ds = {name: o3skim.Source(name, collection) for
               name, collection in config.items()}
 
     # Skim output
