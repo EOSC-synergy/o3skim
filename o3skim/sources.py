@@ -75,8 +75,12 @@ class Model(xr.Dataset):
         self.dataset = ds
 
     def __getattr__(self, attr):
-        # Delegation
+        # Delegation (get)
         return getattr(self.dataset, attr)
+
+    def __setattr__(self, attr, value):
+        # Delegation (set)
+        setattr(self.dataset, attr, value)
 
     def groupby(self, delta='year'):
         """Returns a GroupBy object for performing grouped operations
