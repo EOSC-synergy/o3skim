@@ -5,9 +5,9 @@ import shutil
 import unittest
 import glob
 
+import o3skim
 import xarray as xr
 
-from o3skim import sources, utils
 from tests import mockup_data
 from tests import mockup_noise
 
@@ -17,9 +17,9 @@ class TestO3SKIM_sources(unittest.TestCase):
 
     def setUp(self):
         """Loads and creates the test folders and files from test_sources.yaml"""
-        self.config_base = utils.load("tests/sources_base.yaml")
+        self.config_base = o3skim.utils.load("tests/sources_base.yaml")
         self.assertTrue(type(self.config_base) is dict)
-        self.config_err = utils.load("tests/sources_err.yaml")
+        self.config_err = o3skim.utils.load("tests/sources_err.yaml")
         self.assertTrue(type(self.config_err) is dict)
 
         self.create_mock_datasets()
@@ -32,7 +32,7 @@ class TestO3SKIM_sources(unittest.TestCase):
 
     def create_mock_datasets(self):
         """Creates mock data files according to the loaded configuration"""
-        with utils.cd('data'):
+        with o3skim.utils.cd('data'):
             for _, collection in self.config_base.items():
                 for _, variables in collection.items():
                     for _, vinfo in variables.items():
@@ -42,14 +42,14 @@ class TestO3SKIM_sources(unittest.TestCase):
 
     def create_noise_datasets(self):
         """Creates noise data files according to the noise configuration"""
-        config_noise = utils.load("tests/noise_files.yaml")
-        with utils.cd('data'):
+        config_noise = o3skim.utils.load("tests/noise_files.yaml")
+        with o3skim.utils.cd('data'):
             for ninfo in config_noise:
                 mockup_noise.netcdf(**ninfo)
 
     def clean_output(self):
         """Cleans output removing all folders at output"""
-        with utils.cd('output'):
+        with o3skim.utils.cd('output'):
             directories = (d for d in os.listdir() if os.path.isdir(d))
             for directory in directories:
                 shutil.rmtree(directory)
@@ -57,7 +57,7 @@ class TestO3SKIM_sources(unittest.TestCase):
     def backup_datasets(self):
         """Loads the mock datasets into an internal variable"""
         self.ds_backup = {}
-        with utils.cd('data'):
+        with o3skim.utils.cd('data'):
             for source, collection in self.config_base.items():
                 self.ds_backup[source] = {}
                 for model, variables in collection.items():
@@ -68,7 +68,7 @@ class TestO3SKIM_sources(unittest.TestCase):
 
     def assert_with_backup(self):
         """Asserts the dataset in the backup is equal to the config load"""
-        with utils.cd('data'):
+        with o3skim.utils.cd('data'):
             for source, collection in self.config_base.items():
                 for model, variables in collection.items():
                     for v, vinfo in variables.items():
@@ -78,8 +78,8 @@ class TestO3SKIM_sources(unittest.TestCase):
 
     def test_001_SourcesFromConfig(self):
         """Creates the different sources from the configuration file"""
-        with utils.cd("data"):
-            ds = {name: sources.Source(name, collection) for
+        with o3skim.utils.cd("data"):
+            ds = {name: o3skim.Source(name, collection) for
                   name, collection in self.config_base.items()}
 
         # CCMI-1 tco3_zm asserts
@@ -98,11 +98,11 @@ class TestO3SKIM_sources(unittest.TestCase):
 
     def test_002_OutputFromSources(self):
         """Skims the data into the output folder"""
-        with utils.cd("data"):
-            ds = {name: sources.Source(name, collection) for
+        with o3skim.utils.cd("data"):
+            ds = {name: o3skim.Source(name, collection) for
                   name, collection in self.config_base.items()}
 
-        with utils.cd("output"):
+        with o3skim.utils.cd("output"):
             [source.skim() for source in ds.values()]
 
         # CCMI-1 data skim asserts
@@ -124,11 +124,11 @@ class TestO3SKIM_sources(unittest.TestCase):
 
     def test_003_OutputSplitByYear(self):
         """Skims the data into the output folder spliting by year"""
-        with utils.cd("data"):
-            ds = {name: sources.Source(name, collection) for
+        with o3skim.utils.cd("data"):
+            ds = {name: o3skim.Source(name, collection) for
                   name, collection in self.config_base.items()}
 
-        with utils.cd("output"):
+        with o3skim.utils.cd("output"):
             [source.skim(groupby="year") for source in ds.values()]
 
         # CCMI-1 data skim asserts
@@ -150,11 +150,11 @@ class TestO3SKIM_sources(unittest.TestCase):
 
     def test_004_SourceErrorDontBreak(self):
         """The execution does not stop by an error in source"""
-        with utils.cd("data"):
-            ds = {name: sources.Source(name, collection) for
+        with o3skim.utils.cd("data"):
+            ds = {name: o3skim.Source(name, collection) for
                   name, collection in self.config_err.items()}
 
-        with utils.cd("output"):
+        with o3skim.utils.cd("output"):
             [source.skim() for source in ds.values()]
 
         # ECMWF data skim asserts

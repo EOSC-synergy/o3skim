@@ -71,7 +71,7 @@ class UnknownVariable(Exception):
 
 def load(variable, configuration):
     """Loads and standarises the variable using a specific 
-       configuration.
+    configuration.
     
     :param variable: Loadable variable.
     :type variable: str
@@ -79,8 +79,8 @@ def load(variable, configuration):
     :param configuration: Configuration to apply standardization.
     :type configuration: dict
 
-    :return: A list of tuples (range, group model). 
-    :rtype: [(str, Model)]    
+    :return: A standardized dataset. 
+    :rtype: xarray.Dataset
     """
     try:
         function = __loads[variable]
