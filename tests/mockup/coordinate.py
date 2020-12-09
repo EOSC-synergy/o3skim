@@ -3,7 +3,9 @@
 import datetime
 
 
-def __timeline(start, end, step=10):
+def __timeline(start, end=None, step=10):
+    if not end:
+        end = start
     start = datetime.datetime(start, 1, 1)
     end = datetime.datetime(end, 12, 31)
     step = datetime.timedelta(days=step)

@@ -17,13 +17,13 @@ with utils.cd(model1_dir):
             mockup.Dataset(
                 var_coords={
                     'toz': [
-                        coordinate.time(year,year),
+                        coordinate.time(year),
                         coordinate.lat(),
                         coordinate.lon()
                     ]
                 },
                 coords=[
-                    coordinate.time(year, year),
+                    coordinate.time(year),
                     coordinate.plev(),
                     coordinate.lat(),
                     coordinate.lon()
@@ -37,14 +37,14 @@ with utils.cd(model1_dir):
             mockup.Dataset(
                 var_coords={
                     'vmro3': [
-                        coordinate.time(year,year),
+                        coordinate.time(year),
                         coordinate.plev(),
                         coordinate.lat(),
                         coordinate.lon()
                     ]
                 },
                 coords=[
-                    coordinate.time(year, year),
+                    coordinate.time(year),
                     coordinate.plev(),
                     coordinate.lat(),
                     coordinate.lon()
@@ -60,22 +60,22 @@ with utils.cd(model2_dir):
         mockup.Dataset(
             var_coords={
                 'toz': [
-                    coordinate.time(year,year),
+                    coordinate.time(year),
                     coordinate.lat(),
                     coordinate.lon()
                 ],
                 'vmro3': [
-                    coordinate.time(year,year),
+                    coordinate.time(year),
                     coordinate.plev(),
                     coordinate.lat(),
                     coordinate.lon()
                 ]
             },
             coords=[
-                coordinate.time(year, year),
+                coordinate.time(year),
                 coordinate.plev(),
                 coordinate.lat(),
                 coordinate.lon()
             ]
-        ).to_netcdf("toz_" + str(year) + ".nc")
+        ).to_netcdf("all_" + str(year) + ".nc")
 
