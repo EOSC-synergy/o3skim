@@ -1,0 +1,69 @@
+SourceSplit:
+    ModelTCO3:
+        tco3_zm:
+            name: tco3
+            paths: SourceSplit/tco3_????.nc
+            coordinates:
+                time: time
+                lat: lat
+                lon: lon
+    ModelVMRO3:
+        vmro3_zm:
+            name: vmro3
+            paths: SourceSplit/vmro3_????.nc
+            coordinates:
+                time: time
+                plev: plev
+                lat: lat
+                lon: lon
+    ModelALL:
+        tco3_zm:
+            name: tco3
+            paths: SourceSplit/tco3_????.nc
+            coordinates:
+                time: time
+                lat: lat
+                lon: lon
+        vmro3_zm:
+            name: vmro3
+            paths: SourceSplit/vmro3_????.nc
+            coordinates:
+                time: time
+                plev: plev
+                lat: lat
+                lon: lon 
+SourceMerged:
+    ModelTCO3:
+        tco3_zm:
+            name: tco3
+            paths: SourceMerged/merged_????.nc
+            coordinates:
+                time: time
+                lat: lat
+                lon: lon
+    ModelVMRO3:
+        vmro3_zm:
+            name: vmro3
+            paths: SourceMerged/merged_????.nc
+            coordinates:
+                time: time
+                plev: plev
+                lat: lat
+                lon: lon
+    ModelALL:
+        tco3_zm:
+            name: tco3
+            paths: SourceMerged/merged_????.nc
+            coordinates:
+                time: time
+                lat: lat
+                lon: lon
+        vmro3_zm:
+            name: vmro3
+            paths: SourceMerged/merged_????.nc
+            coordinates:
+                time: time
+                plev: plev
+                lat: lat
+                lon: lon
+

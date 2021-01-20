@@ -14,7 +14,8 @@ def __timeline(start, end=None, step=10):
         start += step
 
 
-def time(start=2000, end=2010, step=30):
+def time(start=2000, end=None, step=30):
+    end = start if not end else None
     return ('time', [t for t in __timeline(start, end, step)])
 
 
