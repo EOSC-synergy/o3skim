@@ -22,9 +22,9 @@ class Source:
     """Conceptual class for a data source. It is produced by the loading 
     and generation of internal instances from each data source model.
 
-    :param sname: Name to provide to the source. The folder name with the 
+    :param name: Name to provide to the source. The folder name with the 
         skimmed output data is preceded with this name before '_'.
-    :type sname: str
+    :type name: str
 
     :param collections: Dictionary where each 'key' is a name and its 
         value another dictionary with the variables contained at this
@@ -32,13 +32,17 @@ class Source:
     :type collections: dict
     """
 
-    def __init__(self, sname, collections):
-        self._name = sname
+    def __init__(self, name, collections):
+        self.name = name
+        self.models = [x for x in collections.keys()]
         self._models = {}
-        logging.info("Load source '%s'", self._name)
-        for name, variables in collections.items():
+        logging.info("Load source '%s'", self.name)
+        for name, specifications in collections.items():
             logging.info("Load model '%s'", name)
-            self._models[name] = Model(variables)
+            self._models[name] = Model(specifications)
+
+    def __getitem__(self, model_name):
+        return self._models[model_name]
 
     def skim(self, groupby=None, **kwargs):
         """Request to skim all source data into the current folder
@@ -46,11 +50,11 @@ class Source:
         :param groupby: How to group output (None, year, decade).
         :type groupby: str, optional
         """
-        for name, model in self._models.items():
-            dirname = self._name + "_" + name
+        for model in self.models:
+            dirname = self.name + "_" + model
             os.makedirs(dirname, exist_ok=True)
             logger.info("Skim data from '%s'", dirname)
-            model.to_netcdf(dirname, groupby, **kwargs)
+            self[model].to_netcdf(dirname, groupby, **kwargs)
 
 
 class Model(xr.Dataset):
