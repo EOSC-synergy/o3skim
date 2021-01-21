@@ -39,7 +39,6 @@ class Source:
 
     def __init__(self, name, collections):
         self.name = name
-        self.models = [x for x in collections.keys()]
         self._models = {}
         logging.info("Load source '%s'", self.name)
         for name, specifications in collections.items():
@@ -51,13 +50,17 @@ class Source:
     def __getitem__(self, model_name):
         return self._models[model_name]
 
+    @property
+    def models(self):
+        return self._models.keys()
+
     def skim(self, groupby=None):
         """Request to skim all source data into the current folder
 
         :param groupby: How to group output (None, year, decade).
         :type groupby: str, optional
         """
-        for model in self.models:
+        for model in self._models:
             dirname = "{source}_{model}".format(source=self.name, model=model)
             os.makedirs(dirname, exist_ok=True)
             logger.info("Skim data from '%s'", dirname)
@@ -87,12 +90,31 @@ def __load_model(tco3_zm=None, vmro3_zm=None):
     return dataset
 
 
+class TestsSource(unittest.TestCase):
+
+    name = "SourceTest"
+    collections = {}  # Empty, only to test constructor stability
+
+    def setUp(self):
+        self.source = Source(TestsSource.name, TestsSource.collections)
+
+    def test_property_name(self):
+        expected = TestsSource.name
+        result = self.source.name
+        self.assertEqual(expected, result)
+
+    def test_property_models(self):
+        expected = TestsSource.collections.keys()
+        result = self.source.models
+        self.assertEqual(expected, result)
+
+
 class TestsModel(unittest.TestCase):
 
     tco3 = np.random.rand(3, 3, 25)
     vmro3 = np.random.rand(3, 3, 4, 25)
 
-    @staticmethod
+    @ staticmethod
     def model():
         return xr.Dataset(
             data_vars=dict(
