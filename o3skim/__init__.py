@@ -42,7 +42,9 @@ class Source:
         logging.info("Load source '%s'", self.name)
         for name, specifications in collections.items():
             logging.info("Load model '%s'", name)
-            self._models[name] = __load_model(specifications)
+            model = __load_model(**specifications)
+            if model:
+                self._models[name] = model 
 
     def __getitem__(self, model_name):
         return self._models[model_name]
@@ -62,10 +64,22 @@ class Source:
                 Skimmed_ds.to_netcdf(groupby)
 
 
-def __load_model(specifications):
+@utils.return_on_failure("Error when loading model", default=None)
+def __load_model(tco3_zm=None, vmro3_zm=None):
     """Loads and standarises a dataset using the specs."""
     dataset = xr.Dataset()
-    for variable in specifications:
-        load = standardization.load(variable, specifications[variable])
-        dataset = dataset.merge(load)
+    if tco3_zm:
+        with xr.open_mfdataset(tco3_zm['paths']) as load:
+            standardized = standardization.standardize_tco3(
+                dataset=load,
+                variable=tco3_zm['name'],
+                coordinates=tco3_zm['coordinates'])
+            dataset = dataset.merge(standardized)
+    if vmro3_zm:
+        with xr.open_mfdataset(vmro3_zm['paths']) as load:
+            standardized = standardization.standardize_vmro3(
+                dataset=load,
+                variable=vmro3_zm['name'],
+                coordinates=vmro3_zm['coordinates'])
+            dataset = dataset.merge(standardized)
     return dataset
