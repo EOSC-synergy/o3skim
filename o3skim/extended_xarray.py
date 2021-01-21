@@ -36,6 +36,7 @@ class ModelAccessor:
         return self._model.groupby(xr.DataArray(years))
 
     def groupby_decade(self):
+        """Returns a grouped dataset by decade"""
         def delta_map(x): return x.year // 10 * 10
         years = self._model.indexes['time'].map(delta_map)
         return self._model.groupby(xr.DataArray(years))
