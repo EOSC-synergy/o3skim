@@ -47,7 +47,8 @@ class Tests(unittest.TestCase):
     pressure_level = [1, 10, 100, 1000]
     time = pd.date_range("2000-01-01", periods=3)
 
-    def tco3_datarray(self):
+    @staticmethod
+    def tco3_datarray():
         return xr.DataArray(
             data=Tests.tco3,
             dims=["lon", "lat", "time"],
@@ -58,8 +59,9 @@ class Tests(unittest.TestCase):
             ),
             attrs=dict(description="Test tco3 datarray")
         )
-
-    def vmro3_datarray(self):
+    
+    @staticmethod
+    def vmro3_datarray():
         return xr.DataArray(
             data=Tests.vmro3,
             dims=["lon", "lat", "plev", "time"],
@@ -87,6 +89,8 @@ class Tests(unittest.TestCase):
             attrs=dict(description="Test dataset")
         )
 
-    def test_001(self):
-        xr.testing.assert_equal(self.ds.model.tco3, self.tco3_datarray())
-        xr.testing.assert_equal(self.ds.model.vmro3, self.vmro3_datarray())
+    def test_tco3_property(self):
+        xr.testing.assert_equal(self.ds.model.tco3, Tests.tco3_datarray())
+
+    def test_vmro3_property(self):
+        xr.testing.assert_equal(self.ds.model.vmro3, Tests.vmro3_datarray())
