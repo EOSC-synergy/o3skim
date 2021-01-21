@@ -12,6 +12,7 @@ import numpy as np
 from o3skim import standardization
 
 logger = logging.getLogger('extended_xr')
+mean_coord = 'lon'
 
 
 @xr.register_dataset_accessor("model")
@@ -22,28 +23,37 @@ class ModelAccessor:
     @property
     def tco3(self):
         """Return the total ozone column of this dataset."""
-        return self._model["tco3_zm"]
+        if "tco3_zm" in list(self._model.var()):
+            return self._model["tco3_zm"].to_dataset()
+        else:
+            return None
 
     @property
     def vmro3(self):
         """Return the ozone volume mixing ratio of this dataset."""
-        return self._model["vmro3_zm"]
+        if "vmro3_zm" in list(self._model.var()):
+            return self._model["vmro3_zm"].to_dataset()
+        else:
+            return None
 
     def groupby_year(self):
         """Returns a grouped dataset by year"""
+        logger.debug("Performing group by year on model")
         def delta_map(x): return x.year
         years = self._model.indexes['time'].map(delta_map)
         return self._model.groupby(xr.DataArray(years))
 
     def groupby_decade(self):
         """Returns a grouped dataset by decade"""
+        logger.debug("Performing group by decade on model")
         def delta_map(x): return x.year // 10 * 10
         years = self._model.indexes['time'].map(delta_map)
         return self._model.groupby(xr.DataArray(years))
 
-    def to_netcdf(self, delta=None):
-        """ """
-        pass #TODO
+    def skim(self):
+        """Skims model producing reduced dataset"""
+        logger.debug("Skimming model")
+        return self._model.mean(mean_coord)
 
 
 class Tests(unittest.TestCase):
@@ -116,3 +126,21 @@ class Tests(unittest.TestCase):
         for decade, dataset in groups:
             self.assertIsInstance(decade, np.int64)
             self.assertIsInstance(dataset, xr.Dataset)
+
+    def test_skimming(self):
+        result = self.ds.model.skim()
+        # Test general coordinates
+        self.assertIn('time', result.coords)
+        self.assertIn('lat', result.coords)
+        self.assertIn('plev', result.coords)
+        self.assertNotIn('lon', result.coords)
+        # Test tco3 coordinates
+        self.assertIn('time', result.model.tco3.coords)
+        self.assertIn('lat', result.model.tco3.coords)
+        self.assertNotIn('plev', result.model.tco3.coords)
+        self.assertNotIn('lon', result.model.tco3.coords)
+        # Test vmro3 coordinates
+        self.assertIn('time', result.model.vmro3.coords)
+        self.assertIn('lat', result.model.vmro3.coords)
+        self.assertIn('plev', result.model.vmro3.coords)
+        self.assertNotIn('lon', result.model.vmro3.coords)

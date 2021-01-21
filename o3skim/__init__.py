@@ -43,7 +43,7 @@ class Source:
         logging.info("Load source '%s'", self.name)
         for name, specifications in collections.items():
             logging.info("Load model '%s'", name)
-            model = __load_model(**specifications)
+            model = _load_model(**specifications)
             if model:
                 self._models[name] = model
 
@@ -52,7 +52,7 @@ class Source:
 
     @property
     def models(self):
-        return self._models.keys()
+        return list(self._models.keys())
 
     def skim(self, groupby=None):
         """Request to skim all source data into the current folder
@@ -65,15 +65,15 @@ class Source:
             os.makedirs(dirname, exist_ok=True)
             logger.info("Skim data from '%s'", dirname)
             with utils.cd(dirname):
-                Skimmed_ds = self[model].model.skim()
-                Skimmed_ds.to_netcdf(groupby)
+                _skim(self[model], delta=groupby)
 
 
 @utils.return_on_failure("Error when loading model", default=None)
-def __load_model(tco3_zm=None, vmro3_zm=None):
-    """Loads and standarises a dataset using the specs."""
+def _load_model(tco3_zm=None, vmro3_zm=None):
+    """Loads a model merging standardized data from specified datasets."""
     dataset = xr.Dataset()
     if tco3_zm:
+        logger.debug("Loading tco3_zm into model")
         with xr.open_mfdataset(tco3_zm['paths']) as load:
             standardized = standardization.standardize_tco3(
                 dataset=load,
@@ -81,6 +81,7 @@ def __load_model(tco3_zm=None, vmro3_zm=None):
                 coordinates=tco3_zm['coordinates'])
             dataset = dataset.merge(standardized)
     if vmro3_zm:
+        logger.debug("Loading vmro3_zm into model")
         with xr.open_mfdataset(vmro3_zm['paths']) as load:
             standardized = standardization.standardize_vmro3(
                 dataset=load,
@@ -88,6 +89,37 @@ def __load_model(tco3_zm=None, vmro3_zm=None):
                 coordinates=vmro3_zm['coordinates'])
             dataset = dataset.merge(standardized)
     return dataset
+
+
+def _skim(model, delta=None):
+    """Skims model producing reduced dataset files"""
+    logger.debug("Skimming model with delta {}".format(delta))
+    skimmed = model.model.skim()
+    if delta == 'year':
+        def tco3_path(y): return "tco3_zm_{}-{}.nc".format(y, y + 1)
+        def vmro3_path(y): return "vmro3_zm_{}-{}.nc".format(y, y + 1)
+        groups = skimmed.model.groupby_year()
+    elif delta == 'decade':
+        def tco3_path(y): return "tco3_zm_{}-{}.nc".format(y, y + 10)
+        def vmro3_path(y): return "vmro3_zm_{}-{}.nc".format(y, y + 10)
+        groups = skimmed.model.groupby_year()
+    else:
+        def tco3_path(_): return "tco3_zm.nc"
+        def vmro3_path(_): return "vmro3_zm.nc"
+        groups = [(None, skimmed), ]
+    years, datasets = zip(*groups)
+    if skimmed.model.tco3:
+        logger.debug("Saving skimed tco3 into files")
+        xr.save_mfdataset(
+            datasets=[ds.model.tco3 for ds in datasets],
+            paths=[tco3_path(year) for year in years]
+        )
+    if skimmed.model.vmro3:
+        logger.debug("Saving skimed vmro3 into files")
+        xr.save_mfdataset(
+            datasets=[ds.model.vmro3 for ds in datasets],
+            paths=[vmro3_path(year) for year in years]
+        )
 
 
 class TestsSource(unittest.TestCase):
@@ -104,7 +136,7 @@ class TestsSource(unittest.TestCase):
         self.assertEqual(expected, result)
 
     def test_property_models(self):
-        expected = TestsSource.collections.keys()
+        expected = list(TestsSource.collections.keys())
         result = self.source.models
         self.assertEqual(expected, result)
 

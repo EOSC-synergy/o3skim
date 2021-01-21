@@ -32,50 +32,48 @@ vmro3_standard_coordinates = [
                          default=xr.Dataset())
 def standardize_tco3(dataset, variable, coordinates):
     """Standardizes a tco3 dataset"""
-    dataset = squeeze(dataset)
-    dataset = rename_tco3(dataset, variable, coordinates)
-    dataset = sort(dataset)
-    return dataset
+    array = dataset[variable]
+    array = squeeze(array)
+    array = rename_tco3(array, coordinates)
+    array = sort(array)
+    return array.to_dataset()
 
 
 @utils.return_on_failure("Error when loading '{0}'".format(vmro3_standard_name),
                          default=xr.Dataset())
 def standardize_vmro3(dataset, variable, coordinates):
     """Standardizes a vmro3 dataset"""
-    dataset = squeeze(dataset)
-    dataset = rename_vmro3(dataset, variable, coordinates)
-    dataset = sort(dataset)
-    return dataset
+    array = dataset[variable]
+    array = squeeze(array)
+    array = rename_vmro3(array, coordinates)
+    array = sort(array)
+    return array.to_dataset()
 
 
-def rename_tco3(dataset, variable, coordinates):
-    """Renames a tco3 dataset variable and coordinates"""
+def rename_tco3(array, coordinates):
+    """Renames a tco3 array variable and coordinates"""
     logger.debug("Rename of '{0}' var and coords".format(tco3_standard_name))
-    return dataset.rename({
-        **{variable: tco3_standard_name},
-        **{coordinates[x]: x for x in tco3_standard_coordinates}
-    })
+    array.name = tco3_standard_name
+    return array.rename({coordinates[x]: x for x in tco3_standard_coordinates})
 
 
-def rename_vmro3(dataset, variable, coordinates):
-    """Renames a vmro3 dataset variable and coordinates"""
+def rename_vmro3(array, coordinates):
+    """Renames a vmro3 array variable and coordinates"""
     logger.debug("Rename of '{0}' var and coords".format(vmro3_standard_name))
-    return dataset.rename({
-        **{variable: vmro3_standard_name},
-        **{coordinates[x]: x for x in vmro3_standard_coordinates}
-    })
+    array.name = vmro3_standard_name
+    return array.rename({coordinates[x]: x for x in vmro3_standard_coordinates})
 
 
-def squeeze(dataset):
-    """Squeezes the 1size dimensions on a dataset"""
+def squeeze(array):
+    """Squeezes the 1-size dimensions on an array"""
     logger.debug("Squeezing coordinates in dataset")
-    return dataset.squeeze(drop=True)
+    return array.squeeze(drop=True)
 
 
-def sort(dataset):
-    """Sorts a dataset by coordinates"""
+def sort(array):
+    """Sorts an array by coordinates"""
     logger.debug("Sorting coordinates in dataset")
-    return dataset.sortby(list(dataset.coords))
+    return array.sortby(list(array.coords))
 
 
 class TestsTCO3(unittest.TestCase):
