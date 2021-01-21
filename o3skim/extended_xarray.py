@@ -108,10 +108,12 @@ class Tests(unittest.TestCase):
         )
 
     def test_tco3_property(self):
-        xr.testing.assert_equal(self.ds.model.tco3, Tests.tco3_datarray())
+        expected = Tests.tco3_datarray().to_dataset(name="tco3_zm")
+        xr.testing.assert_equal(self.ds.model.tco3, expected)
 
     def test_vmro3_property(self):
-        xr.testing.assert_equal(self.ds.model.vmro3, Tests.vmro3_datarray())
+        expected = Tests.vmro3_datarray().to_dataset(name="vmro3_zm")
+        xr.testing.assert_equal(self.ds.model.vmro3, expected)
 
     def test_groupby_year(self):
         groups = self.ds.model.groupby_year()

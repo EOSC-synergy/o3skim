@@ -171,5 +171,3 @@ class TestsModel(unittest.TestCase):
     def test_dataset_has_model_accessor(self):
         model = TestsModel.model()
         self.assertHasAttr(model, 'model')
-        xr.testing.assert_equal(model["tco3_zm"], model.model.tco3)
-        xr.testing.assert_equal(model["vmro3_zm"], model.model.vmro3)
