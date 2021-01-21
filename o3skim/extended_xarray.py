@@ -29,9 +29,16 @@ class ModelAccessor:
         """Return the ozone volume mixing ratio of this dataset."""
         return self._model["vmro3_zm"]
 
-    def groupby(self, delta='year'):
-        """ """
-        pass #TODO
+    def groupby_year(self):
+        """Returns a grouped dataset by year"""
+        def delta_map(x): return x.year
+        years = self._model.indexes['time'].map(delta_map)
+        return self._model.groupby(xr.DataArray(years))
+
+    def groupby_decade(self):
+        def delta_map(x): return x.year // 10 * 10
+        years = self._model.indexes['time'].map(delta_map)
+        return self._model.groupby(xr.DataArray(years))
 
     def to_netcdf(self, delta=None):
         """ """
@@ -40,12 +47,12 @@ class ModelAccessor:
 
 class Tests(unittest.TestCase):
 
-    tco3 = np.random.rand(3, 3, 3)
-    vmro3 = np.random.rand(3, 3, 4, 3)
+    tco3 = np.random.rand(3, 3, 25)
+    vmro3 = np.random.rand(3, 3, 4, 25)
     longitude = [-180, 0, 180]
     latitude = [-90, 0, 90]
     pressure_level = [1, 10, 100, 1000]
-    time = pd.date_range("2000-01-01", periods=3)
+    time = pd.date_range("2000-01-01", periods=25, freq='A')
 
     @staticmethod
     def tco3_datarray():
@@ -59,7 +66,7 @@ class Tests(unittest.TestCase):
             ),
             attrs=dict(description="Test tco3 datarray")
         )
-    
+
     @staticmethod
     def vmro3_datarray():
         return xr.DataArray(
@@ -94,3 +101,17 @@ class Tests(unittest.TestCase):
 
     def test_vmro3_property(self):
         xr.testing.assert_equal(self.ds.model.vmro3, Tests.vmro3_datarray())
+
+    def test_groupby_year(self):
+        groups = self.ds.model.groupby_year()
+        self.assertEqual(25, len(groups))
+        for year, dataset in groups:
+            self.assertIsInstance(year, np.int64)
+            self.assertIsInstance(dataset, xr.Dataset)
+
+    def test_groupby_decade(self):
+        groups = self.ds.model.groupby_decade()
+        self.assertEqual(3, len(groups))
+        for decade, dataset in groups:
+            self.assertIsInstance(decade, np.int64)
+            self.assertIsInstance(dataset, xr.Dataset)
