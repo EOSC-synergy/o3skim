@@ -1,4 +1,12 @@
 SourceSplit:
+    ModelBadVar:
+        badvar_zm:
+            name: tco3 
+            paths: SourceSplit/tco3_????.nc
+            coordinates:
+                time: time
+                lat: lat
+                lon: lon
     ModelBadName:
         tco3_zm:
             name: NonExistingName 
