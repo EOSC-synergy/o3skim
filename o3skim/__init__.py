@@ -13,10 +13,12 @@ import logging
 import os
 import unittest
 
+import xarray as xr
+import pandas as pd
+import numpy as np
 from o3skim import extended_xarray
 from o3skim import standardization
 from o3skim import utils
-import xarray as xr
 
 logger = logging.getLogger('o3skim')
 
@@ -44,7 +46,7 @@ class Source:
             logging.info("Load model '%s'", name)
             model = __load_model(**specifications)
             if model:
-                self._models[name] = model 
+                self._models[name] = model
 
     def __getitem__(self, model_name):
         return self._models[model_name]
@@ -83,3 +85,37 @@ def __load_model(tco3_zm=None, vmro3_zm=None):
                 coordinates=vmro3_zm['coordinates'])
             dataset = dataset.merge(standardized)
     return dataset
+
+
+class TestsModel(unittest.TestCase):
+
+    tco3 = np.random.rand(3, 3, 25)
+    vmro3 = np.random.rand(3, 3, 4, 25)
+
+    @staticmethod
+    def model():
+        return xr.Dataset(
+            data_vars=dict(
+                tco3_zm=(["lon", "lat", "time"], TestsModel.tco3),
+                vmro3_zm=(["lon", "lat", "plev", "time"], TestsModel.vmro3)
+            ),
+            coords=dict(
+                lon=[-180, 0, 180],
+                lat=[-90, 0, 90],
+                plev=[1, 10, 100, 1000],
+                time=pd.date_range("2000-01-01", periods=25, freq='A')
+            ),
+            attrs=dict(description="Test dataset")
+        )
+
+    def assertHasAttr(self, obj, intendedAttr):
+        testBool = hasattr(obj, intendedAttr)
+        msg = 'obj lacking an attribute. obj: %s, intendedAttr: %s' % (
+            obj, intendedAttr)
+        self.assertTrue(testBool, msg=msg)
+
+    def test_dataset_has_model_accessor(self):
+        model = TestsModel.model()
+        self.assertHasAttr(model, 'model')
+        xr.testing.assert_equal(model["tco3_zm"], model.model.tco3)
+        xr.testing.assert_equal(model["vmro3_zm"], model.model.vmro3)
