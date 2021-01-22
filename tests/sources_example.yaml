@@ -5,33 +5,33 @@ SourceSplit:
             paths: SourceSplit/tco3_????.nc
             coordinates:
                 time: time
-                lat: lat
-                lon: lon
+                lat: latitude
+                lon: longitude
     ModelVMRO3:
         vmro3_zm:
             name: vmro3
             paths: SourceSplit/vmro3_????.nc
             coordinates:
                 time: time
-                plev: plev
-                lat: lat
-                lon: lon
+                plev: pressure_level
+                lat: latitude
+                lon: longitude
     ModelALL:
         tco3_zm:
             name: tco3
             paths: SourceSplit/tco3_????.nc
             coordinates:
                 time: time
-                lat: lat
-                lon: lon
+                lat: latitude
+                lon: longitude
         vmro3_zm:
             name: vmro3
             paths: SourceSplit/vmro3_????.nc
             coordinates:
                 time: time
-                plev: plev
-                lat: lat
-                lon: lon 
+                plev: pressure_level
+                lat: latitude
+                lon: longitude 
 SourceMerged:
     ModelTCO3:
         tco3_zm:
@@ -39,31 +39,31 @@ SourceMerged:
             paths: SourceMerged/merged_????.nc
             coordinates:
                 time: time
-                lat: lat
-                lon: lon
+                lat: latitude
+                lon: longitude
     ModelVMRO3:
         vmro3_zm:
             name: vmro3
             paths: SourceMerged/merged_????.nc
             coordinates:
                 time: time
-                plev: plev
-                lat: lat
-                lon: lon
+                plev: pressure_level
+                lat: latitude
+                lon: longitude
     ModelALL:
         tco3_zm:
             name: tco3
             paths: SourceMerged/merged_????.nc
             coordinates:
                 time: time
-                lat: lat
-                lon: lon
+                lat: latitude
+                lon: longitude
         vmro3_zm:
             name: vmro3
             paths: SourceMerged/merged_????.nc
             coordinates:
                 time: time
-                plev: plev
-                lat: lat
-                lon: lon
+                plev: pressure_level
+                lat: latitude
+                lon: longitude
 

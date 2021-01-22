@@ -9,13 +9,13 @@ def tco3(year_range):
     for year in year_range:
         xr.Dataset(
             data_vars=dict(
-                tco3=(["lon", "lat", "time"],
+                tco3=(["longitude", "latitude", "time"],
                       np.random.rand(21, 11, 12))
             ),
             coords=dict(
-                lon=coordinate.lon(num=21),
-                lat=coordinate.lat(num=11),
-                plev=coordinate.plev(num=4),
+                longitude=coordinate.lon(num=21),
+                latitude=coordinate.lat(num=11),
+                pressure_level=coordinate.plev(num=4),
                 time=coordinate.time(num=12, start=year)
             ),
             attrs=dict(description="Test tco3 dataset")
@@ -26,13 +26,13 @@ def vmro3(year_range):
     for year in year_range:
         xr.Dataset(
             data_vars=dict(
-                vmro3=(["lon", "lat", "plev", "time"],
+                vmro3=(["longitude", "latitude", "pressure_level", "time"],
                        np.random.rand(21, 11, 4, 12))
             ),
             coords=dict(
-                lon=coordinate.lon(num=21),
-                lat=coordinate.lat(num=11),
-                plev=coordinate.plev(num=4),
+                longitude=coordinate.lon(num=21),
+                latitude=coordinate.lat(num=11),
+                pressure_level=coordinate.plev(num=4),
                 time=coordinate.time(num=12, start=year)
             ),
             attrs=dict(description="Test vmro3 dataset")
@@ -43,15 +43,15 @@ def combined(year_range):
     for year in year_range:
         xr.Dataset(
             data_vars=dict(
-                tco3=(["lon", "lat", "time"],
+                tco3=(["longitude", "latitude", "time"],
                       np.random.rand(21, 11, 12)),
-                vmro3=(["lon", "lat", "plev", "time"],
+                vmro3=(["longitude", "latitude", "pressure_level", "time"],
                        np.random.rand(21, 11, 4, 12))
             ),
             coords=dict(
-                lon=coordinate.lon(num=21),
-                lat=coordinate.lat(num=11),
-                plev=coordinate.plev(num=4),
+                longitude=coordinate.lon(num=21),
+                latitude=coordinate.lat(num=11),
+                pressure_level=coordinate.plev(num=4),
                 time=coordinate.time(num=12, start=year)
             ),
             attrs=dict(description="Test ozone dataset")
