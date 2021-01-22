@@ -169,9 +169,13 @@ class TestSkimming_ByDecade:
         for y in year_line:
             if y % 10 == 0:
                 assert os.path.isfile("tco3_zm_{}-{}.nc".format(y, y + 10))
+            else:
+                assert not os.path.isfile("tco3_zm_{}-{}.nc".format(y, y + 10))
 
     @pytest.mark.parametrize('model_name', models_vmro, indirect=True)
     def test_skimmed_vmro3(self, skimmed_model):
         for y in year_line:
             if y % 10 == 0:
                 assert os.path.isfile("vmro3_zm_{}-{}.nc".format(y, y + 10))
+            else:
+                assert not os.path.isfile("vmro3_zm_{}-{}.nc".format(y, y + 10))
