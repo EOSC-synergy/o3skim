@@ -102,7 +102,7 @@ def _skim(model, delta=None):
     elif delta == 'decade':
         def tco3_path(y): return "tco3_zm_{}-{}.nc".format(y, y + 10)
         def vmro3_path(y): return "vmro3_zm_{}-{}.nc".format(y, y + 10)
-        groups = skimmed.model.groupby_year()
+        groups = skimmed.model.groupby_decade()
     else:
         def tco3_path(_): return "tco3_zm.nc"
         def vmro3_path(_): return "vmro3_zm.nc"
