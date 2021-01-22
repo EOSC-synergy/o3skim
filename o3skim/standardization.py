@@ -10,58 +10,41 @@ from o3skim import utils
 
 logger = logging.getLogger('o3skim.standardization')
 
-# tco3 standardization
-tco3_standard_name = 'tco3_zm'
-tco3_standard_coordinates = [
-    'time',
-    'lat',
-    'lon'
-]
 
-# vmro3 standardization
-vmro3_standard_name = 'vmro3_zm'
-vmro3_standard_coordinates = [
-    'time',
-    'plev',
-    'lat',
-    'lon'
-]
-
-
-@utils.return_on_failure("Error when loading '{0}'".format(tco3_standard_name),
+@utils.return_on_failure("Error when loading '{0}'".format('tco3_zm'),
                          default=xr.Dataset())
 def standardize_tco3(dataset, variable, coordinates):
     """Standardizes a tco3 dataset"""
     array = dataset[variable]
+    array.name = 'tco3_zm'
     array = squeeze(array)
-    array = rename_tco3(array, coordinates)
+    array = rename_coords_tco3(array, **coordinates)
     array = sort(array)
     return array.to_dataset()
 
 
-@utils.return_on_failure("Error when loading '{0}'".format(vmro3_standard_name),
+def rename_coords_vmro3(array, time, plev, lat, lon):
+    """Renames a vmro3 array variable and coordinates"""
+    logger.debug("Rename '{0}' coordinates".format('vmro3_zm'))
+    return array.rename({'time': time, 'plev': plev, 'lat': lat, 'lon': lon})
+
+
+@utils.return_on_failure("Error when loading '{0}'".format('vmro3_zm'),
                          default=xr.Dataset())
 def standardize_vmro3(dataset, variable, coordinates):
     """Standardizes a vmro3 dataset"""
     array = dataset[variable]
+    array.name = 'vmro3_zm'
     array = squeeze(array)
-    array = rename_vmro3(array, coordinates)
+    array = rename_coords_vmro3(array, **coordinates)
     array = sort(array)
     return array.to_dataset()
 
 
-def rename_tco3(array, coordinates):
+def rename_coords_tco3(array, time, lat, lon):
     """Renames a tco3 array variable and coordinates"""
-    logger.debug("Rename of '{0}' var and coords".format(tco3_standard_name))
-    array.name = tco3_standard_name
-    return array.rename({coordinates[x]: x for x in tco3_standard_coordinates})
-
-
-def rename_vmro3(array, coordinates):
-    """Renames a vmro3 array variable and coordinates"""
-    logger.debug("Rename of '{0}' var and coords".format(vmro3_standard_name))
-    array.name = vmro3_standard_name
-    return array.rename({coordinates[x]: x for x in vmro3_standard_coordinates})
+    logger.debug("Rename '{0}' coordinates".format('tco3_zm'))
+    return array.rename({'time': time, 'lat': lat, 'lon': lon})
 
 
 def squeeze(array):
