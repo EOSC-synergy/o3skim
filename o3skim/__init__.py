@@ -40,9 +40,9 @@ class Source:
     def __init__(self, name, collections):
         self.name = name
         self._models = {}
-        logging.info("Loading source '%s'", self.name)
+        logger.info("Loading source '%s'", self.name)
         for name, specifications in collections.items():
-            logging.info("Loading model '%s'", name)
+            logger.info("Loading model '%s'", name)
             model = _load_model(**specifications)
             if model:
                 self._models[name] = model
