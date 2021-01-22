@@ -25,7 +25,7 @@ def standardize_tco3(dataset, variable, coordinates):
 
 def rename_coords_vmro3(array, time, plev, lat, lon):
     """Renames a vmro3 array variable and coordinates"""
-    logger.debug("Rename '{0}' coordinates".format('vmro3_zm'))
+    logger.debug("Renaming '{0}' coordinates".format('vmro3_zm'))
     return array.rename({'time': time, 'plev': plev, 'lat': lat, 'lon': lon})
 
 
@@ -43,7 +43,7 @@ def standardize_vmro3(dataset, variable, coordinates):
 
 def rename_coords_tco3(array, time, lat, lon):
     """Renames a tco3 array variable and coordinates"""
-    logger.debug("Rename '{0}' coordinates".format('tco3_zm'))
+    logger.debug("Renaming '{0}' coordinates".format('tco3_zm'))
     return array.rename({'time': time, 'lat': lat, 'lon': lon})
 
 

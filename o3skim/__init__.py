@@ -40,9 +40,9 @@ class Source:
     def __init__(self, name, collections):
         self.name = name
         self._models = {}
-        logging.info("Load source '%s'", self.name)
+        logging.info("Loading source '%s'", self.name)
         for name, specifications in collections.items():
-            logging.info("Load model '%s'", name)
+            logging.info("Loading model '%s'", name)
             model = _load_model(**specifications)
             if model:
                 self._models[name] = model
@@ -63,7 +63,7 @@ class Source:
         for model in self._models:
             dirname = "{source}_{model}".format(source=self.name, model=model)
             os.makedirs(dirname, exist_ok=True)
-            logger.info("Skim data from '%s'", dirname)
+            logger.info("Skimming data from '%s'", dirname)
             with utils.cd(dirname):
                 _skim(self[model], delta=groupby)
 

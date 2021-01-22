@@ -28,11 +28,11 @@ def cd(newdir):
     prevdir = os.getcwd()
     os.chdir(os.path.expanduser(newdir))
     try:
-        logger.debug("Temp dir change to: '%s'", newdir)
+        logger.debug("Changing directory: '%s'", newdir)
         yield
     finally:
         os.chdir(prevdir)
-        logger.debug("Restore directory: '%s'", prevdir)
+        logger.debug("Restoring directory: '%s'", prevdir)
 
 
 def return_on_failure(message, default=None):
