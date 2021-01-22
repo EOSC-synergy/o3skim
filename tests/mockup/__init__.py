@@ -1,19 +1,67 @@
 """Mockup sub-package for tests"""
 
-import xarray as xr
 import numpy as np
-# import o3skim.utils as utils
+import xarray as xr
+from tests.mockup import coordinate
 
 
-class Dataset(xr.Dataset):
-    def __init__(self, var_coords, coords):
-        super().__init__(
-            data_vars={k: _coord_data(cx) for k, cx in var_coords.items()},
-            coords=dict(coords)
-        )
+def tco3(year_range):
+    for year in year_range:
+        xr.Dataset(
+            data_vars=dict(
+                tco3=(["lon", "lat", "time"],
+                      np.random.rand(21, 11, 12))
+            ),
+            coords=dict(
+                lon=coordinate.lon(num=21),
+                lat=coordinate.lat(num=11),
+                plev=coordinate.plev(num=4),
+                time=coordinate.time(num=12, start=year)
+            ),
+            attrs=dict(description="Test tco3 dataset")
+        ).to_netcdf("tco3_{}.nc".format(year))
 
 
-def _coord_data(coordinates):
-    coord_names, shape = zip(*[(k, len(x)) for k, x in coordinates])
-    return coord_names, np.ones(shape)
+def vmro3(year_range):
+    for year in year_range:
+        xr.Dataset(
+            data_vars=dict(
+                vmro3=(["lon", "lat", "plev", "time"],
+                       np.random.rand(21, 11, 4, 12))
+            ),
+            coords=dict(
+                lon=coordinate.lon(num=21),
+                lat=coordinate.lat(num=11),
+                plev=coordinate.plev(num=4),
+                time=coordinate.time(num=12, start=year)
+            ),
+            attrs=dict(description="Test vmro3 dataset")
+        ).to_netcdf("vmro3_{}.nc".format(year))
 
+
+def combined(year_range):
+    for year in year_range:
+        xr.Dataset(
+            data_vars=dict(
+                tco3=(["lon", "lat", "time"],
+                      np.random.rand(21, 11, 12)),
+                vmro3=(["lon", "lat", "plev", "time"],
+                       np.random.rand(21, 11, 4, 12))
+            ),
+            coords=dict(
+                lon=coordinate.lon(num=21),
+                lat=coordinate.lat(num=11),
+                plev=coordinate.plev(num=4),
+                time=coordinate.time(num=12, start=year)
+            ),
+            attrs=dict(description="Test ozone dataset")
+        ).to_netcdf("merged_{}.nc".format(year))
+
+
+def noise(name='noise'):
+    """Some noise that blocks '*' wild card"""
+    xr.Dataset(
+        data_vars=dict(noise=(["time"], np.random.rand(12))),
+        coords=dict(time=coordinate.time(num=12)),
+        attrs=dict(description="Test noise dataset")
+    ).to_netcdf(name + ".nc")

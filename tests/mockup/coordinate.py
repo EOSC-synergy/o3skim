@@ -1,31 +1,25 @@
 """Module with coordinate mockups"""
 
 import datetime
+import pandas as pd
+import numpy as np
 
 
-def __timeline(start, end=None, step=10):
-    if not end:
-        end = start
-    start = datetime.datetime(start, 1, 1)
-    end = datetime.datetime(end, 12, 31)
-    step = datetime.timedelta(days=step)
-    while start < end:
-        yield start
-        start += step
+def time(num=12, start=2000, end=None):
+    end = start + 1 if not end else end
+    start = pd.Timestamp("{}-01-01".format(start))
+    end = pd.Timestamp("{}-01-01".format(end))
+    t = np.linspace(start.value, end.value, num + 1)[0:-1]
+    return ('time', pd.to_datetime(t))
 
 
-def time(start=2000, end=None, step=30):
-    end = start if not end else None
-    return ('time', [t for t in __timeline(start, end, step)])
+def lat(num=11):
+    return ('lat', np.linspace(-90, 90, num))
 
 
-def lat(delta=10):
-    return ('lat', [x for x in range(-90, 90, delta)])
+def lon(num=21):
+    return ('lon', np.linspace(-180, 180, num))
 
 
-def lon(delta=20):
-    return ('lon', [x for x in range(-180, 180, delta)])
-
-
-def plev(delta=100):
-    return ('plev', [x for x in range(1, 1000, delta)])
+def plev(num=4):
+    return ('plev', np.logspace(1, 4, num))

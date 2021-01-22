@@ -5,7 +5,7 @@ import pytest
 
 import o3skim
 import xarray
-import tests.mockup_data as mockup_data
+import tests.mockup as mockup_data
 
 # Test configurations ----------------------------------------------
 configuration_file = "tests/sources_example.yaml"
@@ -36,7 +36,6 @@ def data_dir(tmpdir_factory):
                 mockup_data.noise(name='tco3_noise.nc')
                 mockup_data.vmro3(year_line)
                 mockup_data.noise(name='vmro3_noise.nc')
-
     with o3skim.utils.cd(data_dir):
         yield data_dir
 

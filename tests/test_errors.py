@@ -5,7 +5,7 @@ import pytest
 
 import o3skim
 import xarray
-import tests.mockup_data as mockup_data
+import tests.mockup as mockup_data
 
 
 # Test configurations ----------------------------------------------
@@ -29,11 +29,12 @@ def data_dir(tmpdir_factory):
         with o3skim.utils.cd(source_dir):
             if source == 'SourceMerged':
                 mockup_data.combined(year_line)
-
+                mockup_data.noise(name='merged_noise.nc')
             if source == 'SourceSplit':
                 mockup_data.tco3(year_line)
+                mockup_data.noise(name='tco3_noise.nc')
                 mockup_data.vmro3(year_line)
-
+                mockup_data.noise(name='vmro3_noise.nc')
     with o3skim.utils.cd(data_dir):
         yield data_dir
 
