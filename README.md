@@ -1,6 +1,5 @@
 <p align="center">
-  <a href="" rel="noopener">
- <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
+   <img src="https://o3as.data.kit.edu/img/header-bg.jpg" width="850" height="200">
 </p>
 
 <h3 align="center">o3skim</h3>
