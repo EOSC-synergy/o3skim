@@ -26,6 +26,7 @@
 - [About](#about)
 - [Build using docker](#build)
 - [Run using udocker](#deployment)
+- [Testing](#testing)
 - [Documentation](#doc)
 - [Authors](#authors)
 - [Acknowledgments](#acknowledgement)
@@ -109,16 +110,37 @@ $ udocker run --user=application o3skim --help
 ```
 
 
+# Testing <a name = "testing"></a>
+There are 2 types of tests in this package.
+On top, [tox](https://tox.readthedocs.io/en/latest/) automation is used to simplify the testing process.
+
+To run only white and black box tests use:
+```sh
+$ tox tests o3skim/*.py
+```
+
+## BlackBox tests - [Unittest framework](https://docs.python.org/3/library/unittest.html)
+Located inside package modules (./o3skim). This helps to test easily functions at low level. It helps the developer to ensure the function is creating has the expected behavior.
+
+To run only white tests use:
+```sh
+$ tox o3skim/*.py
+```
+
+## BlackBox tests - [Pytest framework](https://docs.pytest.org/en/stable/)
+Located inside tests package folder (./tests). Black box testing is used to test the system from a general overview of the application. Pytest framework is selected in order to provide a simple syntax to test all possible combinations form the user point of view.
+
+To run only black box tests use:
+```sh
+$ tox tests
+```
+
 # Documentation <a name = "doc"></a>
-- [TODO]()
+All o3as project module documents can be found at [o3as.readthedocs.io](https://o3as.readthedocs.io/en/latest/). 
 
 
 # Authors <a name = "authors"></a>
-- [@V.Kozlov](https://git.scc.kit.edu/eo9869) - TBD
-- [@T.Kerzenmacher](https://git.scc.kit.edu/px5501) - TBD
-- [@B.Esteban](https://git.scc.kit.edu/zr5094) - TBD
-
-
-# Acknowledgements <a name = "acknowledgement"></a>
-- 
+- [@V.Kozlov](https://git.scc.kit.edu/eo9869)
+- [@T.Kerzenmacher](https://git.scc.kit.edu/px5501)
+- [@B.Esteban](https://git.scc.kit.edu/zr5094)
 
