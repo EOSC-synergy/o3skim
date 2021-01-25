@@ -114,7 +114,7 @@ $ udocker run --user=application o3skim --help
 There are 2 types of tests in this package.
 On top, [tox](https://tox.readthedocs.io/en/latest/) automation is used to simplify the testing process.
 
-To run only white and black box tests use:
+To run white and black box tests use:
 ```sh
 $ tox tests o3skim/*.py
 ```
