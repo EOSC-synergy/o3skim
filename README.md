@@ -27,9 +27,8 @@
 - [Build using docker](#build)
 - [Run using udocker](#deployment)
 - [Testing](#testing)
-- [Documentation](#doc)
+- [Documentation](https://o3as.readthedocs.io/en/latest)
 - [Authors](#authors)
-- [Acknowledgments](#acknowledgement)
 - [TODO](https://git.scc.kit.edu/synergy.o3as/o3skim/-/issues)
 
 # About <a name = "about"></a>
@@ -128,7 +127,7 @@ $ tox o3skim/*.py
 ```
 
 ## BlackBox tests - [Pytest framework](https://docs.pytest.org/en/stable/)
-Located inside tests package folder (./tests). Black box testing is used to test the system from a general overview of the application. Pytest framework is selected in order to provide a simple syntax to test all possible combinations form the user point of view.
+Located inside tests package folder (./tests). Black box testing is used to test the system from a general overview of the application. Pytest framework is selected in order to provide a simple syntax to test all possible combinations from the user point of view.
 
 To run only black box tests use:
 ```sh
