@@ -71,7 +71,7 @@ def source_name(request):
 @pytest.fixture(scope='module')
 def source(config_dict, source_name, data_dir):
     with o3skim.cd(data_dir):
-        source = o3skim.Source(source_name, config_dict[source_name])
+        source = o3skim.Source(source_name, **config_dict[source_name])
     return source
 
 

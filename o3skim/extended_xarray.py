@@ -36,6 +36,14 @@ class ModelAccessor:
         else:
             return None
 
+    @property
+    def metadata(self):
+        """Return the ozone volume mixing ratio of this dataset."""
+        result = self._model.attrs
+        for var in self._model.var():
+            result = {**result, var: self._model[var].attrs}
+        return result
+
     def groupby_year(self):
         """Returns a grouped dataset by year"""
         logger.debug("Performing group by year on model")
@@ -114,6 +122,14 @@ class Tests(unittest.TestCase):
     def test_vmro3_property(self):
         expected = Tests.vmro3_datarray().to_dataset(name="vmro3_zm")
         xr.testing.assert_equal(self.ds.model.vmro3, expected)
+
+    def test_metadata_property(self):
+        metadata = self.ds.model.metadata
+        self.assertEqual(metadata["description"], "Test dataset")
+        self.assertEqual(metadata["tco3_zm"]
+                         ["description"], "Test tco3 datarray")
+        self.assertEqual(metadata["vmro3_zm"]
+                         ["description"], "Test vmro3 datarray")
 
     def test_groupby_year(self):
         groups = self.ds.model.groupby_year()

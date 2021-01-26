@@ -41,7 +41,7 @@ if __name__ == '__main__':
     # Create sources
     logging.info("Loading data from './data' ")
     with o3skim.cd("data"):
-        ds = {name: o3skim.Source(name, collection) for
+        ds = {name: o3skim.Source(name, **collection) for
               name, collection in config.items()}
 
     # Skim output
