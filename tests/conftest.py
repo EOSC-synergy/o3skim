@@ -6,6 +6,7 @@ import o3skim
 import pytest
 import tests.mockup as mockup_data
 import xarray
+import yaml
 
 # configurations ----------------------------------------------------
 year_line = range(2000, 2022)
@@ -103,6 +104,20 @@ def year(request):
 @pytest.fixture()
 def variable(request):
     return request.param
+
+
+@pytest.fixture()
+def metadata_file(skimmed, model_name):
+    _, source_name = skimmed
+    with o3skim.cd("{}_{}".format(source_name, model_name)):
+        yield "metadata.yaml"
+
+
+@pytest.fixture()
+def metadata_dict(metadata_file):
+    with open(metadata_file, "r") as ymlfile:
+        config = yaml.safe_load(ymlfile)
+    return config
 
 
 @pytest.fixture()

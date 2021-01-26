@@ -85,3 +85,24 @@ class TestSkimming_ByDecade:
         assert not 'plev' in skimmed_model.coords
         assert 'lat' in skimmed_model.coords
         assert not 'lon' in skimmed_model.coords
+
+
+@pytest.mark.parametrize('groupby', [None, 'year', 'decade'], indirect=True)
+class TestSkimming_Common:
+
+    @pytest.mark.parametrize('model_name', conftest.models_tco3, indirect=True)
+    def test_isTCO3metadata(self, metadata_file, variable):
+        assert os.path.isfile(metadata_file)
+
+    @pytest.mark.parametrize('model_name', conftest.models_tco3, indirect=True)
+    def test_metadata_commons(self, metadata_dict, variable):
+        assert metadata_dict["meta_0"] == "Source metadata string example"
+        assert metadata_dict["meta_1"] == "Model metadata string example"
+        assert metadata_dict["meta_2"] == 0
+
+    @pytest.mark.parametrize('model_name', conftest.models_tco3, indirect=True)
+    def test_metadata_tco3(self, metadata_dict, variable):
+        assert variable in metadata_dict
+        metadata_tco3 = metadata_dict[variable]
+        assert metadata_tco3["meta_tco3_1"] == "TCO3 metadata string example"
+        assert metadata_tco3["meta_tco3_2"] == 0
