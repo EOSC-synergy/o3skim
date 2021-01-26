@@ -1,6 +1,7 @@
 SourceSplit:
     metadata:
         meta_0: Source metadata string example
+        meta_1: Source metadata to be replaced by model
     ModelTCO3:
         metadata:
             meta_1: Model metadata string example
@@ -58,6 +59,7 @@ SourceSplit:
 SourceMerged:
     metadata:
         meta_0: Source metadata string example
+        meta_1: Source metadata to be replaced by model
     ModelTCO3:
         metadata:
             meta_1: Model metadata string example
