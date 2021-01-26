@@ -26,7 +26,7 @@ def data_dir(tmpdir_factory):
     for source in sources:
         source_dir = data_dir.join(source)
         os.mkdir(source_dir)
-        with o3skim.utils.cd(source_dir):
+        with o3skim.cd(source_dir):
             if source == 'SourceMerged':
                 mockup_data.combined(year_line)
                 mockup_data.noise(name='merged_noise.nc')
@@ -45,7 +45,7 @@ def config_file(request):
 
 @pytest.fixture(scope='session')
 def config_dict(config_file):
-    return o3skim.utils.load(config_file)
+    return o3skim.load(config_file)
 
 
 # package fixtures --------------------------------------------------
@@ -69,14 +69,14 @@ def source_name(request):
 
 @pytest.fixture(scope='module')
 def source(config_dict, source_name, data_dir):
-    with o3skim.utils.cd(data_dir):
+    with o3skim.cd(data_dir):
         source = o3skim.Source(source_name, config_dict[source_name])
     return source
 
 
 @pytest.fixture(scope='module')
 def skimmed(groupby, source, output_dir):
-    with o3skim.utils.cd(output_dir):
+    with o3skim.cd(output_dir):
         source.skim(groupby=groupby)
         yield groupby, source.name
 
@@ -108,7 +108,7 @@ def variable(request):
 @pytest.fixture()
 def skimed_file(skimmed, model_name, variable, year):
     groupby, source_name = skimmed
-    with o3skim.utils.cd("{}_{}".format(source_name, model_name)):
+    with o3skim.cd("{}_{}".format(source_name, model_name)):
         if not groupby:
             yield "{}.nc".format(variable)
         if groupby == 'year':

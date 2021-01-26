@@ -8,7 +8,6 @@ import logging
 import warnings
 
 import o3skim
-from o3skim import utils
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -37,15 +36,15 @@ if __name__ == '__main__':
 
     # Configuration load
     logging.info("Lookinf for config at: '%s'", args.sources_file)
-    config = utils.load(args.sources_file)
+    config = o3skim.load(args.sources_file)
 
     # Create sources
     logging.info("Loading data from './data' ")
-    with utils.cd("data"):
+    with o3skim.cd("data"):
         ds = {name: o3skim.Source(name, collection) for
               name, collection in config.items()}
 
     # Skim output
     logging.info("Skimming data to './output' ")
-    with utils.cd("output"):
+    with o3skim.cd("output"):
         [source.skim(groupby=args.split_by) for source in ds.values()]

@@ -13,14 +13,14 @@ import xarray
 class TestSource:
 
     def test_constructor(self, config_dict, source_name, data_dir):
-        with o3skim.utils.cd(data_dir):
+        with o3skim.cd(data_dir):
             source = o3skim.Source(source_name, config_dict[source_name])
             assert type(source.name) is str
             assert type(source.models) is list
             assert source.models != []
 
     def test_skimming(self, source, output_dir):
-        with o3skim.utils.cd(output_dir):
+        with o3skim.cd(output_dir):
             assert None == source.skim(groupby=None)
             assert None == source.skim(groupby='year')
             assert None == source.skim(groupby='decade')
@@ -36,7 +36,7 @@ class TestSource:
 class TestExceptions:
 
     def test_constructor(self, config_dict, source_name, data_dir):
-        with o3skim.utils.cd(data_dir):
+        with o3skim.cd(data_dir):
             source = o3skim.Source(source_name, config_dict[source_name])
             assert source.name == source_name
             assert source.models == []

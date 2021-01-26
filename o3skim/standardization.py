@@ -14,7 +14,20 @@ logger = logging.getLogger('o3skim.standardization')
 @utils.return_on_failure("Error when loading '{0}'".format('tco3_zm'),
                          default=xr.Dataset())
 def standardize_tco3(dataset, variable, coordinates):
-    """Standardizes a tco3 dataset"""
+    """Standardizes a tco3 dataset.
+    
+    :param dataset: Dataset to standardize.
+    :type dataset: xarray.Dataset
+
+    :param variable: Variable name for the tco3 on the original dataset.
+    :type variable: str
+
+    :param coordinates: Coordinates map for tco3 variable. 
+    :type coordinates: {'lon':str, 'lat':str, 'time':str}
+
+    :return: Standardized dataset.
+    :rtype: xarray.Dataset 
+    """
     array = dataset[variable]
     array.name = 'tco3_zm'
     array = squeeze(array)
@@ -32,7 +45,20 @@ def rename_coords_tco3(array, time, lat, lon):
 @utils.return_on_failure("Error when loading '{0}'".format('vmro3_zm'),
                          default=xr.Dataset())
 def standardize_vmro3(dataset, variable, coordinates):
-    """Standardizes a vmro3 dataset"""
+    """Standardizes a vmro3 dataset.
+
+    :param dataset: Dataset to standardize.
+    :type dataset: xarray.Dataset
+
+    :param variable: Variable name for the vmro3 on the original dataset.
+    :type variable: str
+
+    :param coordinates: Coordinates map for vmro3 variable. 
+    :type coordinates: {'lon':str, 'lat':str, 'plev':str, 'time':str}
+
+    :return: Standardized dataset.
+    :rtype: xarray.Dataset 
+    """
     array = dataset[variable]
     array.name = 'vmro3_zm'
     array = squeeze(array)

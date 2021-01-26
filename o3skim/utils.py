@@ -53,6 +53,7 @@ def return_on_failure(message, default=None):
                 # Log error with stack using root (not utils)
                 logging.error(message, exc_info=True)
                 return default
+        applicator.__doc__ = function.__doc__
         return applicator
     return decorate
 

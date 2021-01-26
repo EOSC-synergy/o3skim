@@ -1,8 +1,14 @@
 """
-Module in charge of source implementation.
+Module in charge of Source class implementation.
 
-Sources are responsible of loading the netCDF files from data and do
-the standardization during the process.
+Sources are responsible of loading netCDF collections from data and 
+do the standardization during the process. Each source is compose
+therefore from 0 to N models which can be accessed as subscriptable
+object by it's model name.
+
+It also implement internal methods which can be used to operate the
+model data. For example using the method "skim" generates a reduced
+version of the models data on the current folder.
 """
 
 import logging
@@ -21,15 +27,19 @@ logger = logging.getLogger('source')
 
 class Source:
     """Conceptual class for a data source. It is produced by the loading
-    and generation of internal instances from each data source model.
+    and standardization of multiple data models.
 
-    :param name: Name to provide to the source. The folder name with the
-        skimmed output data is preceded with this name before '_'.
+    The current supported model variables are "tco3_zm" and "vmro3_zm", 
+    which should contain the information on how to retrieve the data
+    from the netCDF collection.
+     
+    :param name: Name to provide to the source. 
     :type name: str
 
-    :param collections: Dictionary where each 'key' is a name and its
-        value another dictionary with the variables contained at this
-        model. See :class:`o3skim.Model` for further details.
+    :param collections: Dictionary where each 'key' is a model name 
+        and its value another dictionary with the variable loading 
+        statements for that model.
+        {name:str, paths: str, coordinates: dict} 
     :type collections: dict
     """
 
@@ -51,9 +61,14 @@ class Source:
         return list(self._models.keys())
 
     def skim(self, groupby=None):
-        """Request to skim all source data into the current folder
+        """Request to skim all source data into the current folder.
 
-        :param groupby: How to group output (None, year, decade).
+        The output is generated into multiple folder where
+        each model output is generated in a forder with the source
+        name defined at the source initialization followed by 
+        '_' and the model name: "<source_name>_<model_name>"
+
+        :param groupby: How to group output (None, 'year', 'decade').
         :type groupby: str, optional
         """
         for model in self._models:
