@@ -26,8 +26,8 @@ logger = logging.getLogger('source')
 
 
 class Source:
-    """Conceptual class for a data source. It is produced by the loading
-    and standardization of multiple data models.
+    r"""Conceptual class for a data source. It is produced by the 
+    loading and standardization of multiple data models.
 
     The current supported model variables are "tco3_zm" and "vmro3_zm", 
     which should contain the information on how to retrieve the data
@@ -39,11 +39,10 @@ class Source:
     :param metadata: Source metadata, defaults to {}.
     :type metadata: dict, optional
 
-    :param collections: Dictionary where each 'key' is a model name 
-        and its value another dictionary with the variable loading 
-        statements for that model.
-        {name:str, paths: str, coordinates: dict} 
-    :type collections: **dict
+    :param \**collections: kwarg where each 'key' is the model 
+        name and its 'value' another dictionary with the variable 
+        loading statements for that model.
+        {name:str, paths: str, coordinates: dict, metadata: dict} 
     """
 
     def __init__(self, name, metadata={}, **collections):
@@ -78,7 +77,9 @@ class Source:
         The output is generated into multiple folder where
         each model output is generated in a forder with the source
         name defined at the source initialization followed by 
-        '_' and the model name: "<source_name>_<model_name>"
+        '_' and the model name: "<source_name>_<model_name>".
+        If there was metadata added when creating the source, it is
+        delivered into a "metadata.yaml" file on the directory.
 
         :param groupby: How to group output (None, 'year', 'decade').
         :type groupby: str, optional
