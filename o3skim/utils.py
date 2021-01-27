@@ -88,3 +88,20 @@ def save(file_name, metadata):
     """
     with open(file_name, 'w+') as ymlfile:
         yaml.dump(metadata, ymlfile, allow_unicode=True)
+
+
+def mergedicts(d1, d2):
+    """Merges dict d2 in dict d2 recursively. If two keys exist in 
+    both dicts, the value in d1 is superseded by the value in d2.
+
+    :param d1: Dict to be recursively completed by d2.
+    :type d1: dict
+
+    :param d2: Dict to be recursively merged in d1.
+    :type d2: dict
+    """
+    for key in d2:
+        if key in d1 and isinstance(d1[key], dict) and isinstance(d2[key], dict):
+            mergedicts(d1[key], d2[key])
+        else:
+            d1[key] = d2[key]
