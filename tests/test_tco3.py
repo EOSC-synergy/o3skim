@@ -98,7 +98,9 @@ class TestSkimming_Common:
     def test_metadata_commons(self, metadata_dict, variable):
         assert metadata_dict["meta_0"] == "Source metadata string example"
         assert metadata_dict["meta_1"] == "Model metadata string example"
-        assert metadata_dict["meta_2"] == 0
+        submeta_dict = metadata_dict["meta_2"]
+        assert submeta_dict["meta_20"] == "Sub-metadata from Source"
+        assert submeta_dict["meta_21"] == "Sub-metadata from Model"
 
     @pytest.mark.parametrize('model_name', conftest.models_tco3, indirect=True)
     def test_metadata_tco3(self, metadata_dict, variable):
