@@ -115,7 +115,7 @@ On top, [tox](https://tox.readthedocs.io/en/latest/) automation is used to simpl
 
 To run white and black box tests use:
 ```sh
-$ tox tests o3skim/*.py
+$ tox
 ```
 
 ## BlackBox tests - [Unittest framework](https://docs.python.org/3/library/unittest.html)
@@ -123,7 +123,7 @@ Located inside package modules (./o3skim). This helps to test easily functions a
 
 To run only white tests use:
 ```sh
-$ tox o3skim/*.py
+$ tox o3skim
 ```
 
 ## BlackBox tests - [Pytest framework](https://docs.pytest.org/en/stable/)
