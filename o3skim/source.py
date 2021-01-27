@@ -89,7 +89,8 @@ class Source:
             os.makedirs(dirname, exist_ok=True)
             logger.info("Skimming data from '%s'", dirname)
             with utils.cd(dirname):
-                metadata = self.metadata.copy()
+                metadata = {}  # copy() does not recurse inside dict
+                utils.mergedicts(metadata, self.metadata)
                 utils.mergedicts(metadata, self[model].model.metadata)
                 _skim(self[model], delta=groupby, metadata=metadata)
 
