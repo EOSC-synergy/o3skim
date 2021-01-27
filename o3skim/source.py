@@ -89,9 +89,8 @@ class Source:
             os.makedirs(dirname, exist_ok=True)
             logger.info("Skimming data from '%s'", dirname)
             with utils.cd(dirname):
-                source_metadata = self.metadata
-                model_metadata = self[model].model.metadata
-                metadata = {**source_metadata, **model_metadata}
+                metadata = self.metadata.copy()
+                utils.mergedicts(metadata, self[model].model.metadata)
                 _skim(self[model], delta=groupby, metadata=metadata)
 
 
