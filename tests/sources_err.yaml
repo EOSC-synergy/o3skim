@@ -1,18 +1,52 @@
-ErrorModels:
-    correct_variable:
-        vmro3_zm: # Correct variable
-            name: vmro3
-            paths: Ecmwf/Erai/vmro3_????.nc
+SourceSplit:
+    ModelBadVar:
+        badvar_zm:
+            name: tco3 
+            paths: SourceSplit/tco3_????.nc
             coordinates:
                 time: time
-                plev: level
-                lat: latitude
-                lon: longitude
-    non_existing_variable:
-        tco3_zm: # Incorrect variable
-            name: non_existing_var
-            paths: Ecmwf/Erai/toz_????.nc
+                lat: lat
+                lon: lon
+    ModelBadName:
+        tco3_zm:
+            name: NonExistingName 
+            paths: SourceSplit/tco3_????.nc
             coordinates:
                 time: time
-                lat: latitude
-                lon: longitude 
+                lat: lat
+                lon: lon
+    ModelBadPath:
+        tco3_zm:
+            name: tco3
+            paths: SourceSplit/no_file_????.nc
+            coordinates:
+                time: time
+                lat: lat
+    ModelMissingCoords:
+        tco3_zm:
+            name: tco3
+            paths: SourceSplit/tco3_????.nc
+            coordinates:
+                time: time
+                lat: lat
+    ModelBadCoords:
+        tco3_zm:
+            name: tco3
+            paths: SourceSplit/tco3_????.nc
+            coordinates:
+                time: time
+                lat: lat
+                longitude: lon
+    ModelExtraCoords:
+        tco3_zm:
+            name: tco3
+            paths: SourceSplit/tco3_????.nc
+            coordinates:
+                time: time
+                plev: plev
+                lat: lat
+                lon: lon
+
+
+
+

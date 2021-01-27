@@ -28,11 +28,11 @@ def cd(newdir):
     prevdir = os.getcwd()
     os.chdir(os.path.expanduser(newdir))
     try:
-        logger.debug("Temp dir change to: '%s'", newdir)
+        logger.debug("Changing directory: '%s'", newdir)
         yield
     finally:
         os.chdir(prevdir)
-        logger.debug("Restore directory: '%s'", prevdir)
+        logger.debug("Restoring directory: '%s'", prevdir)
 
 
 def return_on_failure(message, default=None):
@@ -53,6 +53,7 @@ def return_on_failure(message, default=None):
                 # Log error with stack using root (not utils)
                 logging.error(message, exc_info=True)
                 return default
+        applicator.__doc__ = function.__doc__
         return applicator
     return decorate
 
@@ -75,57 +76,15 @@ def load(yaml_file):
         return config
 
 
-def create_empty_netCDF(fname):
-    """Creates a new empty netCDF file.
+def save(file_name, metadata):
+    """Saves the metadata dict on the current folder with yaml 
+    format. 
 
-    :param fname: Name and path where to create the file.
-    :type fname: str
+    :param file_name: Name for the output yaml file.
+    :type file_name: str
+
+    :param metadata: Dict with the data to save into.
+    :type metadata: dict
     """
-    root_grp = netCDF4.Dataset(fname, 'w', format='NETCDF4')
-    root_grp.description = 'Example simulation data'
-    root_grp.close()
-
-
-def to_netcdf(dirname, name, dataset, groupby=None):
-    """Creates or appends data to named netCDF files.
-
-    :param path: Location where to find or create the netCDF files.
-    :type path: str
-
-    :param name: Name/Prefix for file/s where to store the data.
-    :type name: str
-
-    :param dataset: Dataset to write to the netCDF file.
-    :type dataset: :class:`xarray.Dataset`
-
-    :param groupby: How to group files (None, year, decade).
-    :type groupby: str, optional
-    """
-    def split_by_year(dataset):
-        """Splits a dataset by year"""
-        years, dsx = zip(*dataset.groupby("time.year"))
-        fnames = [dirname + "/" + name + "_%s.nc" % y for y in years]
-        return fnames, dsx
-
-    def split_by_decade(dataset):
-        """Splits a dataset by decade"""
-        decades = dataset.indexes["time"].year//10*10
-        decades, dsx = zip(*dataset.groupby(xr.DataArray(decades)))
-        fnames = [dirname + "/" + name + "_%s-%s.nc" % (d, d+10) for d in decades]
-        return fnames, dsx
-
-    def no_split(dataset):
-        """Does not split a dataset"""
-        dsx = (dataset,)
-        fnames = [dirname + "/" + name + ".nc"]
-        return fnames, dsx
-
-    split_by = {
-        "year": split_by_year,
-        "decade": split_by_decade
-    }
-    fnames, dsx = split_by.get(groupby, no_split)(dataset)
-
-    logging.info("Save dataset into: %s", fnames)
-    [create_empty_netCDF(fn) for fn in fnames if not os.path.isfile(fn)]
-    xr.save_mfdataset(dsx, fnames, mode='a')
+    with open(file_name, 'w+') as ymlfile:
+        yaml.dump(metadata, ymlfile, allow_unicode=True)
