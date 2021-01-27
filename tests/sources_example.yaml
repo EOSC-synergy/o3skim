@@ -1,5 +1,11 @@
 SourceSplit:
+    metadata:
+        meta_0: Source metadata string example
+        meta_1: Source metadata to be replaced by model
     ModelTCO3:
+        metadata:
+            meta_1: Model metadata string example
+            meta_2: 0
         tco3_zm:
             name: tco3
             paths: SourceSplit/tco3_????.nc
@@ -7,7 +13,13 @@ SourceSplit:
                 time: time
                 lat: latitude
                 lon: longitude
+            metadata:
+                meta_tco3_1: TCO3 metadata string example
+                meta_tco3_2: 0
     ModelVMRO3:
+        metadata:
+            meta_1: Model metadata string example
+            meta_2: 0
         vmro3_zm:
             name: vmro3
             paths: SourceSplit/vmro3_????.nc
@@ -16,7 +28,13 @@ SourceSplit:
                 plev: pressure_level
                 lat: latitude
                 lon: longitude
+            metadata:
+                meta_vmro3_1: VMRO3 metadata string example
+                meta_vmro3_2: 0
     ModelALL:
+        metadata:
+            meta_1: Model metadata string example
+            meta_2: 0
         tco3_zm:
             name: tco3
             paths: SourceSplit/tco3_????.nc
@@ -24,6 +42,9 @@ SourceSplit:
                 time: time
                 lat: latitude
                 lon: longitude
+            metadata:
+                meta_tco3_1: TCO3 metadata string example
+                meta_tco3_2: 0
         vmro3_zm:
             name: vmro3
             paths: SourceSplit/vmro3_????.nc
@@ -31,9 +52,18 @@ SourceSplit:
                 time: time
                 plev: pressure_level
                 lat: latitude
-                lon: longitude 
+                lon: longitude
+            metadata:
+                meta_vmro3_1: VMRO3 metadata string example
+                meta_vmro3_2: 0
 SourceMerged:
+    metadata:
+        meta_0: Source metadata string example
+        meta_1: Source metadata to be replaced by model
     ModelTCO3:
+        metadata:
+            meta_1: Model metadata string example
+            meta_2: 0
         tco3_zm:
             name: tco3
             paths: SourceMerged/merged_????.nc
@@ -41,7 +71,13 @@ SourceMerged:
                 time: time
                 lat: latitude
                 lon: longitude
+            metadata:
+                meta_tco3_1: TCO3 metadata string example
+                meta_tco3_2: 0
     ModelVMRO3:
+        metadata:
+            meta_1: Model metadata string example
+            meta_2: 0
         vmro3_zm:
             name: vmro3
             paths: SourceMerged/merged_????.nc
@@ -50,7 +86,13 @@ SourceMerged:
                 plev: pressure_level
                 lat: latitude
                 lon: longitude
+            metadata:
+                meta_vmro3_1: VMRO3 metadata string example
+                meta_vmro3_2: 0
     ModelALL:
+        metadata:
+            meta_1: Model metadata string example
+            meta_2: 0
         tco3_zm:
             name: tco3
             paths: SourceMerged/merged_????.nc
@@ -58,6 +100,9 @@ SourceMerged:
                 time: time
                 lat: latitude
                 lon: longitude
+            metadata:
+                meta_tco3_1: TCO3 metadata string example
+                meta_tco3_2: 0
         vmro3_zm:
             name: vmro3
             paths: SourceMerged/merged_????.nc
@@ -66,4 +111,6 @@ SourceMerged:
                 plev: pressure_level
                 lat: latitude
                 lon: longitude
-
+            metadata:
+                meta_vmro3_1: VMRO3 metadata string example
+                meta_vmro3_2: 0

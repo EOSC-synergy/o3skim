@@ -74,3 +74,17 @@ def load(yaml_file):
         config = yaml.safe_load(ymlfile)
         logging.debug("Configuration data: %s", config)
         return config
+
+
+def save(file_name, metadata):
+    """Saves the metadata dict on the current folder with yaml 
+    format. 
+
+    :param file_name: Name for the output yaml file.
+    :type file_name: str
+
+    :param metadata: Dict with the data to save into.
+    :type metadata: dict
+    """
+    with open(file_name, 'w+') as ymlfile:
+        yaml.dump(metadata, ymlfile, allow_unicode=True)

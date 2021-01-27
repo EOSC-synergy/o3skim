@@ -26,27 +26,30 @@ logger = logging.getLogger('source')
 
 
 class Source:
-    """Conceptual class for a data source. It is produced by the loading
-    and standardization of multiple data models.
+    r"""Conceptual class for a data source. It is produced by the 
+    loading and standardization of multiple data models.
 
     The current supported model variables are "tco3_zm" and "vmro3_zm", 
     which should contain the information on how to retrieve the data
     from the netCDF collection.
-     
+
     :param name: Name to provide to the source. 
     :type name: str
 
-    :param collections: Dictionary where each 'key' is a model name 
-        and its value another dictionary with the variable loading 
-        statements for that model.
-        {name:str, paths: str, coordinates: dict} 
-    :type collections: dict
+    :param metadata: Source metadata, defaults to {}.
+    :type metadata: dict, optional
+
+    :param \**collections: kwarg where each 'key' is the model 
+        name and its 'value' another dictionary with the variable 
+        loading statements for that model.
+        {name:str, paths: str, coordinates: dict, metadata: dict} 
     """
 
-    def __init__(self, name, collections):
-        self.name = name
+    def __init__(self, name, metadata={}, **collections):
+        self._name = name
+        self._metadata = metadata
         self._models = {}
-        logger.info("Loading source '%s'", self.name)
+        logger.info("Loading source '%s'", name)
         for name, specifications in collections.items():
             logger.info("Loading model '%s'", name)
             model = _load_model(**specifications)
@@ -57,8 +60,16 @@ class Source:
         return self._models[model_name]
 
     @property
+    def name(self):
+        return self._name
+
+    @property
     def models(self):
         return list(self._models.keys())
+
+    @property
+    def metadata(self):
+        return self._metadata
 
     def skim(self, groupby=None):
         """Request to skim all source data into the current folder.
@@ -66,23 +77,45 @@ class Source:
         The output is generated into multiple folder where
         each model output is generated in a forder with the source
         name defined at the source initialization followed by 
-        '_' and the model name: "<source_name>_<model_name>"
+        '_' and the model name: "<source_name>_<model_name>".
+        If there was metadata added when creating the source, it is
+        delivered into a "metadata.yaml" file on the directory.
 
         :param groupby: How to group output (None, 'year', 'decade').
         :type groupby: str, optional
         """
         for model in self._models:
-            dirname = "{source}_{model}".format(source=self.name, model=model)
+            dirname = "{}_{}".format(self._name, model)
             os.makedirs(dirname, exist_ok=True)
             logger.info("Skimming data from '%s'", dirname)
             with utils.cd(dirname):
-                _skim(self[model], delta=groupby)
+                source_metadata = self.metadata
+                model_metadata = self[model].model.metadata
+                metadata = {**source_metadata, **model_metadata}
+                _skim(self[model], delta=groupby, metadata=metadata)
 
 
 @utils.return_on_failure("Error when loading model", default=None)
-def _load_model(tco3_zm=None, vmro3_zm=None):
-    """Loads a model merging standardized data from specified datasets."""
-    dataset = xr.Dataset()
+def _load_model(tco3_zm=None, vmro3_zm=None, metadata={}):
+    """Loads a model merging standardized data from specified datasets.
+
+    :param tco3_zm: tco3 variable description, defaults to None.
+    :type tco3_zm: {name:str, paths:str, 
+                    coordinates:{lat:str, lon:str, time:str}}, 
+                    optional
+
+    :param vmro3_zm: vmro3 variable description, defaults to None.
+    :type vmro3_zm: {name:str, paths:str, 
+                    coordinates:{lat:str, lon:str, plev:str time:str}}, 
+                    optional
+
+    :param metadata: Source metadata, defaults to {}.
+    :type metadata: dict, optional
+
+    :return: Dataset with specified variables.
+    :rtype: xarray.Dataset
+    """
+    dataset = xr.Dataset(attrs=metadata)
     if tco3_zm:
         logger.debug("Loading tco3_zm into model")
         with xr.open_mfdataset(tco3_zm['paths']) as load:
@@ -91,6 +124,7 @@ def _load_model(tco3_zm=None, vmro3_zm=None):
                 variable=tco3_zm['name'],
                 coordinates=tco3_zm['coordinates'])
             dataset = dataset.merge(standardized)
+            dataset.tco3_zm.attrs = tco3_zm.get('metadata', {})
     if vmro3_zm:
         logger.debug("Loading vmro3_zm into model")
         with xr.open_mfdataset(vmro3_zm['paths']) as load:
@@ -99,11 +133,25 @@ def _load_model(tco3_zm=None, vmro3_zm=None):
                 variable=vmro3_zm['name'],
                 coordinates=vmro3_zm['coordinates'])
             dataset = dataset.merge(standardized)
+            dataset.vmro3_zm.attrs = vmro3_zm.get('metadata', {})
     return dataset
 
 
-def _skim(model, delta=None):
-    """Skims model producing reduced dataset files"""
+def _skim(model, delta=None, metadata=None):
+    """Skims model producing reduced dataset files. It is possible to
+    indicate the time to split the output by 'delta'. If metadata is
+    introduced in the form of dict, a 'metadata.yaml' file is 
+    generated together with the skimmed output.
+
+    :param model: Dataset with ModelAccessor to skim.
+    :type model: xarray.Dataset
+
+    :param metadata: Model metadata, to save as yaml defaults to None.
+    :type metadata: dict, optional
+
+    :param delta: How to group output (None, 'year', 'decade').
+    :type delta:str, optional
+    """
     logger.debug("Skimming model with delta {}".format(delta))
     skimmed = model.model.skim()
     if delta == 'year':
@@ -131,6 +179,9 @@ def _skim(model, delta=None):
             datasets=[ds.model.vmro3 for ds in datasets],
             paths=[vmro3_path(year) for year in years]
         )
+    if metadata:
+        logger.debug("Creating metadata.yaml file")
+        utils.save(file_name="metadata.yaml", metadata=metadata)
 
 
 class TestsSource(unittest.TestCase):
