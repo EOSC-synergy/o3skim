@@ -29,7 +29,7 @@ To run White and Black-Box tests use:
 
 .. code-block:: bash
 
-    $ tox tests o3skim/*.py
+    $ tox
     ...
     py36: commands succeeded
     ...
@@ -49,14 +49,12 @@ naming conventions. Therefore all Black-Box tests should be
 located on the **tests** folder at the package root and start 
 with **test**. For example *test_sources.py*.
 
-More than 500 test combinations are generated using which otherwise 
-might not be feasible using other python test frameworks. 
-
-.. _pytest: https://docs.pytest.org/en/stable/
 .. _test_discovery: https://docs.pytest.org/en/reorganize-docs/new-docs/user/naming_conventions.html
 
-To run only Black-Box tests simply call tox followed by the 
-folder with the test location:
+More than 500 test combinations are generated using which otherwise 
+might not be feasible using other python test frameworks. To run 
+only Black-Box tests simply call tox followed by the folder with the
+test location:
 
 .. code-block:: bash
 
@@ -78,15 +76,12 @@ makes it not suitable for Black-Box testing without a very complex
 customization.
 
 To simplify code usage and testing, the white tests should be located
-on the same file than the function / class are supposed to test.
-
-To run only White tests simply call tox followed by the module files
-you would like to test. You can also use the wildcard '*' to selected
-and test all python modules:
+inside the package folder. To run only White tests simply call tox 
+followed by the package name:
 
 .. code-block:: bash
 
-    $ tox o3skim/*.py
+    $ tox o3skim
     ...
     py36: commands succeeded
     ...
