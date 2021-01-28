@@ -39,6 +39,12 @@ sqa_criteria:
           tox_file: /o3skim-testing/tox.ini
           testenv:
             - bandit
+  qc_doc:
+    repos:
+      o3skim:
+        container: o3skim-testing
+        commands:
+          - python setup.py build_sphinx
 
 #environment:
 #  LANG: C.UTF-8
