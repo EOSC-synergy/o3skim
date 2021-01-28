@@ -42,10 +42,11 @@ sqa_criteria:
   qc_doc:
     repos:
       o3skim:
-        container: o3skim-testing
-        commands:
-          - ls -la
-          # - python /o3skim-testing/setup.py build_sphinx
+        container: testing
+      tox:
+        tox_file: /o3skim-testing/tox.ini
+        testenv:
+          - docs
 
 #environment:
 #  LANG: C.UTF-8
