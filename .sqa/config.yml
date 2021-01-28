@@ -21,9 +21,8 @@ sqa_criteria:
         container: o3skim-testing
         tox:
           tox_file: /o3skim-testing/tox.ini
-          testenv: 
-            - cover
-            - cobertura
+          testenv:
+            - report
   qc_security:
     repos:
       o3skim:
