@@ -4,8 +4,7 @@ services:
   testing:
     image: "indigodatacloud/ci-images:python3.6"
     container_name: "testing"
-    working_dir: /o3skim
     volumes:
       - type: bind
-        source: ./
+        source: ./o3skim
         target: /o3skim
