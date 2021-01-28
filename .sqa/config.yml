@@ -44,7 +44,7 @@ sqa_criteria:
       o3skim:
         container: o3skim-testing
         commands:
-          - tree
+          - ls -la
           # - python /o3skim-testing/setup.py build_sphinx
 
 #environment:
