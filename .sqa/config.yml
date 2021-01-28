@@ -44,7 +44,7 @@ sqa_criteria:
       o3skim:
         container: o3skim-testing
         commands:
-          - python setup.py build_sphinx
+          - python /o3skim-testing/setup.py build_sphinx
 
 #environment:
 #  LANG: C.UTF-8
