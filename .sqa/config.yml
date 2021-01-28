@@ -2,9 +2,9 @@ config:
   project_repos:
     o3skim:
       repo: 'https://git.scc.kit.edu/synergy.o3as/o3skim.git'
-      branch: test 
-      # dockerhub: synergyimk/o3as
-      # dockertag: latest
+      branch: master 
+      dockerhub: synergyimk/o3skim
+      dockertag: latest
 
 sqa_criteria:
   qc_style:
