@@ -9,7 +9,7 @@ config:
 sqa_criteria:
   qc_style:
     repos:
-      o3as:
+      o3skim:
         container: o3skim-testing
         tox:
           tox_file: /o3skim-testing/tox.ini
@@ -17,7 +17,7 @@ sqa_criteria:
             - pep8
   qc_coverage:
     repos:
-      o3as:
+      o3skim:
         container: o3skim-testing
         tox:
           tox_file: /o3skim-testing/tox.ini
@@ -26,7 +26,7 @@ sqa_criteria:
             - cobertura
   qc_security:
     repos:
-      o3as:
+      o3skim:
         container: o3skim-testing
         tox:
           tox_file: /o3skim-testing/tox.ini

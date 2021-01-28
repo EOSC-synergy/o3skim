@@ -49,13 +49,45 @@ argument is configured at the :doc:`../getting_started/cli` call.
     # [CUSTOMIZABLE_KEY -- MANDATORY]
     CCMI-1:
 
+        # Source metadata; common to all models in this source
+        # [FIXED_KEY -- OPTIONAL]
+        metadata:
+
+            # A metadata information example related to the source
+            # [CUSTOMIZABLE_KEY -- OPTIONAL] 
+            meta_0: Source metadata string example
+
+            # A metadata information example related to the source
+            # [CUSTOMIZABLE_KEY -- OPTIONAL] 
+            meta_1: Source metadata example replaced later by model
+
         # This is the preceded -y1- string at the output folder: '[x1]_[y1]'
         # [CUSTOMIZABLE_KEY -- MANDATORY]
         IPSL:
 
+            # Model metadata; Unique key values for this model
+            # [FIXED_KEY -- OPTIONAL]
+            metadata:
+
+                # A metadata information example related to the source
+                # [CUSTOMIZABLE_KEY -- OPTIONAL]  
+                meta_1: Replaces the metadata from the source
+
+                # A metadata information example related to the source
+                # [CUSTOMIZABLE_KEY -- OPTIONAL]  
+                meta_2: Model metadata string example
+
             # Represents the information related to tco3 data
             # [FIXED_KEY -- OPTIONAL]
             tco3_zm:
+
+                # TCO3 metadata; metadata for variable tco3
+                # [FIXED_KEY -- OPTIONAL]
+                metadata:
+
+                    # A tco3 metadata attribute example
+                    # [CUSTOMIZABLE_KEY -- OPTIONAL]  
+                    meta_0: Structured as tco3_zm: -> meta_0:
 
                 # Variable name for tco3 array inside the dataset
                 # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
@@ -82,6 +114,14 @@ argument is configured at the :doc:`../getting_started/cli` call.
             # [FIXED_KEY -- OPTIONAL]
             vmro3_zm:
 
+                # VMRO3 metadata; metadata for variable vmro3
+                # [FIXED_KEY -- OPTIONAL]
+                metadata:
+
+                    # A vmro3 metadata attribute example
+                    # [CUSTOMIZABLE_KEY -- OPTIONAL]  
+                    meta_0: Structured as vmro3_zm: -> meta_0:
+
                 # Variable name for vmro3 array inside the dataset
                 # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY] 
                 name: vmro3
@@ -92,8 +132,8 @@ argument is configured at the :doc:`../getting_started/cli` call.
 
                 # Coordinates description for vmro3 data. 
                 # [FIXED_KEY -- MANDATORY]: 
-
                 coordinates:
+
                     # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
                     time: time
 
@@ -129,95 +169,155 @@ key *path* should be the same for both variables. The output expected at
 
 .. code-block:: yaml
 
-  # This is the preceded -x2- string at the output folder: '[x2]_[y-]'
-  # [CUSTOMIZABLE_KEY -- MANDATORY]
-  ECMWF:
+    # This is the preceded -x2- string at the output folder: '[x2]_[y-]'
+    # [CUSTOMIZABLE_KEY -- MANDATORY]
+    ECMWF:
 
-      # This is the preceded -y1- string at the output folder: '[x2]_[y1]'
-      # [CUSTOMIZABLE_KEY -- MANDATORY]
-      ERA-5:
+        # Source metadata; common to all models in this source
+        # [FIXED_KEY -- OPTIONAL]
+        metadata:
 
-          # Represents the information related to tco3 data
-          # [FIXED_KEY -- OPTIONAL]
-          tco3_zm:
+            # A metadata information example related to the source
+            # [CUSTOMIZABLE_KEY -- OPTIONAL] 
+            meta_0: Source metadata string example
 
-              # Variable name for tco3 array inside the dataset
-              # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-              name: tco3
+            # A metadata information example related to the source
+            # [CUSTOMIZABLE_KEY -- OPTIONAL] 
+            meta_1: Source metadata example replaced later by model
 
-              # Reg expression, how to load the netCDF files
-              # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-              paths: Ecmwf/Era5
+        # This is the preceded -y1- string at the output folder: '[x2]_[y1]'
+        # [CUSTOMIZABLE_KEY -- MANDATORY]
+        ERA-5:
 
-              # Coordinates description for tco3 data. 
-              # [FIXED_KEY -- MANDATORY]:
-              coordinates:
+            # Model metadata; Unique key values for this model
+            # [FIXED_KEY -- OPTIONAL]
+            metadata:
 
-                  # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                  lat: latitude
+                # A metadata information example related to the source
+                # [CUSTOMIZABLE_KEY -- OPTIONAL]  
+                meta_1: Replaces the metadata from the source
 
-                  # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                  lon: longitude 
+                # A metadata information example related to the source
+                # [CUSTOMIZABLE_KEY -- OPTIONAL]  
+                meta_2: Model metadata string example
 
-                  # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                  time: time
+            # Represents the information related to tco3 data
+            # [FIXED_KEY -- OPTIONAL]
+            tco3_zm:
 
-      # This is the preceded -y2- string at the output folder: '[x2]_[y2]'
-      # [CUSTOMIZABLE_KEY -- MANDATORY]
-      ERA-i:
+                # TCO3 metadata; metadata for variable tco3
+                # [FIXED_KEY -- OPTIONAL]
+                metadata:
 
-          # Represents the information related to tco3 data
-          # [FIXED_KEY -- OPTIONAL]
-          tco3_zm:
+                    # A tco3 metadata attribute example
+                    # [CUSTOMIZABLE_KEY -- OPTIONAL]  
+                    meta_0: Structured as tco3_zm: -> meta_0:
 
-              # Variable name for tco3 array inside the dataset
-              # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-              name: toz
+                # Variable name for tco3 array inside the dataset
+                # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                name: tco3
 
-              # Reg expression, how to load the netCDF files
-              # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-              paths: Ecmwf/Erai
+                # Reg expression, how to load the netCDF files
+                # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                paths: Ecmwf/Era5
 
-              # Coordinates description for tco3 data. 
-              # [FIXED_KEY -- MANDATORY]:
-              coordinates:
+                # Coordinates description for tco3 data. 
+                # [FIXED_KEY -- MANDATORY]:
+                coordinates:
 
-                  # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                  time: time
+                    # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                    lat: latitude
 
-                  # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                  lat: latitude
+                    # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                    lon: longitude 
 
-                  # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                  lon: longitude 
+                    # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                    time: time
 
-          # Represents the information related to vmro3 data
-          # [FIXED_KEY -- OPTIONAL]
-          vmro3_zm:
+        # This is the preceded -y2- string at the output folder: '[x2]_[y2]'
+        # [CUSTOMIZABLE_KEY -- MANDATORY]
+        ERA-i:
 
-              # Variable name for vmro3 array inside the dataset
-              # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]         
-              name: vmro3
+            # Model metadata; Unique key values for this model
+            # [FIXED_KEY -- OPTIONAL]
+            metadata:
 
-              # Reg expression, how to load the netCDF files
-              # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-              paths: Ecmwf/Erai
+                # A metadata information example related to the source
+                # [CUSTOMIZABLE_KEY -- OPTIONAL]  
+                meta_1: Replaces the metadata from the source
 
-              # Coordinates description for vmro3 data. 
-              # [FIXED_KEY -- MANDATORY]: 
+                # A metadata information example related to the source
+                # [CUSTOMIZABLE_KEY -- OPTIONAL]  
+                meta_2: Model metadata string example
 
-              coordinates:
-                  # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                  time: time
+            # Represents the information related to tco3 data
+            # [FIXED_KEY -- OPTIONAL]
+            tco3_zm:
 
-                  # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                  plev: level
+                # TCO3 metadata; metadata for variable tco3
+                # [FIXED_KEY -- OPTIONAL]
+                metadata:
 
-                  # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                  lat: latitude
+                    # A tco3 metadata attribute example
+                    # [CUSTOMIZABLE_KEY -- OPTIONAL]  
+                    meta_0: Structured as tco3_zm: -> meta_0:
 
-                  # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
-                  lon: longitude
+                # Variable name for tco3 array inside the dataset
+                # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                name: toz
+
+                # Reg expression, how to load the netCDF files
+                # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                paths: Ecmwf/Erai
+
+                # Coordinates description for tco3 data. 
+                # [FIXED_KEY -- MANDATORY]:
+                coordinates:
+
+                    # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                    time: time
+
+                    # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                    lat: latitude
+
+                    # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                    lon: longitude 
+
+            # Represents the information related to vmro3 data
+            # [FIXED_KEY -- OPTIONAL]
+            vmro3_zm:
+
+                # VMRO3 metadata; metadata for variable vmro3
+                # [FIXED_KEY -- OPTIONAL]
+                metadata:
+
+                    # A vmro3 metadata attribute example
+                    # [CUSTOMIZABLE_KEY -- OPTIONAL]  
+                    meta_0: Structured as vmro3_zm: -> meta_0:
+
+                # Variable name for vmro3 array inside the dataset
+                # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]         
+                name: vmro3
+
+                # Reg expression, how to load the netCDF files
+                # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                paths: Ecmwf/Erai
+
+                # Coordinates description for vmro3 data. 
+                # [FIXED_KEY -- MANDATORY]: 
+
+                coordinates:
+                    # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                    time: time
+
+                    # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                    plev: level
+
+                    # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                    lat: latitude
+
+                    # [FIXED_KEY -- MANDATORY]: [CORRECT_VALUE -- MANDATORY]
+                    lon: longitude
 
 One or two files?
 -----------------
