@@ -42,7 +42,7 @@ sqa_criteria:
   qc_doc:
     repos:
       o3skim:
-        container: testing
+        container: o3skim-testing
       tox:
         tox_file: /o3skim-testing/tox.ini
         testenv:
