@@ -1,8 +1,8 @@
 config:
   project_repos:
     o3skim:
-      repo: 'https://git.scc.kit.edu/synergy.o3as/o3skim.git'
-      branch: master 
+      repo: "https://git.scc.kit.edu/synergy.o3as/o3skim.git"
+      branch: master
       dockerhub: synergyimk/o3skim
       dockertag: latest
 
@@ -21,9 +21,8 @@ sqa_criteria:
         container: o3skim-testing
         tox:
           tox_file: /o3skim-testing/tox.ini
-          testenv: 
-            - cover
-            - cobertura
+          testenv:
+            - report
   qc_security:
     repos:
       o3skim:
