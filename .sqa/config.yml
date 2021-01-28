@@ -7,38 +7,38 @@ config:
       # dockertag: latest
 
 sqa_criteria:
-  qc_style:
-    repos:
-      o3skim:
-        container: o3skim-testing
-        tox:
-          tox_file: /o3skim-testing/tox.ini
-          testenv:
-            - stylecheck
-  qc_coverage:
-    repos:
-      o3skim:
-        container: o3skim-testing
-        tox:
-          tox_file: /o3skim-testing/tox.ini
-          testenv:
-            - unittesting
-  qc_functional:
-    repos:
-      o3skim:
-        container: o3skim-testing
-        tox:
-          tox_file: /o3skim-testing/tox.ini
-          testenv:
-              - functional
-  qc_security:
-    repos:
-      o3skim:
-        container: o3skim-testing
-        tox:
-          tox_file: /o3skim-testing/tox.ini
-          testenv:
-            - bandit
+  # qc_style:
+  #   repos:
+  #     o3skim:
+  #       container: o3skim-testing
+  #       tox:
+  #         tox_file: /o3skim-testing/tox.ini
+  #         testenv:
+  #           - stylecheck
+  # qc_coverage:
+  #   repos:
+  #     o3skim:
+  #       container: o3skim-testing
+  #       tox:
+  #         tox_file: /o3skim-testing/tox.ini
+  #         testenv:
+  #           - unittesting
+  # qc_functional:
+  #   repos:
+  #     o3skim:
+  #       container: o3skim-testing
+  #       tox:
+  #         tox_file: /o3skim-testing/tox.ini
+  #         testenv:
+  #             - functional
+  # qc_security:
+  #   repos:
+  #     o3skim:
+  #       container: o3skim-testing
+  #       tox:
+  #         tox_file: /o3skim-testing/tox.ini
+  #         testenv:
+  #           - bandit
   qc_doc:
     repos:
       o3skim:
