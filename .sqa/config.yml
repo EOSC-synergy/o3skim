@@ -43,10 +43,10 @@ sqa_criteria:
     repos:
       o3skim:
         container: o3skim-testing
-      tox:
-        tox_file: /o3skim-testing/tox.ini
-        testenv:
-          - docs
+        tox:
+          tox_file: /o3skim-testing/tox.ini
+          testenv:
+            - docs
 
 #environment:
 #  LANG: C.UTF-8
