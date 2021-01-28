@@ -12,6 +12,7 @@ sqa_criteria:
       o3skim:
         container: o3skim-testing
         tox:
+          tox_file: /o3skim-testing/tox.ini
           testenv:
             - stylecheck
   qc_coverage:
@@ -19,13 +20,15 @@ sqa_criteria:
       o3skim:
         container: o3skim-testing
         tox:
+          tox_file: /o3skim-testing/tox.ini
           testenv:
-              - unittesting
+            - unittesting
   qc_security:
     repos:
       o3skim:
         container: o3skim-testing
         tox:
+          tox_file: /o3skim-testing/tox.ini
           testenv:
             - bandit
 
