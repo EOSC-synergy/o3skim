@@ -12,6 +12,7 @@ sqa_criteria:
       o3skim:
         container: testing
         tox:
+          tox_file: /o3skim/tox.ini
           testenv:
             - stylecheck
   qc_coverage:
