@@ -20,6 +20,7 @@ sqa_criteria:
       o3skim:
         container: testing
         tox:
+          tox_file: /o3skim/tox.ini
           testenv:
             - unittesting
   qc_functional:
@@ -27,6 +28,7 @@ sqa_criteria:
       o3skim:
         container: testing
         tox:
+          tox_file: /o3skim/tox.ini
           testenv:
               - functional
   qc_security:
@@ -34,6 +36,7 @@ sqa_criteria:
       o3skim:
         container: testing
         tox:
+          tox_file: /o3skim/tox.ini
           testenv:
             - bandit
   qc_doc:
@@ -41,6 +44,7 @@ sqa_criteria:
       o3skim:
         container: testing
         tox:
+          tox_file: /o3skim/tox.ini
           testenv:
             - docs
 
