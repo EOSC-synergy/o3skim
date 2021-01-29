@@ -117,7 +117,7 @@ def _load_model(tco3_zm=None, vmro3_zm=None, metadata={}):
     """
     dataset = xr.Dataset()
     dataset.model.set_metadata(metadata)
-    def conflict(d1, d2): raise Exception(
+    def raise_conflict(d1, d2): raise Exception(
         "Conflict merging {}, {}".format(d1, d2))
     if tco3_zm:
         logger.debug("Loading tco3_zm into model")
@@ -127,7 +127,7 @@ def _load_model(tco3_zm=None, vmro3_zm=None, metadata={}):
                 coordinates=tco3_zm['coordinates'])
             metadata = {'tco3_zm': tco3_zm.get('metadata', {})}
             dataset.model.add_metadata(metadata)
-            utils.mergedicts(dataset.attrs, load.attrs, if_conflict=conflict)
+            utils.mergedicts(dataset.attrs, load.attrs, raise_conflict)
     if vmro3_zm:
         logger.debug("Loading vmro3_zm into model")
         with xr.open_mfdataset(vmro3_zm['paths']) as load:
@@ -136,7 +136,7 @@ def _load_model(tco3_zm=None, vmro3_zm=None, metadata={}):
                 coordinates=vmro3_zm['coordinates'])
             metadata = {'vmro3_zm': vmro3_zm.get('metadata', {})}
             dataset.model.add_metadata(metadata)
-            utils.mergedicts(dataset.attrs, load.attrs, if_conflict=conflict)
+            utils.mergedicts(dataset.attrs, load.attrs, raise_conflict)
     return dataset
 
 
