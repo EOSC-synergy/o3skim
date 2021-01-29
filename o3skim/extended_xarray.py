@@ -9,7 +9,8 @@ import unittest
 import xarray as xr
 import pandas as pd
 import numpy as np
-from o3skim import standardization
+from xarray.core.dataset import Dataset
+from o3skim import standardization, utils
 
 logger = logging.getLogger('extended_xr')
 mean_coord = 'lon'
@@ -19,12 +20,15 @@ mean_coord = 'lon'
 class ModelAccessor:
     def __init__(self, xarray_obj):
         self._model = xarray_obj
+        self._metadata = {}
 
     @property
     def tco3(self):
         """Return the total ozone column of this dataset."""
         if "tco3_zm" in list(self._model.var()):
-            return self._model["tco3_zm"].to_dataset()
+            dataset = self._model["tco3_zm"].to_dataset()
+            dataset.attrs = self._model.attrs
+            return dataset
         else:
             return None
 
@@ -32,17 +36,24 @@ class ModelAccessor:
     def vmro3(self):
         """Return the ozone volume mixing ratio of this dataset."""
         if "vmro3_zm" in list(self._model.var()):
-            return self._model["vmro3_zm"].to_dataset()
+            dataset = self._model["vmro3_zm"].to_dataset()
+            dataset.attrs = self._model.attrs
+            return dataset
         else:
             return None
 
     @property
     def metadata(self):
-        """Return the ozone volume mixing ratio of this dataset."""
-        result = self._model.attrs
-        for var in self._model.var():
-            result = {**result, var: self._model[var].attrs}
-        return result
+        """Returns the metadata property"""
+        return self._metadata
+
+    def add_metadata(self, metadata):
+        """Merges the input metadata with the model metadata"""
+        utils.mergedicts(self._metadata, metadata)
+
+    def set_metadata(self, metadata):
+        """Sets the metadata to the input variable."""
+        self._metadata = metadata
 
     def groupby_year(self):
         """Returns a grouped dataset by year"""
@@ -61,5 +72,8 @@ class ModelAccessor:
     def skim(self):
         """Skims model producing reduced dataset"""
         logger.debug("Skimming model")
-        return self._model.mean(mean_coord)
-
+        skimmed = self._model.mean(mean_coord)
+        skimmed.attrs = self._model.attrs
+        for var in self._model:
+            skimmed[var].attrs = self._model[var].attrs
+        return skimmed

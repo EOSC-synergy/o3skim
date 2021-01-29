@@ -56,16 +56,32 @@ class Tests(unittest.TestCase):
     def test_tco3_property(self):
         expected = tco3_datarray.to_dataset(name="tco3_zm")
         xr.testing.assert_equal(dataset.model.tco3, expected)
+        self.assertEqual(dataset.model.tco3.attrs, dataset.attrs)
 
     def test_vmro3_property(self):
         expected = vmro3_datarray.to_dataset(name="vmro3_zm")
         xr.testing.assert_equal(dataset.model.vmro3, expected)
+        self.assertEqual(dataset.model.vmro3.attrs, dataset.attrs)
 
     def test_metadata_property(self):
-        meta = dataset.model.metadata
-        self.assertEqual(meta["description"], "Test dataset")
-        self.assertEqual(meta["tco3_zm"]["description"], "Test tco3 xarray")
-        self.assertEqual(meta["vmro3_zm"]["description"], "Test vmro3 xarray")
+        model = dataset.copy().model
+        self.assertEqual(model.metadata, {})
+
+    def test_add_metadata(self):
+        model = dataset.copy().model
+        self.assertEqual(model.metadata, {})
+        model.add_metadata(dict(d1=1))
+        self.assertEqual(model.metadata, dict(d1=1))
+        model.add_metadata(dict(d2=2))
+        self.assertEqual(model.metadata, dict(d1=1, d2=2))
+
+    def test_set_metadata(self):
+        model = dataset.copy().model
+        self.assertEqual(model.metadata, {})
+        model.set_metadata(dict(d1=1))
+        self.assertEqual(model.metadata, dict(d1=1))
+        model.set_metadata(dict(d2=2))
+        self.assertEqual(model.metadata, dict(d2=2))
 
     def test_groupby_year(self):
         groups = dataset.model.groupby_year()
@@ -101,3 +117,9 @@ class Tests(unittest.TestCase):
         self.assertIn('lat', result.model.vmro3.coords)
         self.assertIn('plev', result.model.vmro3.coords)
         self.assertNotIn('lon', result.model.vmro3.coords)
+
+    def test_skimming_attrs(self):
+        skimmed = dataset.model.skim()
+        self.assertEqual(skimmed.attrs, dataset.attrs)
+        for var in dataset:
+            self.assertEqual(skimmed[var].attrs, dataset[var].attrs)
