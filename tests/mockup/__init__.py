@@ -10,7 +10,8 @@ def tco3(year_range):
         xr.Dataset(
             data_vars=dict(
                 tco3=(["longitude", "latitude", "time"],
-                      np.random.rand(21, 11, 12))
+                      np.random.rand(21, 11, 12),
+                      dict(description="Test tco3 xarray"))
             ),
             coords=dict(
                 longitude=coordinate.lon(num=21),
@@ -18,7 +19,7 @@ def tco3(year_range):
                 pressure_level=coordinate.plev(num=4),
                 time=coordinate.time(num=12, start=year)
             ),
-            attrs=dict(description="Test tco3 dataset")
+            attrs=dict(description="Test ozone dataset")
         ).to_netcdf("tco3_{}.nc".format(year))
 
 
@@ -27,7 +28,8 @@ def vmro3(year_range):
         xr.Dataset(
             data_vars=dict(
                 vmro3=(["longitude", "latitude", "pressure_level", "time"],
-                       np.random.rand(21, 11, 4, 12))
+                       np.random.rand(21, 11, 4, 12),
+                       dict(description="Test vmro3 xarray"))
             ),
             coords=dict(
                 longitude=coordinate.lon(num=21),
@@ -35,7 +37,7 @@ def vmro3(year_range):
                 pressure_level=coordinate.plev(num=4),
                 time=coordinate.time(num=12, start=year)
             ),
-            attrs=dict(description="Test vmro3 dataset")
+            attrs=dict(description="Test ozone dataset")
         ).to_netcdf("vmro3_{}.nc".format(year))
 
 
@@ -44,9 +46,11 @@ def combined(year_range):
         xr.Dataset(
             data_vars=dict(
                 tco3=(["longitude", "latitude", "time"],
-                      np.random.rand(21, 11, 12)),
+                      np.random.rand(21, 11, 12),
+                      dict(description="Test tco3 xarray")),
                 vmro3=(["longitude", "latitude", "pressure_level", "time"],
-                       np.random.rand(21, 11, 4, 12))
+                       np.random.rand(21, 11, 4, 12),
+                       dict(description="Test vmro3 xarray"))
             ),
             coords=dict(
                 longitude=coordinate.lon(num=21),
