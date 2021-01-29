@@ -48,3 +48,6 @@ if __name__ == '__main__':
     logging.info("Skimming data to './output' ")
     with o3skim.cd("output"):
         [source.skim(groupby=args.split_by) for source in ds.values()]
+
+    # End of program
+    logging.info("End of program")

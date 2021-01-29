@@ -17,16 +17,17 @@ logger = logging.getLogger('o3skim.utils')
 
 
 @contextmanager
-def cd(newdir):
+def cd(dir):
     """Changes the directory inside a 'with' context. When the code
     reaches the end of the 'with' block or the code fails, the 
     previous folder is restored.
 
-    :param newdir: Path folder where to change the working directory.
-    :type newdir: str
+    :param dir: Path folder where to change the working directory.
+    :type dir: str
     """
     prevdir = os.getcwd()
-    os.chdir(os.path.expanduser(newdir))
+    os.chdir(os.path.expanduser(dir))
+    newdir = os.getcwd()
     try:
         logger.debug("Changing directory: '%s'", newdir)
         yield
