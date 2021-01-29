@@ -9,7 +9,6 @@ import unittest
 import xarray as xr
 import pandas as pd
 import numpy as np
-from xarray.core.dataset import Dataset
 from o3skim import standardization, utils
 
 logger = logging.getLogger('extended_xr')
