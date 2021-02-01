@@ -115,25 +115,28 @@ def _load_model(tco3_zm=None, vmro3_zm=None, metadata={}):
     :return: Dataset with specified variables.
     :rtype: xarray.Dataset
     """
-    dataset = xr.Dataset(attrs=metadata)
+    dataset = xr.Dataset()
+    dataset.model.set_metadata(metadata)
+    def raise_conflict(d1, d2): raise Exception(
+        "Conflict merging {}, {}".format(d1, d2))
     if tco3_zm:
         logger.debug("Loading tco3_zm into model")
         with xr.open_mfdataset(tco3_zm['paths']) as load:
-            standardized = standardization.standardize_tco3(
-                dataset=load,
-                variable=tco3_zm['name'],
+            dataset['tco3_zm'] = standardization.standardize_tco3(
+                array=load[tco3_zm['name']],
                 coordinates=tco3_zm['coordinates'])
-            dataset = dataset.merge(standardized)
-            dataset.tco3_zm.attrs = tco3_zm.get('metadata', {})
+            metadata = {'tco3_zm': tco3_zm.get('metadata', {})}
+            dataset.model.add_metadata(metadata)
+            utils.mergedicts(dataset.attrs, load.attrs, raise_conflict)
     if vmro3_zm:
         logger.debug("Loading vmro3_zm into model")
         with xr.open_mfdataset(vmro3_zm['paths']) as load:
-            standardized = standardization.standardize_vmro3(
-                dataset=load,
-                variable=vmro3_zm['name'],
+            dataset['vmro3_zm'] = standardization.standardize_vmro3(
+                array=load[vmro3_zm['name']],
                 coordinates=vmro3_zm['coordinates'])
-            dataset = dataset.merge(standardized)
-            dataset.vmro3_zm.attrs = vmro3_zm.get('metadata', {})
+            metadata = {'vmro3_zm': vmro3_zm.get('metadata', {})}
+            dataset.model.add_metadata(metadata)
+            utils.mergedicts(dataset.attrs, load.attrs, raise_conflict)
     return dataset
 
 

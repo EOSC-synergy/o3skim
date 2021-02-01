@@ -91,7 +91,7 @@ def save(file_name, metadata):
         yaml.dump(metadata, ymlfile, allow_unicode=True)
 
 
-def mergedicts(d1, d2):
+def mergedicts(d1, d2, if_conflict=lambda _, d: d):
     """Merges dict d2 in dict d2 recursively. If two keys exist in 
     both dicts, the value in d1 is superseded by the value in d2.
 
@@ -102,7 +102,12 @@ def mergedicts(d1, d2):
     :type d2: dict
     """
     for key in d2:
-        if key in d1 and isinstance(d1[key], dict) and isinstance(d2[key], dict):
-            mergedicts(d1[key], d2[key])
+        if key in d1:
+            if isinstance(d1[key], dict) and isinstance(d2[key], dict):
+                mergedicts(d1[key], d2[key], if_conflict)
+            elif d1[key] == d2[key]:
+                pass  # same leaf value
+            else:
+                d1[key] = if_conflict(d1[key], d2[key])
         else:
             d1[key] = d2[key]
