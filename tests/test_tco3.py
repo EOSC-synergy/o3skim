@@ -38,12 +38,20 @@ class TestSkimming_NoGroup:
 
     @pytest.mark.parametrize('model_name', conftest.models_tco3, indirect=True)
     @pytest.mark.parametrize('year', [None], indirect=True)
-    def test_skimmed_tco3(self, skimmed_model):
+    def test_skimmed_tco3_coords(self, skimmed_model):
         assert 'tco3_zm' in skimmed_model.var()
         assert 'time' in skimmed_model.coords
         assert not 'plev' in skimmed_model.coords
         assert 'lat' in skimmed_model.coords
         assert not 'lon' in skimmed_model.coords
+
+    @pytest.mark.parametrize('model_name', conftest.models_tco3, indirect=True)
+    @pytest.mark.parametrize('year', [None], indirect=True)
+    def test_skimmed_tco3_attrs(self, skimmed_model):
+        expected_ds_attrs = dict(description="Test ozone dataset")
+        assert skimmed_model.attrs == expected_ds_attrs
+        expected_tco3_attrs = dict(description="Test tco3 xarray")
+        assert skimmed_model.tco3_zm.attrs == expected_tco3_attrs
 
 
 @pytest.mark.parametrize('groupby', ['year'], indirect=True)
@@ -56,12 +64,20 @@ class TestSkimming_ByYear:
 
     @pytest.mark.parametrize('model_name', conftest.models_tco3, indirect=True)
     @pytest.mark.parametrize('year', list(conftest.year_line), indirect=True)
-    def test_skimmed_tco3(self, skimmed_model):
+    def test_skimmed_tco3_coords(self, skimmed_model):
         assert 'tco3_zm' in skimmed_model.var()
         assert 'time' in skimmed_model.coords
         assert not 'plev' in skimmed_model.coords
         assert 'lat' in skimmed_model.coords
         assert not 'lon' in skimmed_model.coords
+
+    @pytest.mark.parametrize('model_name', conftest.models_tco3, indirect=True)
+    @pytest.mark.parametrize('year', list(conftest.year_line), indirect=True)
+    def test_skimmed_tco3_attrs(self, skimmed_model):
+        expected_ds_attrs = dict(description="Test ozone dataset")
+        assert skimmed_model.attrs == expected_ds_attrs
+        expected_tco3_attrs = dict(description="Test tco3 xarray")
+        assert skimmed_model.tco3_zm.attrs == expected_tco3_attrs
 
 
 @pytest.mark.parametrize('groupby', ['decade'], indirect=True)
@@ -79,12 +95,20 @@ class TestSkimming_ByDecade:
 
     @pytest.mark.parametrize('model_name', conftest.models_tco3, indirect=True)
     @pytest.mark.parametrize('year', [y for y in conftest.year_line if y % 10 == 0], indirect=True)
-    def test_skimmed_tco3(self, skimmed_model):
+    def test_skimmed_tco3_coords(self, skimmed_model):
         assert 'tco3_zm' in skimmed_model.var()
         assert 'time' in skimmed_model.coords
         assert not 'plev' in skimmed_model.coords
         assert 'lat' in skimmed_model.coords
         assert not 'lon' in skimmed_model.coords
+
+    @pytest.mark.parametrize('model_name', conftest.models_tco3, indirect=True)
+    @pytest.mark.parametrize('year', [y for y in conftest.year_line if y % 10 == 0], indirect=True)
+    def test_skimmed_tco3_attrs(self, skimmed_model):
+        expected_ds_attrs = dict(description="Test ozone dataset")
+        assert skimmed_model.attrs == expected_ds_attrs
+        expected_tco3_attrs = dict(description="Test tco3 xarray")
+        assert skimmed_model.tco3_zm.attrs == expected_tco3_attrs
 
 
 @pytest.mark.parametrize('groupby', [None, 'year', 'decade'], indirect=True)

@@ -1,5 +1,6 @@
 import copy
 import unittest
+from unittest.case import expectedFailure
 
 from o3skim import utils
 
@@ -27,3 +28,9 @@ class Tests_mergedict(unittest.TestCase):
         self.assertEqual(dict_3['b'], 2)
         self.assertEqual(dict_3['c'], 0)
         self.assertEqual(dict_3['z'], {'a': 1, 'b': 2, 'c': 0})
+
+    def test_merge_with_exception(self):
+        def raise_exception(x, y): raise Exception(x, y)
+        with self.assertRaises(Exception) as cm:
+            utils.mergedicts({'a': 1}, {'a': 2}, raise_exception)
+        self.assertEqual(cm.exception.args, (1, 2))
