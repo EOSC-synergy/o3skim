@@ -13,4 +13,4 @@ services:
      build:
         context: "."
         dockerfile: "./o3skim/Dockerfile"
-     image: "o3skim/o3skim:latest"
+     image: "o3as/o3skim:test"
