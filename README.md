@@ -26,9 +26,9 @@
 - [About](#about)
 - [Build using docker](#build)
 - [Run using udocker](#deployment)
-- [Documentation](#doc)
+- [Testing](#testing)
+- [Documentation](https://o3as.readthedocs.io/en/latest)
 - [Authors](#authors)
-- [Acknowledgments](#acknowledgement)
 - [TODO](https://git.scc.kit.edu/synergy.o3as/o3skim/-/issues)
 
 # About <a name = "about"></a>
@@ -108,17 +108,21 @@ $ udocker run --user=application o3skim --help
 ...
 ```
 
+# Testing <a name = "testing"></a>
+Testing is based on [sqa-baseline](https://indigo-dc.github.io/sqa-baseline/) criteria. On top, [tox](https://tox.readthedocs.io/en/latest/) automation is used to simplify the testing process.
+
+To run unit and functional tests with coverage use:
+```sh
+$ tox
+```
+
 
 # Documentation <a name = "doc"></a>
-- [TODO]()
+All o3as project module documents can be found at [o3as.readthedocs.io](https://o3as.readthedocs.io/en/latest/). 
 
 
 # Authors <a name = "authors"></a>
-- [@V.Kozlov](https://git.scc.kit.edu/eo9869) - TBD
-- [@T.Kerzenmacher](https://git.scc.kit.edu/px5501) - TBD
-- [@B.Esteban](https://git.scc.kit.edu/zr5094) - TBD
-
-
-# Acknowledgements <a name = "acknowledgement"></a>
-- 
+- [@V.Kozlov](https://git.scc.kit.edu/eo9869)
+- [@T.Kerzenmacher](https://git.scc.kit.edu/px5501)
+- [@B.Esteban](https://git.scc.kit.edu/zr5094)
 

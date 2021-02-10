@@ -17,38 +17,44 @@ logger = logging.getLogger('o3skim.utils')
 
 
 @contextmanager
-def cd(newdir):
+def cd(dir):
     """Changes the directory inside a 'with' context. When the code
     reaches the end of the 'with' block or the code fails, the 
     previous folder is restored.
 
-    :param newdir: Path folder where to change the working directory.
-    :type newdir: str
+    :param dir: Path folder where to change the working directory.
+    :type dir: str
     """
     prevdir = os.getcwd()
-    os.chdir(os.path.expanduser(newdir))
+    os.chdir(os.path.expanduser(dir))
+    newdir = os.getcwd()
     try:
-        logger.debug("Temp dir change to: '%s'", newdir)
+        logger.debug("Changing directory: '%s'", newdir)
         yield
     finally:
         os.chdir(prevdir)
-        logger.debug("Restore directory: '%s'", prevdir)
+        logger.debug("Restoring directory: '%s'", prevdir)
 
 
-def return_on_failure(message):
+def return_on_failure(message, default=None):
     """Decorator to do not break but log. Note that the error stack
     is printed as well to do not lose relevant information.
 
     :param message: Additional message to log when the function fails.
     :type message: str
+
+    :param default: Value to return if fails.
+    :type default: any or None, optional
     """
     def decorate(function):
         def applicator(*args, **kwargs):
             try:
-                function(*args, **kwargs)
+                return function(*args, **kwargs)
             except:
-                # Log error with stak using root (not utils)
+                # Log error with stack using root (not utils)
                 logging.error(message, exc_info=True)
+                return default
+        applicator.__doc__ = function.__doc__
         return applicator
     return decorate
 
@@ -71,57 +77,37 @@ def load(yaml_file):
         return config
 
 
-def create_empty_netCDF(fname):
-    """Creates a new empty netCDF file.
+def save(file_name, metadata):
+    """Saves the metadata dict on the current folder with yaml 
+    format. 
 
-    :param fname: Name and path where to create the file.
-    :type fname: str
+    :param file_name: Name for the output yaml file.
+    :type file_name: str
+
+    :param metadata: Dict with the data to save into.
+    :type metadata: dict
     """
-    root_grp = netCDF4.Dataset(fname, 'w', format='NETCDF4')
-    root_grp.description = 'Example simulation data'
-    root_grp.close()
+    with open(file_name, 'w+') as ymlfile:
+        yaml.dump(metadata, ymlfile, allow_unicode=True)
 
 
-def to_netcdf(dirname, name, dataset, groupby=None):
-    """Creates or appends data to named netCDF files.
+def mergedicts(d1, d2, if_conflict=lambda _, d: d):
+    """Merges dict d2 in dict d2 recursively. If two keys exist in 
+    both dicts, the value in d1 is superseded by the value in d2.
 
-    :param path: Location where to find or create the netCDF files.
-    :type path: str
+    :param d1: Dict to be recursively completed by d2.
+    :type d1: dict
 
-    :param name: Name/Prefix for file/s where to store the data.
-    :type name: str
-
-    :param dataset: Dataset to write to the netCDF file.
-    :type dataset: :class:`xarray.Dataset`
-
-    :param groupby: How to group files (None, year, decade).
-    :type groupby: str, optional
+    :param d2: Dict to be recursively merged in d1.
+    :type d2: dict
     """
-    def split_by_year(dataset):
-        """Splits a dataset by year"""
-        years, dsx = zip(*dataset.groupby("time.year"))
-        fnames = [dirname + "/" + name + "_%s.nc" % y for y in years]
-        return fnames, dsx
-
-    def split_by_decade(dataset):
-        """Splits a dataset by decade"""
-        decades = dataset.indexes["time"].year//10*10
-        decades, dsx = zip(*dataset.groupby(xr.DataArray(decades)))
-        fnames = [dirname + "/" + name + "_%s-%s.nc" % (d, d+10) for d in decades]
-        return fnames, dsx
-
-    def no_split(dataset):
-        """Does not split a dataset"""
-        dsx = (dataset,)
-        fnames = [dirname + "/" + name + ".nc"]
-        return fnames, dsx
-
-    split_by = {
-        "year": split_by_year,
-        "decade": split_by_decade
-    }
-    fnames, dsx = split_by.get(groupby, no_split)(dataset)
-
-    logging.info("Save dataset into: %s", fnames)
-    [create_empty_netCDF(fn) for fn in fnames if not os.path.isfile(fn)]
-    xr.save_mfdataset(dsx, fnames, mode='a')
+    for key in d2:
+        if key in d1:
+            if isinstance(d1[key], dict) and isinstance(d2[key], dict):
+                mergedicts(d1[key], d2[key], if_conflict)
+            elif d1[key] == d2[key]:
+                pass  # same leaf value
+            else:
+                d1[key] = if_conflict(d1[key], d2[key])
+        else:
+            d1[key] = d2[key]

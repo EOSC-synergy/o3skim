@@ -1,6 +1,3 @@
-=========================================
-o3skim
-=========================================
 .. rubric:: Data skimming for ozone assessment.
 
 **o3skim** is an open source project and Python package that provides the 
@@ -9,15 +6,15 @@ simplify and speed up ozone data transfer and plot.
 
 .. _netCDF: http://www.unidata.ucar.edu/software/netcdf
 
-Documentation
--------------
 
-**Getting started**
+Getting started
+=========================================
 
 * Which :doc:`getting_started/prerequisites` you need to start.
 * How to :doc:`getting_started/build` your o3skim container.
 * How to :doc:`getting_started/deployment` your o3skim container.
 * How to use the o3skim :doc:`getting_started/cli`
+* Create your :doc:`getting_started/source-file` to point what to skim.
 
 .. toctree::
    :maxdepth: 2
@@ -28,25 +25,14 @@ Documentation
    getting_started/build
    getting_started/deployment
    getting_started/cli
-   
-
-**User guide**
-
-* Create your :doc:`user_guide/source-file` to point what to skim.
-* Learn how to skim by reading the :doc:`user_guide/o3skim`
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: User guide:
-
-   user_guide/source-file
-   user_guide/o3skim
+   getting_started/source-file   
 
 
-**Developer guide**
+Developer guide
+=========================================
 
 * How to do a :doc:`dev_guide/local-install`
+* How to use o3skim package :doc:`dev_guide/o3skim`
 * How to run and create new :doc:`dev_guide/tests`
 
 .. toctree::
@@ -56,25 +42,16 @@ Documentation
 
    dev_guide/local-install
    dev_guide/tests
+   dev_guide/o3skim
 
 
-See also
---------
+Authors 
+=========================================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+- `@T.Kerzenmacher <https://git.scc.kit.edu/px5501>`_ - Data scientist at KIT-IMK_
+- `@V.Kozlov <https://git.scc.kit.edu/eo9869>`_ - Code developer at KIT-SCC_
+- `@B.Esteban <https://git.scc.kit.edu/zr5094>`_ - Code developer at KIT-SCC_
 
-
-Authors
--------
-
-- `@V.Kozlov <https://git.scc.kit.edu/eo9869>`_ - TBD
-- `@T.Kerzenmacher <https://git.scc.kit.edu/px5501>`_ - TBD
-- `@B.Esteban <https://git.scc.kit.edu/zr5094>`_ - TBD
-
-
-Acknowledgements
-----------------
-
+.. _KIT-IMK: https://www.imk.kit.edu/english/index.php
+.. _KIT-SCC: https://www.scc.kit.edu/en/index.php
 

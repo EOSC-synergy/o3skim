@@ -2,36 +2,58 @@ config:
   project_repos:
     o3skim:
       repo: 'https://git.scc.kit.edu/synergy.o3as/o3skim.git'
-      branch: test
-      dockerhub: synergyimk/o3as
-      dockertag: latest
+      branch: master
+  credentials:
+    - id: o3as-dockerhub-vk
+      username_var: JPL_DOCKERUSER
+      password_var: JPL_DOCKERPASS
+
+environment:
+  JPL_DOCKERPUSH: "o3skim"
+  JPL_DOCKERFORCEBUILD: "True"
+#  LANG: C.UTF-8
 
 sqa_criteria:
   qc_style:
     repos:
-      o3as:
-        container: o3skim-testing
+      o3skim:
+        container: testing
         tox:
-          tox_file: /o3skim-testing/tox.ini
+          tox_file: /o3skim/tox.ini
           testenv:
-            - pep8
+            - stylecheck
   qc_coverage:
     repos:
-      o3as:
-        container: o3skim-testing
+      o3skim:
+        container: testing
         tox:
-          tox_file: /o3skim-testing/tox.ini
-          testenv: 
-            - cover
-            - cobertura
+          tox_file: /o3skim/tox.ini
+          testenv:
+            - unittesting
+  qc_functional:
+    repos:
+      o3skim:
+        container: testing
+        tox:
+          tox_file: /o3skim/tox.ini
+          testenv:
+              - functional
   qc_security:
     repos:
-      o3as:
-        container: o3skim-testing
+      o3skim:
+        container: testing
         tox:
-          tox_file: /o3skim-testing/tox.ini
+          tox_file: /o3skim/tox.ini
           testenv:
             - bandit
+  qc_doc:
+    repos:
+      o3skim:
+        container: testing
+        tox:
+          tox_file: /o3skim/tox.ini
+          testenv:
+            - docs
 
 #environment:
 #  LANG: C.UTF-8

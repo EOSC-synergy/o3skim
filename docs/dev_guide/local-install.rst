@@ -4,7 +4,7 @@ Local installation
 To run tests, you need to install the tool in your system without docker.
 
 As first step ensure you have the following dependencies:
- - python_ > 3.8
+ - python_ > 3.6
  - pip_ > 20.0.2
  - gcc_
  - g++_
