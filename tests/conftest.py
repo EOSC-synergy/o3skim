@@ -15,7 +15,7 @@ sources_example = "tests/sources_example.yaml"
 sources_err = "tests/sources_err.yaml"
 available_configurations = {
     'correct': {sources_example},
-    'with_errors': {sources_err}
+    'errors': {sources_err}
 }
 
 # Sources
@@ -34,17 +34,26 @@ vmro3_models = {
     'SourceMerged_ModelVMRO3',
     'SourceMerged_ModelALL'
 }
+error_models = {
+    'ModelBadVar',
+    'ModelBadKey',
+    'ModelBadName',
+    'ModelBadPath',
+    'ModelMissingCoords',
+    'ModelBadCoords',
+    'ModelExtraCoords'
+}
 available_models = {
     'all': tco3_models | vmro3_models,
     'with_tco3': tco3_models,
     'only_tco3': tco3_models - vmro3_models,
     'with_vmro3': vmro3_models,
-    'only_vmro3': vmro3_models - tco3_models
+    'only_vmro3': vmro3_models - tco3_models,
+    'errors': error_models
 }
 
+
 # session fixtures ---------------------------------------------------
-
-
 @pytest.fixture(scope='session')
 def data_dir(tmpdir_factory):
     data_dir = tmpdir_factory.mktemp("data")
@@ -91,10 +100,14 @@ def config_dict(config):
 
 
 @pytest.fixture(scope='session')
-def load_model(data_dir, config_dict, model):
-    model_configuration = config_dict[model]
+def model_config(config_dict, model):
+    return config_dict[model]
+
+
+@pytest.fixture(scope='session')
+def load_model(data_dir, model_config):
     with o3skim.utils.cd(data_dir):
-        return o3skim.loading(**model_configuration)
+        return o3skim.loading(**model_config)
 
 
 @pytest.fixture(scope='session')
@@ -204,6 +217,12 @@ def metadata_file_content(metadata_dir, save_metadata):
 
 
 # function fixtures -------------------------------------------------
+@pytest.fixture()
+def data_cd(data_dir):
+    with o3skim.utils.cd(data_dir):
+        yield None
+
+
 @pytest.fixture()
 def output_cd(output_dir):
     with o3skim.utils.cd(output_dir):
