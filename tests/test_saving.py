@@ -1,6 +1,6 @@
 """Pytest module to test sources as blackbox."""
 import os
-from numpy.core.fromnumeric import var
+import o3skim
 import pytest
 import tests.conftest as conftest
 import xarray as xr
@@ -35,3 +35,12 @@ class TestMetadataSaving:
 
     def test_content(self, metadata, metadata_file_content):
         assert metadata == metadata_file_content
+
+
+@pytest.mark.parametrize('config', configs['correct'], indirect=True)
+@pytest.mark.parametrize('model', models['all'], indirect=True)
+@pytest.mark.parametrize('groupby', ['unknown'], indirect=True)
+class TestExceptions:
+
+    def test_BadGroup(self, output_cd, dataset, groupby):
+        pytest.raises(KeyError, o3skim.saving, dataset, groupby)

@@ -41,7 +41,6 @@ def cmdline_args():
     return(p.parse_args())
 
 
-@utils.return_on_failure("Error processing model")
 def skim_process(name, operations, split_by, configuration):
     # Process start
     logging.info("Process start for model %s", name)
@@ -88,16 +87,16 @@ if __name__ == '__main__':
 
     # Configuration load
     logging.info("Looking for config at: '%s'", args.sources_file)
-    config = utils.load(args.sources_file)
+    configuration = utils.load(args.sources_file)
 
     # Processing loop
     logging.info("Processing loop for models")
-    for model_name in config:
-        skim_process(
-            name=model_name,
-            operations=args.operations,
-            split_by=args.split_by,
-            configuration=config[model_name])
+    for model in configuration:
+        try:
+            skim_process(model, args.operations, args.split_by,
+                         configuration[model])
+        except Exception as e:
+            logging.error("Error processing model", exc_info=e)
 
     # End of program
     logging.info("End of program")

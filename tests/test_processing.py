@@ -1,5 +1,6 @@
 """Pytest module to test sources as blackbox."""
 import itertools
+import o3skim
 import pytest
 import tests.conftest as conftest
 
@@ -24,6 +25,15 @@ class TestCommon:
         assert dataset.attrs == processed.attrs
         for o3var in processed.var():
             assert dataset[o3var].attrs == processed[o3var].attrs
+
+
+@pytest.mark.parametrize('config', configs['correct'], indirect=True)
+@pytest.mark.parametrize('model', models['all'], indirect=True)
+@pytest.mark.parametrize('actions', [['unknown_operation']], indirect=True)
+class TestExceptions:
+
+    def test_BadOperation(self, dataset, actions):
+        pytest.raises(KeyError, o3skim.processing, dataset, actions)
 
 
 @pytest.mark.parametrize('config', configs['correct'], indirect=True)

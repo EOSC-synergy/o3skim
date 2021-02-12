@@ -33,29 +33,6 @@ def cd(dir):
         logger.debug("Restoring directory: '%s'", prevdir)
 
 
-def return_on_failure(message, default=None):
-    """Decorator to do not break but log. Note that the error stack
-    is printed as well to do not lose relevant information.
-
-    :param message: Additional message to log when the function fails.
-    :type message: str
-
-    :param default: Value to return if fails.
-    :type default: any or None, optional
-    """
-    def decorate(function):
-        def applicator(*args, **kwargs):
-            try:
-                return function(*args, **kwargs)
-            except:
-                # Log error with stack using root (not utils)
-                logging.error(message, exc_info=True)
-                return default
-        applicator.__doc__ = function.__doc__
-        return applicator
-    return decorate
-
-
 def load(yaml_file):
     """Loads the .yaml file and returns a python dictionary with all
     the yaml keys and values. Note a yaml file can have key:values 
