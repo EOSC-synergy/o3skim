@@ -7,15 +7,29 @@ models = conftest.available_models
 
 
 @pytest.mark.parametrize('config', configs['correct'], indirect=True)
+@pytest.mark.parametrize('model', models['all'], indirect=True)
+class TestO3CommonsLoad:
+
+    def test_attrs(self, dataset):
+        assert dataset.attrs == dict(description="Test ozone dataset")
+
+    def test_metadata(self, metadata):
+        assert metadata["meta_1"] == "Model metadata string example"
+        assert metadata["meta_2"]["meta_21"] == "Sub-metadata from Model"
+
+
+@pytest.mark.parametrize('config', configs['correct'], indirect=True)
 class TestTCO3Load:
 
     @pytest.mark.parametrize('model', models['with_tco3'], indirect=True)
     def test_variable_load(self, dataset):
         assert 'tco3_zm' in dataset
-        assert 'time' in dataset['tco3_zm'].coords
-        assert 'lat' in dataset['tco3_zm'].coords
-        assert 'lon' in dataset['tco3_zm'].coords
-        assert len(dataset['tco3_zm'].coords) == 3
+        darray = dataset['tco3_zm']
+        assert 'time' in darray.coords
+        assert 'lat' in darray.coords
+        assert 'lon' in darray.coords
+        assert len(darray.coords) == 3
+        assert darray.attrs == dict(description="Test tco3 xarray")
 
     @pytest.mark.parametrize('model', models['with_tco3'], indirect=True)
     def test_coordinates(self, dataset):
@@ -34,11 +48,13 @@ class TestVMRO3Load:
     @pytest.mark.parametrize('model', models['with_vmro3'], indirect=True)
     def test_variable_load(self, dataset):
         assert 'vmro3_zm' in dataset
-        assert 'time' in dataset['vmro3_zm'].coords
-        assert 'plev' in dataset['vmro3_zm'].coords
-        assert 'lat' in dataset['vmro3_zm'].coords
-        assert 'lon' in dataset['vmro3_zm'].coords
-        assert len(dataset['vmro3_zm'].coords) == 4
+        darray = dataset['vmro3_zm']
+        assert 'time' in darray.coords
+        assert 'plev' in darray.coords
+        assert 'lat' in darray.coords
+        assert 'lon' in darray.coords
+        assert len(darray.coords) == 4
+        assert darray.attrs == dict(description="Test vmro3 xarray")
 
     @pytest.mark.parametrize('model', models['with_vmro3'], indirect=True)
     def test_coordinates(self, dataset):

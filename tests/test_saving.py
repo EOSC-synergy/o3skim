@@ -15,7 +15,7 @@ models = conftest.available_models
 class TestNetCDFSaving:
 
     def test_arefiles(self, output_cd, save_netCDF, expected_netCDF):
-        assert all([os.path.isfile(f) for f in expected_netCDF])
+        assert set(os.listdir()) == set(expected_netCDF)
 
     def test_saved_data(self, dataset, saved_ds, variables):
         xr.testing.assert_equal(dataset, saved_ds)
@@ -28,9 +28,9 @@ class TestNetCDFSaving:
 
 @pytest.mark.parametrize('config', configs['correct'], indirect=True)
 @pytest.mark.parametrize('model', models['all'], indirect=True)
-class TestMetadataFSaving:
+class TestMetadataSaving:
 
-    def test_isfile(self, output_cd, save_metadata):
+    def test_isfile(self, metadata_cd, save_metadata):
         assert os.path.isfile("metadata.yaml")
 
     def test_content(self, metadata, metadata_file_content):
