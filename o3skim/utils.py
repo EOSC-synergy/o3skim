@@ -5,13 +5,10 @@ Although this module is not expected to be used out of the o3skim
 package, some functions might be convenient when using the python 
 shell.
 """
-
 from contextlib import contextmanager
+import logging
 import os
 import yaml
-import netCDF4
-import xarray as xr
-import logging
 
 logger = logging.getLogger('o3skim.utils')
 
@@ -87,7 +84,7 @@ def save(file_name, metadata):
     :param metadata: Dict with the data to save into.
     :type metadata: dict
     """
-    with open(file_name, 'w+') as ymlfile:
+    with open(file_name, 'w') as ymlfile:
         yaml.dump(metadata, ymlfile, allow_unicode=True)
 
 
