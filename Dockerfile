@@ -61,5 +61,4 @@ USER ${user}
 
 # Start default script
 ENTRYPOINT [ "main" ]
-CMD [ "--verbosity ERROR" ]
 

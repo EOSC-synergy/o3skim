@@ -4,7 +4,7 @@ config:
       repo: 'https://git.scc.kit.edu/synergy.o3as/o3skim.git'
       branch: master
   credentials:
-    - id: o3as-dockerhub-vk
+    - id: o3as-dockerhub-$GIT_REAL_COMMITER
       username_var: JPL_DOCKERUSER
       password_var: JPL_DOCKERPASS
 

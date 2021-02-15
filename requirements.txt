@@ -1,5 +1,0 @@
-xarray
-dask[complete]
-netcdf4
-pyyaml
-

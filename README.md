@@ -7,7 +7,7 @@
 
 <div align="center">
 
-  [![Build Status](https://jenkins.eosc-synergy.eu/buildStatus/icon?job=eosc-synergy-org%2Fo3skim%2Ftest)](https://jenkins.eosc-synergy.eu/job/eosc-synergy-org/job/o3skim/job/test/)
+  [![Build Status](https://jenkins.eosc-synergy.eu/buildStatus/icon?job=eosc-synergy-org%2Fo3skim%2Ftest)](https://jenkins.eosc-synergy.eu/job/eosc-synergy-org/job/o3skim/job/master)
   [![Documentation Status](https://readthedocs.org/projects/o3as/badge/?version=latest)](https://o3as.readthedocs.io/en/latest/?badge=latest)
   [![pipeline status](https://git.scc.kit.edu/synergy.o3as/o3skim/badges/master/pipeline.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/master)
   [![coverage status](https://git.scc.kit.edu/synergy.o3as/o3skim/badges/master/coverage.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/master)
@@ -93,7 +93,7 @@ $ udocker run \
   --volume=${PWD}/sources.yaml:/app/sources.yaml \
   --volume=${PWD}/data:/app/data \
   --volume=${PWD}/output:/app/output \
-  o3skim --verbosity INFO
+  o3skim --verbosity INFO ${action1} ${action2}
 ...
 executing: main
 ...

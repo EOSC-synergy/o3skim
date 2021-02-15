@@ -1,12 +1,48 @@
 import copy
+import os
+import tempfile
 import unittest
-from unittest.case import expectedFailure
+import yaml
 
 from o3skim import utils
 
 
 dict_1 = {'a': 1, 'c': 0, 'z': {'a': 1, 'c': 0}}
 dict_2 = {'b': 2, 'c': 3, 'z': {'b': 2, 'c': 3}}
+
+
+class Tests_YAMLLoad(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.ymlfile = tempfile.NamedTemporaryFile(mode='w')
+        yaml.dump(dict_1, self.ymlfile, allow_unicode=True)
+
+    def tearDown(self) -> None:
+        self.ymlfile.close()
+
+    def test_correct_content(self):
+        self.assertEqual(dict_1, utils.load(self.ymlfile.name))
+
+
+class Tests_YAMLSave(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.tempdir = tempfile.TemporaryDirectory()
+        self.prevdir = os.getcwd()
+        os.chdir(self.tempdir.name)
+        utils.save("metadata.yaml", metadata=dict_1)
+
+    def tearDown(self) -> None:
+        os.chdir(self.prevdir)
+        self.tempdir.cleanup()
+
+
+    def test_isfile(self):
+        self.assertTrue(os.path.isfile("metadata.yaml"))
+
+    def test_filecontent(self):
+        with open("metadata.yaml", "r") as ymlfile:
+            self.assertEqual(dict_1, yaml.safe_load(ymlfile))
 
 
 class Tests_mergedict(unittest.TestCase):
