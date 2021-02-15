@@ -8,3 +8,9 @@ services:
       - type: bind
         source: ./o3skim
         target: /o3skim
+
+  o3skim:
+     build:
+        context: "."
+        dockerfile: "./o3skim/Dockerfile"
+     image: "o3as/o3skim:test"
