@@ -93,7 +93,7 @@ $ udocker run \
   --volume=${PWD}/sources.yaml:/app/sources.yaml \
   --volume=${PWD}/data:/app/data \
   --volume=${PWD}/output:/app/output \
-  o3skim --verbosity INFO
+  o3skim --verbosity INFO ${action1} ${action2}
 ...
 executing: main
 ...
