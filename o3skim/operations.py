@@ -3,7 +3,7 @@ Module in charge of implementing the o3skim operations.
 """
 import logging
 
-logger = logging.getLogger('operations')
+logger = logging.getLogger('o3skim.operations')
 
 
 def run(name, dataset):

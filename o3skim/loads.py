@@ -8,7 +8,7 @@ from o3skim import utils
 import xarray as xr
 
 
-logger = logging.getLogger('load')
+logger = logging.getLogger('o3skim.loads')
 
 
 def tco3(name, paths, coordinates, metadata={}):

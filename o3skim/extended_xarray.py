@@ -5,7 +5,7 @@ handle tco3 and vmro3 operations and data skimming.
 import logging
 import xarray as xr
 
-logger = logging.getLogger('extended_xr')
+logger = logging.getLogger('o3skim.extended_xr')
 
 
 @xr.register_dataset_accessor("o3")
