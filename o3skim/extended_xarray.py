@@ -1,78 +1,60 @@
 """
-xarray extension module to provide model class and functions to handle
-tco3 and vmro3 operations and data skimming.
+Xarray extension module to provide model class and functions to
+handle tco3 and vmro3 operations and data skimming. 
 """
 import logging
-import os
-import unittest
-
 import xarray as xr
-import pandas as pd
-import numpy as np
-from o3skim import standardization, utils
 
 logger = logging.getLogger('extended_xr')
-mean_coord = 'lon'
 
 
-@xr.register_dataset_accessor("model")
-class ModelAccessor:
+@xr.register_dataset_accessor("o3")
+class O3Accessor:
+    """General accessor to access all possible ozone type accessor
+    using subscriptable syntax. For example:
+
+    - `dataset.o3['tco3_zm']`  == `dataset.tco3`
+    - `dataset.o3['vmro3_zm']` == `dataset.vmro3`
+    """
+
     def __init__(self, xarray_obj):
         self._model = xarray_obj
-        self._metadata = {}
+
+    def __getitem__(self, o3variable):
+        if o3variable == 'tco3_zm':
+            return self._model.tco3
+        if o3variable == 'vmro3_zm':
+            return self._model.vmro3
+
+
+class O3Variable:
+    def __init__(self, xarray_obj, name):
+        self._model = xarray_obj
+        self._name = name
 
     @property
-    def tco3(self):
-        """Return the total ozone column of this dataset."""
-        if "tco3_zm" in list(self._model.var()):
-            dataset = self._model["tco3_zm"].to_dataset()
-            dataset.attrs = self._model.attrs
-            return dataset
-        else:
-            return None
+    def dataset(self):
+        """Returns variable as Dataset and conserving attributes."""
+        dataset = self._model[self._name].to_dataset()
+        dataset.attrs = self._model.attrs
+        return dataset
 
-    @property
-    def vmro3(self):
-        """Return the ozone volume mixing ratio of this dataset."""
-        if "vmro3_zm" in list(self._model.var()):
-            dataset = self._model["vmro3_zm"].to_dataset()
-            dataset.attrs = self._model.attrs
-            return dataset
-        else:
-            return None
 
-    @property
-    def metadata(self):
-        """Returns the metadata property"""
-        return self._metadata
+@xr.register_dataset_accessor("tco3")
+class TCO3Accessor(O3Variable):
+    """Total Column of Ozone accessor.
+    (dataset.tco3 -acts_over-> tco3_zm variable).
+    """
 
-    def add_metadata(self, metadata):
-        """Merges the input metadata with the model metadata"""
-        utils.mergedicts(self._metadata, metadata)
+    def __init__(self, xarray_obj):
+        O3Variable.__init__(self, xarray_obj, name='tco3_zm')
 
-    def set_metadata(self, metadata):
-        """Sets the metadata to the input variable."""
-        self._metadata = metadata
 
-    def groupby_year(self):
-        """Returns a grouped dataset by year"""
-        logger.debug("Performing group by year on model")
-        def delta_map(x): return x.year
-        years = self._model.indexes['time'].map(delta_map)
-        return self._model.groupby(xr.DataArray(years))
+@xr.register_dataset_accessor("vmro3")
+class VMRO3Accessor(O3Variable):
+    """Volume Mixing Ratio of Ozone accessor.
+    (dataset.vmro3 -acts_over-> vmro3_zm variable).
+    """
 
-    def groupby_decade(self):
-        """Returns a grouped dataset by decade"""
-        logger.debug("Performing group by decade on model")
-        def delta_map(x): return x.year // 10 * 10
-        years = self._model.indexes['time'].map(delta_map)
-        return self._model.groupby(xr.DataArray(years))
-
-    def skim(self):
-        """Skims model producing reduced dataset"""
-        logger.debug("Skimming model")
-        skimmed = self._model.mean(mean_coord)
-        skimmed.attrs = self._model.attrs
-        for var in self._model:
-            skimmed[var].attrs = self._model[var].attrs
-        return skimmed
+    def __init__(self, xarray_obj):
+        O3Variable.__init__(self, xarray_obj, name='vmro3_zm')

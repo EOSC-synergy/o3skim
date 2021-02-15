@@ -1,30 +1,80 @@
 #!/usr/bin/env python3
 """
-o3skim is a tool for data pre-processing of ozone applications
+o3skim is a tool for data pre-processing of ozone applications:
+- lon_mean: Mean operation over longitude axis.
+- lat_mean: Mean operation over latitude axis.
 """
-import sys
 import argparse
 import logging
+import os
 import warnings
 
 import o3skim
+from o3skim import utils
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 def cmdline_args():
-    p = argparse.ArgumentParser(description=__doc__,
-                                formatter_class=argparse.RawDescriptionHelpFormatter)
-    # Arguments
-    p.add_argument("-f", "--sources_file", type=str, default="./sources.yaml",
-                   help="custom sources YAML configuration (default: %(default)s)")
-    p.add_argument("-s", "--split_by", type=str, default=None,
-                   choices=['year', 'decade'],
-                   help="Period time to split output (default: %(default)s)")
-    p.add_argument("-v", "--verbosity", type=str, default='ERROR',
-                   choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-                   help="Sets the logging level (default: %(default)s)")
+    p = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__)
+    p.add_argument(
+        "-f", "--sources_file",
+        type=str, default="./sources.yaml",
+        help="custom sources YAML configuration (default: %(default)s)")
+    p.add_argument(
+        "-s", "--split_by",
+        type=str, default=None,
+        choices=['year', 'decade'],
+        help="Period time to split output (default: %(default)s)")
+    p.add_argument(
+        "-v", "--verbosity",
+        type=str, default='ERROR',
+        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+        help="Sets the logging level (default: %(default)s)")
+    p.add_argument(
+        "operations", nargs='+',
+        type=str,
+        choices=['lon_mean', 'lat_mean'],
+        help="o3skim operations to perform")
     return(p.parse_args())
+
+
+def skim_process(name, operations, split_by, configuration):
+    # Process start
+    logging.info("Process start for model %s", name)
+
+    # Data loading
+    logging.info("Loading model %s data", name)
+    with utils.cd('data'):
+        model, metadata = o3skim.loading(**configuration)
+
+    # Data processing
+    logging.info("Processing model %s data", name)
+    processed = o3skim.processing(model, operations)
+
+    # Data grouping
+    logging.info("Grouping processed model %s data", name)
+    years, datasets = o3skim.grouping(processed, split_by)
+
+    # Create output directory saving
+    logging.info("Creating output directory %s", name)
+    with utils.cd('output'):
+        os.makedirs(name, exist_ok=True)
+
+    # Data saving
+    logging.info("Saving processed model %s data", name)
+    with utils.cd('output/' + name):
+        o3skim.saving(datasets, split_by, years)
+
+    # Metadata saving
+    logging.debug("Creating model %s metadata.yaml file", name)
+    with utils.cd('output/' + name):
+        utils.save("metadata.yaml", metadata)
+
+    # Process end
+    logging.info("Process end for model %s", name)
 
 
 if __name__ == '__main__':
@@ -32,22 +82,21 @@ if __name__ == '__main__':
 
     # Set logging level
     logformat = '%(asctime)s %(name)-24s %(levelname)-8s %(message)s'
-    logging.basicConfig(level=getattr(logging, args.verbosity), format=logformat)
+    logging.basicConfig(level=getattr(
+        logging, args.verbosity), format=logformat)
 
     # Configuration load
-    logging.info("Lookinf for config at: '%s'", args.sources_file)
-    config = o3skim.load(args.sources_file)
+    logging.info("Looking for config at: '%s'", args.sources_file)
+    configuration = utils.load(args.sources_file)
 
-    # Create sources
-    logging.info("Loading data from './data' ")
-    with o3skim.cd("data"):
-        ds = {name: o3skim.Source(name, **collection) for
-              name, collection in config.items()}
-
-    # Skim output
-    logging.info("Skimming data to './output' ")
-    with o3skim.cd("output"):
-        [source.skim(groupby=args.split_by) for source in ds.values()]
+    # Processing loop
+    logging.info("Processing loop for models")
+    for model in configuration:
+        try:
+            skim_process(model, args.operations, args.split_by,
+                         configuration[model])
+        except Exception as e:
+            logging.error("Error processing model", exc_info=e)
 
     # End of program
     logging.info("End of program")

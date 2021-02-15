@@ -5,13 +5,10 @@ Although this module is not expected to be used out of the o3skim
 package, some functions might be convenient when using the python 
 shell.
 """
-
 from contextlib import contextmanager
+import logging
 import os
 import yaml
-import netCDF4
-import xarray as xr
-import logging
 
 logger = logging.getLogger('o3skim.utils')
 
@@ -34,29 +31,6 @@ def cd(dir):
     finally:
         os.chdir(prevdir)
         logger.debug("Restoring directory: '%s'", prevdir)
-
-
-def return_on_failure(message, default=None):
-    """Decorator to do not break but log. Note that the error stack
-    is printed as well to do not lose relevant information.
-
-    :param message: Additional message to log when the function fails.
-    :type message: str
-
-    :param default: Value to return if fails.
-    :type default: any or None, optional
-    """
-    def decorate(function):
-        def applicator(*args, **kwargs):
-            try:
-                return function(*args, **kwargs)
-            except:
-                # Log error with stack using root (not utils)
-                logging.error(message, exc_info=True)
-                return default
-        applicator.__doc__ = function.__doc__
-        return applicator
-    return decorate
 
 
 def load(yaml_file):
@@ -87,7 +61,7 @@ def save(file_name, metadata):
     :param metadata: Dict with the data to save into.
     :type metadata: dict
     """
-    with open(file_name, 'w+') as ymlfile:
+    with open(file_name, 'w') as ymlfile:
         yaml.dump(metadata, ymlfile, allow_unicode=True)
 
 
@@ -100,6 +74,11 @@ def mergedicts(d1, d2, if_conflict=lambda _, d: d):
 
     :param d2: Dict to be recursively merged in d1.
     :type d2: dict
+
+    :param if_conflict: Action to perform when key from d1 exists in d1.
+        Fun(d1,d2) which returns the value to store in d1.
+        Default action is to replace d1 key value by d2 key value.
+    :type if_conflict: function, optional
     """
     for key in d2:
         if key in d1:
