@@ -19,7 +19,7 @@ FROM ${base}:${tag}
 LABEL maintainer='B.Esteban, T.Kerzenmacher, V.Kozlov (KIT)'
 
 # What branch to clone (!)
-ARG branch=master
+ARG branch=test
 
 # Which user and group to use 
 ARG user=application
