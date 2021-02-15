@@ -7,6 +7,7 @@ Usage:
 
     usage: main [-h] [-f SOURCES_FILE] [-s {year,decade}]
                 [-v {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
+                {lon_mean,lat_mean} [{lon_mean,lat_mean} ...]
 
 To run the the application using **udocker** at the **Runtime machine** 
 you need to provide the following volumes to the container:
@@ -15,7 +16,7 @@ you need to provide the following volumes to the container:
  - --volume, mount `/app/output`: Output path for skimmed results.
  - --volume, mount `/app/sources.yaml`: Configuration file with a data structure 
    description at the input path in YAML_ format.
-   See :doc:`../user_guide/source-file` for a configuration example.
+   See :doc:`../getting_started/source-file` for a configuration example.
 
 .. _YAML: https://yaml.org/
 
@@ -35,7 +36,7 @@ For example,to run the container using udocker_ use the following:
       --volume=${PWD}/sources.yaml:/app/sources.yaml \
       --volume=${PWD}/data:/app/data \
       --volume=${PWD}/output:/app/output \
-      o3skim --verbosity INFO
+      o3skim --verbosity INFO lon_mean
     ...
     executing: main
     ...
@@ -51,12 +52,25 @@ For the main function description and commands help you can call:
     $ udocker run --user=application o3skim --help
 
 
-As optional arguments, it is possible to indicate:
+Where positional arguments are the o3skim operations to perform:
 
- - -h, --help: show this help message and exit
- - -f, --sources_file SOURCES_FILE: Custom sources YAML configuration. (default: ./sources.yaml)
- - -s, --split_by {year,decade}: Period time to split output (default: None)
- - -v, --verbosity {DEBUG,INFO,WARNING,ERROR,CRITICAL}: Sets the logging level (default: ERROR)
+.. code-block:: bash
+
+  o3skim is a tool for data pre-processing of ozone applications:
+  - lon_mean: Mean operation over longitude axis.
+  - lat_mean: Mean operation over latitude axis.
+
+  positional arguments:
+    {lon_mean,lat_mean}   o3skim operations to perform
+
+  optional arguments:
+    -h, --help            Show this help message and exit
+    -f SOURCES_FILE, --sources_file SOURCES_FILE
+                          Custom sources YAML configuration; default:./sources.yaml
+    -s {year,decade}, --split_by {year,decade}
+                          Period time to split output; default: None
+    -v {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --verbosity {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                          Sets the logging level; default: ERROR
 
 Note that SOURCES_FILE is only modified for development purposes as usually any 
 file from host can be mounted using the container directive '--volume'. 

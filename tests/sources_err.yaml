@@ -1,52 +1,55 @@
-SourceSplit:
-    ModelBadVar:
-        badvar_zm:
-            name: tco3 
-            paths: SourceSplit/tco3_????.nc
-            coordinates:
-                time: time
-                lat: lat
-                lon: lon
-    ModelBadName:
-        tco3_zm:
-            name: NonExistingName 
-            paths: SourceSplit/tco3_????.nc
-            coordinates:
-                time: time
-                lat: lat
-                lon: lon
-    ModelBadPath:
-        tco3_zm:
-            name: tco3
-            paths: SourceSplit/no_file_????.nc
-            coordinates:
-                time: time
-                lat: lat
-    ModelMissingCoords:
-        tco3_zm:
-            name: tco3
-            paths: SourceSplit/tco3_????.nc
-            coordinates:
-                time: time
-                lat: lat
-    ModelBadCoords:
-        tco3_zm:
-            name: tco3
-            paths: SourceSplit/tco3_????.nc
-            coordinates:
-                time: time
-                lat: lat
-                longitude: lon
-    ModelExtraCoords:
-        tco3_zm:
-            name: tco3
-            paths: SourceSplit/tco3_????.nc
-            coordinates:
-                time: time
-                plev: plev
-                lat: lat
-                lon: lon
-
-
-
-
+ModelBadVar:
+    badvar_zm:
+        name: tco3
+        paths: SourceSplit/tco3_????.nc
+        coordinates:
+            time: time
+            lat: lat
+            lon: lon
+ModelBadKey:
+    tco3_zm:
+        badKey: ABadKeyName
+        paths: SourceSplit/tco3_????.nc
+        coordinates:
+            time: time
+            lat: lat
+            lon: lon
+ModelBadName:
+    tco3_zm:
+        name: NonExistingName
+        paths: SourceSplit/tco3_????.nc
+        coordinates:
+            time: time
+            lat: lat
+            lon: lon
+ModelBadPath:
+    tco3_zm:
+        name: tco3
+        paths: SourceSplit/no_file_????.nc
+        coordinates:
+            time: time
+            lat: lat
+ModelMissingCoords:
+    tco3_zm:
+        name: tco3
+        paths: SourceSplit/tco3_????.nc
+        coordinates:
+            time: time
+            lat: lat
+ModelBadCoords:
+    tco3_zm:
+        name: tco3
+        paths: SourceSplit/tco3_????.nc
+        coordinates:
+            time: time
+            lat: lat
+            longitude: lon
+ModelExtraCoords:
+    tco3_zm:
+        name: tco3
+        paths: SourceSplit/tco3_????.nc
+        coordinates:
+            time: time
+            plev: plev
+            lat: lat
+            lon: lon
