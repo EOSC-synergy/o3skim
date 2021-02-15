@@ -50,4 +50,4 @@ class TestByDecade:
 class TestExceptions:
 
     def test_BadGroup(self, dataset, groupby):
-        pytest.raises(KeyError, o3skim.group, dataset, groupby)
+        pytest.raises(KeyError, o3skim.grouping, dataset, groupby)

@@ -139,7 +139,7 @@ def groupby(request):
 
 @pytest.fixture(scope='session')
 def splitted(dataset, groupby):
-    return o3skim.group(dataset, split_by=groupby)
+    return o3skim.grouping(dataset, split_by=groupby)
 
 
 @pytest.fixture(scope='session')

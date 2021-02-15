@@ -74,6 +74,11 @@ def mergedicts(d1, d2, if_conflict=lambda _, d: d):
 
     :param d2: Dict to be recursively merged in d1.
     :type d2: dict
+
+    :param if_conflict: Action to perform when key from d1 exists in d1.
+        Fun(d1,d2) which returns the value to store in d1.
+        Default action is to replace d1 key value by d2 key value.
+    :type if_conflict: function, optional
     """
     for key in d2:
         if key in d1:

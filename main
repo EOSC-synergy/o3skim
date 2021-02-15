@@ -56,7 +56,7 @@ def skim_process(name, operations, split_by, configuration):
 
     # Data grouping
     logging.info("Grouping processed model %s data", name)
-    years, datasets = o3skim.group(processed, split_by)
+    years, datasets = o3skim.grouping(processed, split_by)
 
     # Create output directory saving
     logging.info("Creating output directory %s", name)

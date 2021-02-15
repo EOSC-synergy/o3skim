@@ -9,13 +9,13 @@ def tco3(array, coord):
     """Standardizes a tco3 dataset.
 
     :param array: DataArray to standardize.
-    :type array: xarray.DataArray
+    :type array: :class:`xarray.DataArray`
 
     :param coord: Coordinates map for tco3 variable. 
     :type coord: {'lon':str, 'lat':str, 'time':str}
 
     :return: Standardized DataArray.
-    :rtype: xarray.DataArray 
+    :rtype: :class:`xarray.DataArray`
     """
     array.name = 'tco3_zm'
     array = squeeze(array)
@@ -34,13 +34,13 @@ def vmro3(array, coord):
     """Standardizes a vmro3 dataset.
 
     :param array: DataArray to standardize.
-    :type array: xarray.DataArray
+    :type array: :class:`xarray.DataArray`
 
     :param coord: Coordinates map for vmro3 variable. 
     :type coord: {'lon':str, 'lat':str, 'plev':str, 'time':str}
 
     :return: Standardized DataArray.
-    :rtype: xarray.DataArray 
+    :rtype: :class:`xarray.DataArray`
     """
     array.name = 'vmro3_zm'
     array = squeeze(array)
