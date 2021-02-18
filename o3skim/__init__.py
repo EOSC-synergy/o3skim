@@ -1,8 +1,5 @@
 """
 O3as package with classes and utilities to handle ozone data skimming.
-
-
-
 """
 import logging
 import xarray as xr

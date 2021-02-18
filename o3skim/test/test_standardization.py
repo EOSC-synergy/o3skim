@@ -30,7 +30,7 @@ class TestsTCO3(unittest.TestCase):
 
     def test_standardize(self):
         coords = {'lon': 'long', 'lat': 'latd', 'time': 'time'}
-        standardized_tco3 = standardization.tco3(
+        standardized_tco3 = standardizations.tco3(
             array=tco3_nonstd,
             coord=coords)
         xr.testing.assert_equal(tco3_standard, standardized_tco3)
@@ -61,7 +61,7 @@ class TestsVMRO3(unittest.TestCase):
 
     def test_standardize(self):
         coords = {'lon': 'lo', 'lat': 'la', 'plev': 'lv', 'time': 't'}
-        standardized_vmro3 = standardization.vmro3(
+        standardized_vmro3 = standardizations.vmro3(
             array=vmro3_nonstd,
             coord=coords)
         xr.testing.assert_equal(vmro3_standard, standardized_vmro3)

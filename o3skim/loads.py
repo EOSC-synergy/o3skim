@@ -1,67 +1,24 @@
 """
-Module in charge of data loading and standardization.
+Module in charge of data loading and standardizations.
 """
 import logging
-
-from o3skim import standardization
-from o3skim import utils
 import xarray as xr
 
 
 logger = logging.getLogger('o3skim.loads')
 
 
-def tco3(name, paths, coordinates, metadata={}):
-    """Function to load data as standardized tco3_zm.
-
-    :param name: Variable to retrieve after loading datasets.
-    :type name: str
-
-    :param paths: Regex expresion with paths to the datasets to load.
-    :type paths: str
-
-    :param coordinates: Coordinates map translation from original datasets.
-    :type coordinates: dict
-
-    :param metadata: Variable specific metadata. 
-    :type metadata: dict, optional
-
-    :return: Tuple with standardized tco3 data array, original dataset
-        attributes and variable specific metadata.
-    :rtype: tuple (:class:`xarray.DataArray`, dict, dict)
-    """
-    logger.debug("Loading tco3 data from: %s", paths)
+def ccmi(variable, paths):
+    logger.debug("Loading CCMI-1 data from: %s", paths)
     with xr.open_mfdataset(paths) as dataset:
-        datarray = standardization.tco3(
-            array=dataset[name],
-            coord=coordinates)
+        datarray = dataset[variable]
         ds_attrs = dataset.attrs
-    return datarray, ds_attrs, metadata
+    return datarray, ds_attrs
 
 
-def vmro3(name, paths, coordinates, metadata={}):
-    """Function to load data as standardized vmro3_zm.
-
-    :param name: Variable to retrieve after loading datasets.
-    :type name: str
-
-    :param paths: Regex expresion with paths to the datasets to load.
-    :type paths: str
-
-    :param coordinates: Coordinates map translation from original datasets.
-    :type coordinates: dict
-
-    :param metadata: Variable specific metadata. 
-    :type metadata: dict, optional
-
-    :return: Tuple with standardized vmro3 data array, original dataset
-        attributes and variable specific metadata.
-    :rtype: tuple (:class:`xarray.DataArray`, dict, dict)
-    """
-    logger.debug("Loading vmro3 data from: %s", paths)
+def ecmwf(variable, paths):
+    logger.debug("Loading ECMWF data from: %s", paths)
     with xr.open_mfdataset(paths) as dataset:
-        datarray = standardization.vmro3(
-            array=dataset[name],
-            coord=coordinates)
+        datarray = dataset[variable]
         ds_attrs = dataset.attrs
-    return datarray, ds_attrs, metadata
+    return datarray, ds_attrs
