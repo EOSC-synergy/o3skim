@@ -45,7 +45,7 @@ def parser():
         help="Standardization for total column ozone")
     vars_group.add_argument(
         "--vmro3_zm", action='append_const',
-        dest='parameter', const='tco3_zm',
+        dest='parameter', const='vmro3_zm',
         help="Standardization for volume mixing ratio ozone")
 
     # Arguments for subcommand CCMI-1
@@ -58,10 +58,10 @@ def parser():
         "--plev", type=str, default='plev',
         help="Pressure level coordinate on dataset (default: %(default)s)")
     ccmi_coordinates.add_argument(
-        "--lat", type=str, default='latitude',
+        "--lat", type=str, default='lat',
         help="Latitude coordinate on dataset (default: %(default)s)")
     ccmi_coordinates.add_argument(
-        "--lon", type=str, default='longitude',
+        "--lon", type=str, default='lon',
         help="Longitude coordinate on dataset (default: %(default)s)")
     ccmi_parser.set_defaults(command=ccmi_function)
     ccmi_parser.add_argument(
@@ -78,7 +78,7 @@ def parser():
         "--time", type=str, default='time',
         help="Time coordinate on dataset (default: %(default)s)")
     ecmwf_coordinates.add_argument(
-        "--plev", type=str, default='plev',
+        "--plev", type=str, default='pressure',
         help="Pressure level coordinate on dataset (default: %(default)s)")
     ecmwf_coordinates.add_argument(
         "--lat", type=str, default='latitude',
@@ -93,6 +93,9 @@ def parser():
     ecmwf_parser.add_argument(
         "paths", nargs='+', type=str, action='store',
         help="Paths to netCDF files with the variable to load")
+
+    # Parser return
+    return parser
 
 
 def run_command(command, verbosity, target, parameter, **kwargs):
