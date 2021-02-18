@@ -16,13 +16,13 @@ logger = logging.getLogger('o3skim')
 
 
 def loading(tco3_zm=None, vmro3_zm=None, metadata={}):
-    """Function in charge of o3 variable data loading. The specifications 
+    """Function in charge of o3 variable data loading. The specifications
     for the variables to load must follow this dict structure:
 
         :paths:         Regex expresion with paths to the datasets to load.
         :name:          Variable to retrieve after loading datasets.
         :coordinates:   Coordinates map translation from original datasets.
-        :metadata:      Optional. Variable added metadata. 
+        :metadata:      Optional. Variable added metadata.
 
     :param tco3_zm: Total Column Ozone data specifications.
     :type tco3_zm: dict, {paths, name, coordinates, metadata}
@@ -62,14 +62,14 @@ def processing(dataset, actions):
         :lat_mean: Latitudinal mean accross the dataset.
 
     Note that multiple operations can be concatenated. For example
-    using the list ['lon_mean', 'lat_mean'] as actions parameter 
+    using the list ['lon_mean', 'lat_mean'] as actions parameter
     input would perform a longitudinal mean followed afterwards by
     a latitudinal mean before returning the result.
 
     :param dataset: Original o3 dataset where to perform operations.
     :type dataset: :class:`xarray.Dataset`
 
-    :param actions: List of operation names to perform. 
+    :param actions: List of operation names to perform.
     :type actions: list
 
     :return: Dataset after processing listed operations.
@@ -85,7 +85,7 @@ def processing(dataset, actions):
 
 
 def grouping(dataset, split_by):
-    """Function in charge of splitting the input dataset into the 
+    """Function in charge of splitting the input dataset into the
     specified time range. The available list of split groups are:
 
         :`None`: No splitting, returns ([None], [dataset])
@@ -95,7 +95,7 @@ def grouping(dataset, split_by):
     :param dataset: Original o3 dataset where to perform splitting.
     :type dataset: :class:`xarray.Dataset`
 
-    :param split_by: Type of split to apply. 
+    :param split_by: Type of split to apply.
     :type split_by: str or None
 
     :return: Dataset after splitting by the defined time.
@@ -120,7 +120,7 @@ def grouping(dataset, split_by):
 
 def saving(datasets, split_by=None, years=None):
     """Function in charge of saving the input dataset into the file
-    system using an specified time range. The available type of 
+    system using an specified time range. The available type of
     output file formats are:
 
         :`None`: Output file format is {var}.nc
@@ -132,7 +132,7 @@ def saving(datasets, split_by=None, years=None):
     :param datasets: List o3 datasets to save in the filesystem.
     :type datasets: [:class:`xarray.Dataset`]
 
-    :param split_by: Type of saving format to apply. 
+    :param split_by: Type of saving format to apply.
     :type split_by:  str or None
     """
     if not split_by:
@@ -148,3 +148,55 @@ def saving(datasets, split_by=None, years=None):
         xr.save_mfdataset(
             datasets=[ds.o3[variable].dataset for ds in datasets],
             paths=[path(variable, year) for year in years])
+
+
+def save(datarray, variable, target, attrs={}, split_by=None):
+    """Function in charge of saving the input dataset into the file
+    system using an specified time range. The available type of 
+    output file formats are:
+
+        :`None`: Output file format is {target}.nc
+        :year:   Output file format is {target}_{y}-{y+01}.nc
+        :decade: Output file format is {target}_{y}-{y+10}.nc
+
+    :param datarray: DataArray to save in the target.
+    :type datarray: :class:`xarray.DataArray`
+
+    :param target:
+    :type target:
+
+    :param attrs:
+    :type attrs:
+
+    :param split_by: Type of saving format to apply. 
+    :type split_by:  str or None
+    """
+    dataset = datarray.to_dataset(name=variable)
+    dataset.attrs = attrs
+    if not split_by:
+        def path(_): return "{}.nc".format(target)
+        groups = [(None, dataset)]
+    elif split_by == 'year':
+        def path(y): return "{}_{}-{}.nc".format(target, y, y + 1)
+        def delta_map(x): return x.year
+        years = dataset.indexes['time'].map(delta_map)
+        groups = dataset.groupby(xr.DataArray(years))
+    elif split_by == 'decade':
+        def path(y): return "{}_{}-{}.nc".format(target, y, y + 10)
+        def delta_map(x): return x.year // 10 * 10
+        years = dataset.indexes['time'].map(delta_map)
+        groups = dataset.groupby(xr.DataArray(years))
+    else:
+        message = "Bad input split_by {} use {None, 'year', 'decade'}"
+        raise KeyError(message.format(split_by))
+    years, datasets = tuple(zip(*groups))
+    try:
+        xr.save_mfdataset(
+            mode='a',
+            datasets=[dataset for dataset in datasets],
+            paths=[path(year) for year in years])
+    except FileNotFoundError:
+        xr.save_mfdataset(
+            mode='w',
+            datasets=[dataset for dataset in datasets],
+            paths=[path(year) for year in years])

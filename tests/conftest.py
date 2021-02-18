@@ -10,66 +10,54 @@ import xarray
 # configurations ----------------------------------------------------
 year_line = range(2000, 2022)
 
-#  Source files
-sources_example = "tests/sources_example.yaml"
-sources_err = "tests/sources_err.yaml"
-available_configurations = {
-    'correct': {sources_example},
-    'errors': {sources_err}
-}
-
-# Sources
-sources = ["SourceSplit", "SourceMerged"]
-
 # Models
 tco3_models = {
-    'SourceSplit_ModelTCO3',
-    'SourceSplit_ModelALL',
-    'SourceMerged_ModelTCO3',
-    'SourceMerged_ModelALL'
+    'Model_onlyTCO3',
+    'Model_allVariables'
 }
 vmro3_models = {
-    'SourceSplit_ModelVMRO3',
-    'SourceSplit_ModelALL',
-    'SourceMerged_ModelVMRO3',
-    'SourceMerged_ModelALL'
-}
-error_models = {
-    'ModelBadVar',
-    'ModelBadKey',
-    'ModelBadName',
-    'ModelBadPath',
-    'ModelMissingCoords',
-    'ModelBadCoords',
-    'ModelExtraCoords'
+    'Model_onlyVMRO3',
+    'Model_allVariables'
 }
 available_models = {
-    'all': tco3_models | vmro3_models,
+    'no_errors': tco3_models | vmro3_models,
     'with_tco3': tco3_models,
     'only_tco3': tco3_models - vmro3_models,
     'with_vmro3': vmro3_models,
-    'only_vmro3': vmro3_models - tco3_models,
-    'errors': error_models
+    'only_vmro3': vmro3_models - tco3_models
 }
 
 
 # session fixtures ---------------------------------------------------
 @pytest.fixture(scope='session')
+def data_format(request):
+    if hasattr(request, 'param'):
+        return request.param
+
+
+@pytest.fixture(scope='session')
+def timeline(request):
+    if hasattr(request, 'param'):
+        return request.param
+
+
+@pytest.fixture(scope='session')
 def data_dir(tmpdir_factory):
     data_dir = tmpdir_factory.mktemp("data")
-    for source in sources:
-        source_dir = data_dir.join(source)
+    return data_dir
+
+
+@pytest.fixture(scope='session')
+def source_dir(data_dir, data_format, timeline):
+    source_dir = data_dir.join(data_format + '_' + timeline)
+    try:  # See https://github.com/pytest-dev/pytest/discussions/8350
         os.mkdir(source_dir)
         with o3skim.utils.cd(source_dir):
-            if source == 'SourceMerged':
-                mockup_data.combined(year_line)
-                mockup_data.noise(name='merged_noise.nc')
-            if source == 'SourceSplit':
-                mockup_data.tco3(year_line)
-                mockup_data.noise(name='tco3_noise.nc')
-                mockup_data.vmro3(year_line)
-                mockup_data.noise(name='vmro3_noise.nc')
-    return data_dir
+            mockup_data.data(year_line, data_format, timeline)
+            mockup_data.noise(name='model_noise.nc')
+        return source_dir
+    except FileExistsError:
+        return source_dir
 
 
 @pytest.fixture(scope='session')
@@ -85,8 +73,18 @@ def metadata_dir(tmpdir_factory, model):
 
 
 @pytest.fixture(scope='session')
-def config(request):
-    return request.param
+def sources_path(timeline, data_format):
+    if data_format == 'errors':
+        sources_path = "tests/sources/errors.yaml"
+    else:
+        sources_path = "tests/sources/{}/{}/sources.yaml"
+        sources_path = sources_path.format(data_format, timeline)
+    return sources_path
+
+
+@pytest.fixture(scope='session')
+def sources_dict(sources_path):
+    return o3skim.utils.load(sources_path)
 
 
 @pytest.fixture(scope='session')
@@ -95,17 +93,12 @@ def model(request):
 
 
 @pytest.fixture(scope='session')
-def config_dict(config):
-    return o3skim.utils.load(config)
+def model_config(sources_dict, model):
+    return sources_dict[model]
 
 
 @pytest.fixture(scope='session')
-def model_config(config_dict, model):
-    return config_dict[model]
-
-
-@pytest.fixture(scope='session')
-def load_model(data_dir, model_config):
+def load_model(data_dir, model_config, source_dir):
     with o3skim.utils.cd(data_dir):
         return o3skim.loading(**model_config)
 
