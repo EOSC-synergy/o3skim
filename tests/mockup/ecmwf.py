@@ -8,6 +8,12 @@ def create_data(years):
         ds.to_netcdf("era-int_sfc_{}.nc".format(year))
 
 
+def random_dataset(year):
+    return mockup.dataset_from(
+        tco3=random_tco3(year),
+        vmro3=random_vmro3(year))
+
+
 def random_tco3(year):
     coordinates = dict(
         time=mockup.time(num=12, start=year),
@@ -25,9 +31,3 @@ def random_vmro3(year):
         latitude=mockup.lat(num=11))
     description = "Test vmro3 xarray"
     return mockup.random_array(coordinates, description)
-
-
-def random_dataset(year):
-    return mockup.dataset_from(
-        tco3=random_tco3(year),
-        vmro3=random_vmro3(year))

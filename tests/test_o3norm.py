@@ -1,7 +1,5 @@
 """Pytest module to test sources as blackbox."""
-import o3skim
 import pytest
-import tests.conftest as conftest
 import xarray as xr
 
 from o3skim.scripts import o3norm
