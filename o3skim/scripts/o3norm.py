@@ -7,14 +7,14 @@ import logging
 import sys
 import warnings
 
-from o3skim import loads, standardizations
+from o3skim import loads, standardization
 import o3skim
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 def main():
-    parser = parser()
+    parser = run_parser()
     args = parser.parse_args()
     if args.command is not None:
         run_command(**vars(args))
@@ -23,7 +23,7 @@ def main():
     sys.exit(0)  # Shell return 0 == success
 
 
-def parser():
+def run_parser():
     parser = argparse.ArgumentParser(
         prog='PROG', description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -94,6 +94,29 @@ def parser():
         "paths", nargs='+', type=str, action='store',
         help="Paths to netCDF files with the variable to load")
 
+    # Arguments for subcommand ESACCI
+    esacci_parser = subparsers.add_parser('esacci', help='ESACCI Source input')
+    esacci_coordinates = esacci_parser.add_argument_group('coordinates')
+    esacci_coordinates.add_argument(
+        "--time_parse", type=str, default='%Y%m%d',
+        help="Time parsing from file name (default: %(default)s)")
+    esacci_coordinates.add_argument(
+        "--plev", type=str, default='pressure',
+        help="Pressure level coordinate on dataset (default: %(default)s)")
+    esacci_coordinates.add_argument(
+        "--lat", type=str, default='latitude',
+        help="Latitude coordinate on dataset (default: %(default)s)")
+    esacci_coordinates.add_argument(
+        "--lon", type=str, default='longitude',
+        help="Longitude coordinate on dataset (default: %(default)s)")
+    esacci_parser.set_defaults(command=esacci_function)
+    esacci_parser.add_argument(
+        "variable", nargs=1, type=str, action='store',
+        help="Variable name to load from the netCFD dataset")
+    esacci_parser.add_argument(
+        "paths", nargs='+', type=str, action='store',
+        help="Paths to netCDF files with the variable to load")
+
     # Parser return
     return parser
 
@@ -121,13 +144,19 @@ def run_command(command, verbosity, target, parameter, **kwargs):
 
 def ccmi_function(parameter, variable, paths, **coords):
     datarray, attrs = loads.ccmi(variable[0], paths)
-    datarray = standardizations.ccmi(datarray, parameter[0], **coords)
+    datarray = standardization.run(datarray, parameter[0], **coords)
     return datarray, attrs
 
 
 def ecmwf_function(parameter, variable, paths, **coords):
     datarray, attrs = loads.ecmwf(variable[0], paths)
-    datarray = standardizations.ecmwf(datarray, parameter[0], **coords)
+    datarray = standardization.run(datarray, parameter[0], **coords)
+    return datarray, attrs
+
+
+def esacci_function(parameter, variable, time_parse, paths, **coords):
+    datarray, attrs = loads.esacci(variable[0], time_parse, paths)
+    datarray = standardization.run(datarray, parameter[0], **coords)
     return datarray, attrs
 
 

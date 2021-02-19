@@ -9,7 +9,7 @@ from o3skim.scripts import o3norm
 
 @pytest.fixture()
 def args(target, variable, source, s_args):
-    parser = o3norm.parser()
+    parser = o3norm.run_parser()
     variable = '--' + variable
     return parser.parse_args(['-t', target, variable, source, *s_args])
 
@@ -26,7 +26,7 @@ def dataset(target, args):
 
 
 @pytest.mark.parametrize('variable', {'tco3_zm', 'vmro3_zm'}, indirect=True)
-@pytest.mark.parametrize('source', {'ccmi', 'ecmwf'}, indirect=True)
+@pytest.mark.parametrize('source', {'ccmi', 'ecmwf', 'esacci'}, indirect=True)
 class TestsCommon:
 
     def test_coordinates(self, dataset):
@@ -36,7 +36,7 @@ class TestsCommon:
 
 
 @pytest.mark.parametrize('variable', {'tco3_zm'}, indirect=True)
-@pytest.mark.parametrize('source', {'ccmi', 'ecmwf'}, indirect=True)
+@pytest.mark.parametrize('source', {'ccmi', 'ecmwf', 'esacci'}, indirect=True)
 class TestsTCO3:
 
     def test_coordinates(self, dataset):
@@ -44,7 +44,7 @@ class TestsTCO3:
 
 
 @pytest.mark.parametrize('variable', {'vmro3_zm'}, indirect=True)
-@pytest.mark.parametrize('source', {'ccmi', 'ecmwf'}, indirect=True)
+@pytest.mark.parametrize('source', {'ccmi', 'ecmwf', 'esacci'}, indirect=True)
 class TestsVMRO3:
 
     def test_coordinates(self, dataset):

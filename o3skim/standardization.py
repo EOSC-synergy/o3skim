@@ -5,13 +5,13 @@ import logging
 logger = logging.getLogger('o3skim.standardization')
 
 
-def ccmi(datarray, variable, **coords):
-    """Standardizes a CCMI-1 DataArray.
+def run(datarray, variable, **coords):
+    """Standardizes a DataArray.
 
     :return: Standardized DataArray.
     :rtype: :class:`xarray.DataArray`
     """
-    logger.debug("Standardizing CCMI-1 data")
+    logger.debug("Standardizing DataArray as %s", variable)
     datarray = _squeeze(datarray)
     datarray.name = variable
     if variable == 'tco3_zm':
@@ -22,30 +22,13 @@ def ccmi(datarray, variable, **coords):
     return datarray
 
 
-def ecmwf(datarray, variable, **coords):
-    """Standardizes an ECMWF dataArray.
-
-    :return: Standardized DataArray.
-    :rtype: :class:`xarray.DataArray`
-    """
-    logger.debug("Standardizing ECMWF data")
-    datarray = _squeeze(datarray)
-    datarray.name = variable
-    if variable == 'tco3_zm':
-        datarray = _rename_coords_tco3(datarray, **coords)
-    if variable == 'vmro3_zm':
-        datarray = _rename_coords_vmro3(datarray, **coords)
-    datarray = _sort(datarray)
-    return datarray
-
-
-def _rename_coords_tco3(array, time, lat, lon, **Not_used):
+def _rename_coords_tco3(array, lat, lon, time='time', **Not_used):
     """Renames a tco3 array variable and coordinates"""
     logger.debug("Renaming '{0}' coordinates".format('tco3_zm'))
     return array.rename({time: 'time', lat: 'lat', lon: 'lon'})
 
 
-def _rename_coords_vmro3(array, time, plev, lat, lon, **Not_used):
+def _rename_coords_vmro3(array, lat, lon, plev, time='time', **Not_used):
     """Renames a vmro3 array variable and coordinates"""
     logger.debug("Renaming '{0}' coordinates".format('vmro3_zm'))
     return array.rename({time: 'time', plev: 'plev', lat: 'lat', lon: 'lon'})

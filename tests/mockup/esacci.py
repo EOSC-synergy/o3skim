@@ -5,13 +5,14 @@ import tests.mockup as mockup
 
 
 def create_data(years):
-    def date(t): return pd.to_datetime(t).date()
+    def date(t): return str(pd.to_datetime(t).date()).replace('-', '')
+    fname = 'ESACCI-OZONE-L3S-TC-MERGED-DLR_1M-{}-fv0100.nc'
     for year in years:
         dataset = random_dataset(year)
         tx, dsx = zip(*dataset.groupby("time"))
         xr.save_mfdataset(
             [ds.drop('time') for ds in dsx],
-            ['ESACCI-OZONE_{}.nc'.format(date(t)) for t in tx])
+            [fname.format(date(t)) for t in tx])
 
 
 def random_tco3(year):
