@@ -98,8 +98,8 @@ def run_parser():
     esacci_parser = subparsers.add_parser('esacci', help='ESACCI Source input')
     esacci_coordinates = esacci_parser.add_argument_group('coordinates')
     esacci_coordinates.add_argument(
-        "--time_parse", type=str, default='%Y%m%d',
-        help="Time parsing from file name (default: %(default)s)")
+        "--time_position", type=int, default=-2,
+        help="Time position from file name (default: %(default)s)")
     esacci_coordinates.add_argument(
         "--plev", type=str, default='pressure',
         help="Pressure level coordinate on dataset (default: %(default)s)")
@@ -154,8 +154,8 @@ def ecmwf_function(parameter, variable, paths, **coords):
     return datarray, attrs
 
 
-def esacci_function(parameter, variable, time_parse, paths, **coords):
-    datarray, attrs = loads.esacci(variable[0], time_parse, paths)
+def esacci_function(parameter, variable, time_position, paths, **coords):
+    datarray, attrs = loads.esacci(variable[0], time_position, paths)
     datarray = standardization.run(datarray, parameter[0], **coords)
     return datarray, attrs
 
