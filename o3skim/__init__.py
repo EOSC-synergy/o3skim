@@ -43,7 +43,7 @@ def processing(dataset, actions):
     return processed
 
 
-def save(datarray, variable, target, attrs={}, split_by=None):
+def save(dataset, target, split_by=None):
     """Function in charge of saving the input dataset into the file
     system using an specified time range. The available type of 
     output file formats are:
@@ -52,20 +52,15 @@ def save(datarray, variable, target, attrs={}, split_by=None):
         :year:   Output file format is {target}_{y}-{y+01}.nc
         :decade: Output file format is {target}_{y}-{y+10}.nc
 
-    :param datarray: DataArray to save in the target.
-    :type datarray: :class:`xarray.DataArray`
+    :param dataset: DataSet to save in the target.
+    :type dataset: :class:`xarray.DataSet`
 
     :param target:
     :type target:
 
-    :param attrs:
-    :type attrs:
-
     :param split_by: Type of saving format to apply. 
     :type split_by:  str or None
     """
-    dataset = datarray.to_dataset(name=variable)
-    dataset.attrs = attrs
     if not split_by:
         def path(_): return "{}.nc".format(target)
         groups = [(None, dataset)]

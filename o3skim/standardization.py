@@ -12,26 +12,22 @@ def run(datarray, variable, **coords):
     :rtype: :class:`xarray.DataArray`
     """
     logger.debug("Standardizing DataArray as %s", variable)
+    datarray.name = variable    
     datarray = _squeeze(datarray)
-    datarray.name = variable
-    if variable == 'tco3_zm':
-        datarray = _rename_coords_tco3(datarray, **coords)
-    if variable == 'vmro3_zm':
-        datarray = _rename_coords_vmro3(datarray, **coords)
+    datarray = _rename_coords(datarray, **coords)
     datarray = _sort(datarray)
     return datarray
 
 
-def _rename_coords_tco3(array, lat, lon, time='time', **Not_used):
-    """Renames a tco3 array variable and coordinates"""
-    logger.debug("Renaming '{0}' coordinates".format('tco3_zm'))
-    return array.rename({time: 'time', lat: 'lat', lon: 'lon'})
-
-
-def _rename_coords_vmro3(array, lat, lon, plev, time='time', **Not_used):
-    """Renames a vmro3 array variable and coordinates"""
-    logger.debug("Renaming '{0}' coordinates".format('vmro3_zm'))
-    return array.rename({time: 'time', plev: 'plev', lat: 'lat', lon: 'lon'})
+def _rename_coords(array, **coords):
+    """Renames an array variable and coordinates"""
+    logger.debug("Renaming coordinates: {}".format(coords))
+    for key, value in coords.items():
+        try:
+            array = array.rename({value: key})
+        except ValueError:
+            pass
+    return array
 
 
 def _squeeze(array):

@@ -117,6 +117,16 @@ def run_parser():
         "paths", nargs='+', type=str, action='store',
         help="Paths to netCDF files with the variable to load")
 
+    # Arguments for subcommand SBUV
+    sbuv_parser = subparsers.add_parser('sbuv', help='SBUV Source input')
+    sbuv_parser.set_defaults(command=sbuv_function)
+    sbuv_parser.add_argument(
+        "-s", "--delimiter", type=str, default='\s+',
+        help="Delimiter to use (default: %(default)s)")
+    sbuv_parser.add_argument(
+        "textfile", nargs=1, type=str, action='store',
+        help="File .txt with the data to load")
+
     # Parser return
     return parser
 
@@ -132,11 +142,11 @@ def run_command(command, verbosity, target, parameter, **kwargs):
 
     # Loading of DataArray and attributes
     logging.info("Data loading and standardization of %s", parameter[0])
-    datarray, attrs = command(parameter, **kwargs)
+    dataset = command(parameter, **kwargs)
 
     # Saving
     logging.info("Staving result into %s.nc", target)
-    o3skim.save(datarray, parameter[0], target, attrs)
+    o3skim.save(dataset, target)
 
     # End of program
     logging.info("End of program")
@@ -145,19 +155,36 @@ def run_command(command, verbosity, target, parameter, **kwargs):
 def ccmi_function(parameter, variable, paths, **coords):
     datarray, attrs = loads.ccmi(variable[0], paths)
     datarray = standardization.run(datarray, parameter[0], **coords)
-    return datarray, attrs
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    return dataset
 
 
 def ecmwf_function(parameter, variable, paths, **coords):
     datarray, attrs = loads.ecmwf(variable[0], paths)
     datarray = standardization.run(datarray, parameter[0], **coords)
-    return datarray, attrs
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    return dataset
 
 
 def esacci_function(parameter, variable, time_position, paths, **coords):
     datarray, attrs = loads.esacci(variable[0], time_position, paths)
     datarray = standardization.run(datarray, parameter[0], **coords)
-    return datarray, attrs
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    return dataset
+
+
+def sbuv_function(parameter, delimiter, textfile):
+    datarray, attrs = loads.sbuv(textfile[0], delimiter)
+    datarray = standardization.run(datarray, parameter[0])
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    if parameter[0] == 'tco3_zm':
+        return dataset.assign_coords(lon=['nan'])
+    if parameter[0] == 'vmro3_zm':
+        raise NotImplementedError("Load of vmro3 not available")
 
 
 if __name__ == '__main__':

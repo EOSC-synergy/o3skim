@@ -9,6 +9,7 @@ from contextlib import contextmanager
 import logging
 import os
 import yaml
+import io
 
 logger = logging.getLogger('o3skim.utils')
 
@@ -90,3 +91,18 @@ def mergedicts(d1, d2, if_conflict=lambda _, d: d):
                 d1[key] = if_conflict(d1[key], d2[key])
         else:
             d1[key] = d2[key]
+
+
+def chunkio(headid, strio):
+    heads = []
+    chunks = []
+    chunk = io.StringIO()
+    for line in strio:
+        if headid in line:
+            heads.append(line)
+            chunks.append(chunk)
+            chunk.seek(0)   # rewind the stream
+            chunk = io.StringIO()
+        else:
+            chunk.write(line)
+    return zip(heads, chunks[1:-1])

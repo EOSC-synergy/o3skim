@@ -7,15 +7,15 @@ from tests.mockup import standard
 
 
 @pytest.fixture()
-def tco3_array():
-    arrays = [standard.random_tco3(y) for y in range(2000, 2022)]
-    return xr.concat(arrays, dim='time')
+def tco3_ds():
+    dsx = [standard.random_tco3_dataset(y) for y in range(2000, 2022)]
+    return xr.concat(dsx, dim='time')
 
 
 @pytest.fixture()
-def vmro3_array():
-    arrays = [standard.random_vmro3(y) for y in range(2000, 2022)]
-    return xr.concat(arrays, dim='time')
+def vmro3_ds():
+    dsx = [standard.random_vmro3_dataset(y) for y in range(2000, 2022)]
+    return xr.concat(dsx, dim='time')
 
 
 @pytest.fixture(scope='session')
@@ -24,10 +24,9 @@ def split_by(request):
 
 
 @ pytest.fixture()
-def dataset(target, tco3_array, vmro3_array, split_by):
-    attrs = dict(desc="Test dataset 1535843")
-    o3skim.save(tco3_array, 'tco3_zm', target, attrs, split_by)
-    o3skim.save(vmro3_array, 'vmro3_zm', target, attrs, split_by)
+def dataset(target, tco3_ds, vmro3_ds, split_by):
+    o3skim.save(tco3_ds, target, split_by)
+    o3skim.save(vmro3_ds, target, split_by)
     return xr.open_mfdataset(target + '*.nc')
 
 
@@ -45,4 +44,4 @@ class TestsSavedDataset:
         assert 'lat' in dataset.coords
 
     def test_attrs(self, dataset):
-        assert dataset.attrs == dict(desc="Test dataset 1535843")
+        assert dataset.attrs == dict(description="Test ozone dataset")

@@ -4,16 +4,11 @@ import os
 
 import o3skim
 import pytest
-from tests.mockup import ccmi, ecmwf, esacci
-import tests.mockup as mockup_data
-import xarray
+from tests.mockup import ccmi, ecmwf, esacci, sbuv
+
 
 # configurations ----------------------------------------------------
 year_line = range(2000, 2020)
-var_names = {
-    'ccmi':  dict(tco3_zm='toz', vmro3_zm='vmro3'),
-    'ecmwf': dict(tco3_zm='tco3', vmro3_zm='vmro3'),
-    'esacci': dict(tco3_zm='tco3', vmro3_zm='vmro3')}
 
 
 # session fixtures --------------------------------------------------
@@ -37,6 +32,8 @@ def paths(tmpdir_factory, source, variable):
             ecmwf.create_data(year_line)  # Merged
         if source == 'esacci':
             esacci.create_data(year_line)  # Merged
+        if source == 'sbuv':
+            sbuv.create_data(year_line)  # Merged
         files = os.listdir()
     return [str(source_dir.join(f)) for f in files]
 
@@ -59,9 +56,4 @@ def output_dir(tmpdir_factory):
 
 @pytest.fixture()
 def target(output_dir):
-    return str(output_dir.join('o3data.nc'))
-
-
-@pytest.fixture()
-def var_name(source, variable):
-    return var_names[source][variable]
+    return str(output_dir.join('o3data'))
