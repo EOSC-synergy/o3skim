@@ -1,10 +1,10 @@
 """Pytest configuration file."""
-from o3skim.scripts import o3norm
-import os
-
 import o3skim
+import os
 import pytest
+from tests.mockup import standard
 from tests.mockup import ccmi, ecmwf, esacci, sbuv
+import xarray as xr
 
 
 # configurations ----------------------------------------------------
@@ -12,30 +12,6 @@ year_line = range(2000, 2020)
 
 
 # session fixtures --------------------------------------------------
-@pytest.fixture(scope='session')
-def source(request):
-    return request.param
-
-
-@pytest.fixture(scope='session')
-def variable(request):
-    return request.param
-
-
-@pytest.fixture(scope='session')
-def paths(tmpdir_factory, source, variable):
-    source_dir = tmpdir_factory.mktemp(source + '_' + variable)
-    with o3skim.utils.cd(source_dir):
-        if source == 'ccmi':
-            ccmi.create_data(variable, year_line)
-        if source == 'ecmwf':
-            ecmwf.create_data(year_line)  # Merged
-        if source == 'esacci':
-            esacci.create_data(year_line)  # Merged
-        if source == 'sbuv':
-            sbuv.create_data(year_line)  # Merged
-        files = os.listdir()
-    return [str(source_dir.join(f)) for f in files]
 
 
 # package fixtures --------------------------------------------------
@@ -56,4 +32,70 @@ def output_dir(tmpdir_factory):
 
 @pytest.fixture()
 def target(output_dir):
-    return str(output_dir.join('o3data'))
+    return str(output_dir.join('o3target'))
+
+
+@pytest.fixture()
+def output(output_dir):
+    return str(output_dir.join('o3output'))
+
+
+@pytest.fixture()
+def variable(request):
+    return request.param
+
+
+@pytest.fixture()
+def tco3_ds():
+    dsx = [standard.random_tco3_dataset(y) for y in range(2000, 2022)]
+    return xr.concat(dsx, dim='time')
+
+
+@pytest.fixture()
+def vmro3_ds():
+    dsx = [standard.random_vmro3_dataset(y) for y in range(2000, 2022)]
+    return xr.concat(dsx, dim='time')
+
+
+@pytest.fixture()
+def random_dataset():
+    dsx = [standard.random_dataset(y) for y in range(2000, 2022)]
+    return xr.concat(dsx, dim='time')
+
+
+@pytest.fixture()
+def split_by(request):
+    return request.param
+
+
+@pytest.fixture()
+def operations(request):
+    return request.param
+
+
+@pytest.fixture()
+def source(request):
+    return request.param
+
+
+@pytest.fixture()
+def source_files(tmpdir_factory, source, variable):
+    source_dir = tmpdir_factory.mktemp(source + '_' + variable)
+    with o3skim.utils.cd(source_dir):
+        if source == 'ccmi':
+            ccmi.create_data(variable, year_line)
+        if source == 'ecmwf':
+            ecmwf.create_data(year_line)  # Merged
+        if source == 'esacci':
+            esacci.create_data(year_line)  # Merged
+        if source == 'sbuv':
+            sbuv.create_data(year_line)  # Merged
+        files = os.listdir()
+    return [str(source_dir.join(f)) for f in files]
+
+
+@pytest.fixture()
+def o3data_files(output_dir, random_dataset, target, split_by):
+    o3skim.save(random_dataset, target, split_by)
+    files = os.listdir(output_dir)
+    return [str(output_dir.join(f)) for f in files]

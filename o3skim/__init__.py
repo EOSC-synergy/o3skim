@@ -7,12 +7,11 @@ import xarray as xr
 from o3skim import loads
 from o3skim import operations
 from o3skim import utils
-from o3skim import extended_xarray
 
 logger = logging.getLogger('o3skim')
 
 
-def processing(dataset, actions):
+def process(dataset, actions):
     """Function in charge of processing the list of o3skim operations
     to the ozone variables dataset. The available list of operations
     to perform are:
@@ -39,7 +38,7 @@ def processing(dataset, actions):
     operation = actions.pop()
     processed = operations.run(operation, dataset)
     if actions != []:
-        processed = processing(processed, actions)
+        processed = process(processed, actions)
     return processed
 
 

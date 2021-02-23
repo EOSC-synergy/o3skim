@@ -8,6 +8,7 @@ import sys
 import warnings
 
 import o3skim
+import xarray as xr
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -68,11 +69,15 @@ def run_command(verbosity, operations, output, paths):
 
     # Loading of DataArray and attributes
     logging.info("Data loading from %s", paths)
-    raise NotADirectoryError("Not implemented")
+    dataset = xr.open_mfdataset(paths)
+
+    # Processing of skimming operations
+    logging.info("Data skimming using %s", operations)
+    skimmed = o3skim.process(dataset, operations)
 
     # Saving
     logging.info("Staving result into %s.nc", output)
-    raise NotADirectoryError("Not implemented")
+    o3skim.save(skimmed, output)
 
     # End of program
     logging.info("End of program")

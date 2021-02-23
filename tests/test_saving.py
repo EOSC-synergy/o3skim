@@ -2,32 +2,10 @@
 import pytest
 import xarray as xr
 
-import o3skim
-from tests.mockup import standard
-
-
-@pytest.fixture()
-def tco3_ds():
-    dsx = [standard.random_tco3_dataset(y) for y in range(2000, 2022)]
-    return xr.concat(dsx, dim='time')
-
-
-@pytest.fixture()
-def vmro3_ds():
-    dsx = [standard.random_vmro3_dataset(y) for y in range(2000, 2022)]
-    return xr.concat(dsx, dim='time')
-
-
-@pytest.fixture(scope='session')
-def split_by(request):
-    return request.param
-
 
 @ pytest.fixture()
-def dataset(target, tco3_ds, vmro3_ds, split_by):
-    o3skim.save(tco3_ds, target, split_by)
-    o3skim.save(vmro3_ds, target, split_by)
-    return xr.open_mfdataset(target + '*.nc')
+def dataset(o3data_files):
+    return xr.open_mfdataset(o3data_files)
 
 
 @pytest.mark.parametrize('split_by', {None, 'year', 'decade'}, indirect=True)
