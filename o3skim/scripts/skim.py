@@ -16,18 +16,14 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 def main():
     parser = run_parser()
     args = parser.parse_args()
-    if args.command is not None:
-        run_command(**vars(args))
-    else:
-        parser.print_help()
+    run_command(**vars(args))
     sys.exit(0)  # Shell return 0 == success
 
 
 def run_parser():
     parser = argparse.ArgumentParser(
         prog='PROG', description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="See '<command> --help' to read about a specific sub-command.")
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         "-v", "--verbosity", type=str, default='INFO',
         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
@@ -81,7 +77,6 @@ def run_command(verbosity, operations, output, paths):
 
     # End of program
     logging.info("End of program")
-
 
 
 if __name__ == '__main__':
