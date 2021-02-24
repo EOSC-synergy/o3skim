@@ -59,6 +59,3 @@ RUN groupadd -r ${group} && \
     chown -R ${user} . 
 USER ${user}
 
-# Start default script
-ENTRYPOINT [ "main" ]
-
