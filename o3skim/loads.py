@@ -2,6 +2,7 @@
 Module in charge of data loading and standardization.
 """
 import pandas as pd
+import numpy as np
 import logging
 import xarray as xr
 import o3skim.utils as utils
@@ -58,5 +59,6 @@ def sbuv(textfile, delimiter):
             coords=dict(
                 lat=table.index,
                 time=[pd.datetime(year, m, 1) for m in range(1, 13)]))
+        array.values.flat[array.values.flat == 0.0] = np.nan
         arrays.append(array)
     return xr.concat(arrays, 'time'), {}
