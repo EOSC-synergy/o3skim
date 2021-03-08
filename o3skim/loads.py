@@ -13,6 +13,8 @@ logger = logging.getLogger('o3skim.loads')
 
 def ccmi(variable, paths):
     logger.debug("Loading CCMI-1 data from: %s", paths)
+    if len(paths) == 1:
+        paths = paths[0]
     with xr.open_mfdataset(paths) as dataset:
         datarray = dataset[variable]
         ds_attrs = dataset.attrs
@@ -21,6 +23,8 @@ def ccmi(variable, paths):
 
 def ecmwf(variable, paths):
     logger.debug("Loading ECMWF data from: %s", paths)
+    if len(paths) == 1:
+        paths = paths[0]
     with xr.open_mfdataset(paths) as dataset:
         datarray = dataset[variable]
         ds_attrs = dataset.attrs
@@ -28,6 +32,8 @@ def ecmwf(variable, paths):
 
 
 def esacci(variable, time_position, paths):
+    if len(paths) == 1:
+        paths = paths[0]
     def pf(ds):
         fpath = ds.encoding["source"]
         fname = fpath.split('/')[-1]
