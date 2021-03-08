@@ -1,42 +1,41 @@
 """Module in charge of dataset standardization when loading models."""
 import logging
-
+import o3skim.loads as loads
+import o3skim.normalization as normalization
 
 logger = logging.getLogger('o3skim.standardization')
 
 
-def run(datarray, variable, **coords):
-    """Standardizes a DataArray.
-
-    :return: Standardized DataArray.
-    :rtype: :class:`xarray.DataArray`
-    """
-    logger.debug("Standardizing DataArray as %s", variable)
-    datarray.name = variable    
-    datarray = _squeeze(datarray)
-    datarray = _rename_coords(datarray, **coords)
-    datarray = _sort(datarray)
-    return datarray
+def ccmi_function(parameter, variable, paths, **coords):
+    datarray, attrs = loads.ccmi(variable[0], paths)
+    datarray = normalization.run(datarray, parameter[0], **coords)
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    return dataset
 
 
-def _rename_coords(array, **coords):
-    """Renames an array variable and coordinates"""
-    logger.debug("Renaming coordinates: {}".format(coords))
-    for key, value in coords.items():
-        try:
-            array = array.rename({value: key})
-        except ValueError:
-            pass
-    return array
+def ecmwf_function(parameter, variable, paths, **coords):
+    datarray, attrs = loads.ecmwf(variable[0], paths)
+    datarray = normalization.run(datarray, parameter[0], **coords)
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    return dataset
 
 
-def _squeeze(array):
-    """Squeezes the 1-size dimensions on an array"""
-    logger.debug("Squeezing coordinates in dataset")
-    return array.squeeze(drop=True)
+def esacci_function(parameter, variable, time_position, paths, **coords):
+    datarray, attrs = loads.esacci(variable[0], time_position, paths)
+    datarray = normalization.run(datarray, parameter[0], **coords)
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    return dataset
 
 
-def _sort(array):
-    """Sorts an array by coordinates"""
-    logger.debug("Sorting coordinates in dataset")
-    return array.sortby(list(array.coords))
+def sbuv_function(parameter, delimiter, textfile):
+    datarray, attrs = loads.sbuv(textfile[0], delimiter)
+    datarray = normalization.run(datarray, parameter[0])
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    if parameter[0] == 'tco3_zm':
+        return dataset.assign_coords(lon=['nan'])
+    if parameter[0] == 'vmro3_zm':
+        raise NotImplementedError("Load of vmro3 not available")

@@ -18,9 +18,9 @@ using = {
 
 @pytest.fixture()
 def args(operations, output, o3data_files):
-    parser = skim.run_parser()
     operations = ["--{}".format(x) for x in operations]
-    return parser.parse_args([*operations, '-o', output, *o3data_files])
+    args = [*operations, '-o', output, *o3data_files]
+    return skim.parser.parse_args(args)
 
 
 @pytest.fixture()

@@ -15,9 +15,8 @@ var_names = {
 def args(target, variable, source, s_args):
     if source == 'sbuv' and variable == 'vmro3_zm':
         pytest.skip('This model does not support vmro3')
-    parser = norm.run_parser()
-    variable = '--' + variable
-    return parser.parse_args(['-t', target, variable, source, *s_args])
+    args = ['-t', target, f"--{variable}", source, *s_args]
+    return norm.parser.parse_args(args)
 
 
 @pytest.fixture()
