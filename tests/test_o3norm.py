@@ -5,16 +5,10 @@ import xarray as xr
 
 
 sources = {'ccmi', 'ecmwf', 'esacci', 'sbuv'}
-var_names = {
-    'ccmi':  dict(tco3_zm='toz', vmro3_zm='vmro3'),
-    'ecmwf': dict(tco3_zm='tco3', vmro3_zm='vmro3'),
-    'esacci': dict(tco3_zm='tco3', vmro3_zm='vmro3')}
 
 
 @pytest.fixture()
 def args(target, variable, source, s_args):
-    if source == 'sbuv' and variable == 'vmro3_zm':
-        pytest.skip('This model does not support vmro3')
     args = ['-t', target, f"--{variable}", source, *s_args]
     return norm.parser.parse_args(args)
 
@@ -22,13 +16,29 @@ def args(target, variable, source, s_args):
 @pytest.fixture()
 def s_args(source, variable, source_files):
     if source == 'ccmi':
-        return [var_names[source][variable]] + source_files
+        if variable == 'tco3_zm':
+            return ['toz', *source_files]
+        elif variable == 'vmro3_zm':
+            return ['vmro3', *source_files]
+        else:
+            pytest.skip(f"This model does not support {variable}")
     if source == 'ecmwf':
-        return [var_names[source][variable]] + source_files
+        if variable == 'tco3_zm':
+            return ['tco3', *source_files]
+        elif variable == 'vmro3_zm':
+            return ['vmro3', *source_files]
+        else:
+            pytest.skip(f"This model does not support {variable}")
     if source == 'esacci':
-        return [var_names[source][variable]] + source_files
+        if variable == 'tco3_zm':
+            return ['atmosphere_mole_content_of_ozone', *source_files]
+        else:
+            pytest.skip(f"This model does not support {variable}")
     if source == 'sbuv':
-        return source_files
+        if variable == 'tco3_zm':
+            return source_files
+        else:
+            pytest.skip(f"This model does not support {variable}")
 
 
 @pytest.fixture()

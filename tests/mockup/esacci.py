@@ -36,5 +36,4 @@ def random_vmro3(year):
 
 def random_dataset(year):
     return mockup.dataset_from(
-        tco3=random_tco3(year),
-        vmro3=random_vmro3(year))
+        atmosphere_mole_content_of_ozone=random_tco3(year))
