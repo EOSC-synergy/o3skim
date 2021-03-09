@@ -36,7 +36,7 @@ vars_group.add_argument(
     help="Standardization for volume mixing ratio ozone")
 
 # Arguments for subcommand CCMI-1
-ccmi_parser = subparsers.add_parser('ccmi', help='CCMI-1 Source input')
+ccmi_parser = subparsers.add_parser('CCMI-1', help='CCMI-1 Source input')
 ccmi_coordinates = ccmi_parser.add_argument_group('coordinates')
 ccmi_coordinates.add_argument(
     "--time", type=str, default='time',
@@ -59,7 +59,7 @@ ccmi_parser.add_argument(
     help="Paths to netCDF files with the variable to load")
 
 # Arguments for subcommand ECMWF
-ecmwf_parser = subparsers.add_parser('ecmwf', help='ECMWF Source input')
+ecmwf_parser = subparsers.add_parser('ECMWF', help='ECMWF Source input')
 ecmwf_coordinates = ecmwf_parser.add_argument_group('coordinates')
 ecmwf_coordinates.add_argument(
     "--time", type=str, default='time',
@@ -82,7 +82,7 @@ ecmwf_parser.add_argument(
     help="Paths to netCDF files with the variable to load")
 
 # Arguments for subcommand ESACCI
-esacci_parser = subparsers.add_parser('esacci', help='ESACCI Source input')
+esacci_parser = subparsers.add_parser('ESACCI', help='ESACCI Source input')
 esacci_coordinates = esacci_parser.add_argument_group('coordinates')
 esacci_coordinates.add_argument(
     "--time_position", type=int, default=-2,
@@ -105,7 +105,7 @@ esacci_parser.add_argument(
     help="Paths to netCDF files with the variable to load")
 
 # Arguments for subcommand SBUV
-sbuv_parser = subparsers.add_parser('sbuv', help='SBUV Source input')
+sbuv_parser = subparsers.add_parser('SBUV', help='SBUV Source input')
 sbuv_parser.set_defaults(command=sbuv_function)
 sbuv_parser.add_argument(
     "-s", "--delimiter", type=str, default='\s+',

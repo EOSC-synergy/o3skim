@@ -82,13 +82,13 @@ def source(request):
 def source_files(tmpdir_factory, source, variable):
     source_dir = tmpdir_factory.mktemp(source + '_' + variable)
     with o3skim.utils.cd(source_dir):
-        if source == 'ccmi':
+        if source == 'CCMI-1':
             ccmi.create_data(variable, year_line)
-        if source == 'ecmwf':
+        if source == 'ECMWF':
             ecmwf.create_data(year_line)  # Merged
-        if source == 'esacci':
+        if source == 'ESACCI':
             esacci.create_data(year_line)  # Merged
-        if source == 'sbuv':
+        if source == 'SBUV':
             sbuv.create_data(year_line)  # Merged
         files = os.listdir()
     return [str(source_dir.join(f)) for f in files]

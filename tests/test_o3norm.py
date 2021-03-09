@@ -4,7 +4,7 @@ import pytest
 import xarray as xr
 
 
-sources = {'ccmi', 'ecmwf', 'esacci', 'sbuv'}
+sources = {'CCMI-1', 'ECMWF', 'ESACCI', 'SBUV'}
 
 
 @pytest.fixture()
@@ -15,26 +15,26 @@ def args(target, variable, source, s_args):
 
 @pytest.fixture()
 def s_args(source, variable, source_files):
-    if source == 'ccmi':
+    if source == 'CCMI-1':
         if variable == 'tco3_zm':
             return ['toz', *source_files]
         elif variable == 'vmro3_zm':
             return ['vmro3', *source_files]
         else:
             pytest.skip(f"This model does not support {variable}")
-    if source == 'ecmwf':
+    if source == 'ECMWF':
         if variable == 'tco3_zm':
             return ['tco3', *source_files]
         elif variable == 'vmro3_zm':
             return ['vmro3', *source_files]
         else:
             pytest.skip(f"This model does not support {variable}")
-    if source == 'esacci':
+    if source == 'ESACCI':
         if variable == 'tco3_zm':
             return ['atmosphere_mole_content_of_ozone', *source_files]
         else:
             pytest.skip(f"This model does not support {variable}")
-    if source == 'sbuv':
+    if source == 'SBUV':
         if variable == 'tco3_zm':
             return source_files
         else:
