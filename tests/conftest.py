@@ -1,4 +1,5 @@
 """Pytest configuration file."""
+import glob
 import o3skim
 import os
 import pytest
@@ -32,12 +33,16 @@ def output_dir(tmpdir_factory):
 
 @pytest.fixture()
 def target(output_dir):
-    return str(output_dir.join('o3target'))
+    target = output_dir.join('target')
+    os.makedirs(target)
+    return f"{target}/o3data"
 
 
 @pytest.fixture()
 def output(output_dir):
-    return str(output_dir.join('o3output'))
+    output = output_dir.join('output')
+    os.makedirs(output)
+    return str(output)
 
 
 @pytest.fixture()
@@ -95,7 +100,6 @@ def source_files(tmpdir_factory, source, variable):
 
 
 @pytest.fixture()
-def o3data_files(output_dir, random_dataset, target, split_by):
+def o3data_files(random_dataset, target, split_by):
     o3skim.save(random_dataset, target, split_by)
-    files = os.listdir(output_dir)
-    return [str(output_dir.join(f)) for f in files]
+    return glob.glob(f"{target}*")

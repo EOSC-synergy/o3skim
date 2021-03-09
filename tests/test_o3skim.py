@@ -31,7 +31,7 @@ def original(o3data_files):
 @pytest.fixture()
 def processed(output, args):
     skim.run_command(**vars(args))
-    return xr.open_dataset(output + '.nc')
+    return xr.open_mfdataset(f"{output}/*.nc")
 
 
 @pytest.mark.parametrize('split_by', {None, 'year', 'decade'}, indirect=True)

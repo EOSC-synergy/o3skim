@@ -18,8 +18,8 @@ parser.add_argument(
     choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
     help="Sets the logging level (default: %(default)s)")
 parser.add_argument(
-    "-o", "--output", type=str, default='o3skim',
-    help="Target netCDF file (default: %(default)s)")
+    "-o", "--output", type=str, default='.',
+    help="Folder for output files (default: %(default)s)")
 parser.add_argument(
     "paths", nargs='+', type=str, action='store',
     help="Paths to netCDF files with the data to skim")
@@ -64,8 +64,11 @@ def run_command(verbosity, operations, output, paths):
     skimmed = o3skim.process(dataset, operations)
 
     # Saving
-    logging.info("Staving result into %s.nc", output)
-    o3skim.save(skimmed, output)
+    logging.info("Staving result into %s", output)
+    for variable in skimmed:
+        variable_ds = skimmed[variable].to_dataset()
+        variable_ds.attrs = skimmed.attrs
+        o3skim.save(variable_ds, f"{output}/{variable}")
 
     # End of program
     logging.info("End of program")
