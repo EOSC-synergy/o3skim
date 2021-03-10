@@ -5,6 +5,7 @@ import os
 import pytest
 from tests.mockup import standard
 from tests.mockup import ccmi, ecmwf, esacci, sbuv
+from tests.utils import cd
 import xarray as xr
 
 
@@ -86,7 +87,7 @@ def source(request):
 @pytest.fixture()
 def source_files(tmpdir_factory, source, variable):
     source_dir = tmpdir_factory.mktemp(source + '_' + variable)
-    with o3skim.utils.cd(source_dir):
+    with cd(source_dir):
         if source == 'CCMI-1':
             ccmi.create_data(variable, year_line)
         if source == 'ECMWF':

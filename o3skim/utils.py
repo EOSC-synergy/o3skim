@@ -5,33 +5,11 @@ Although this module is not expected to be used out of the o3skim
 package, some functions might be convenient when using the python 
 shell.
 """
-from contextlib import contextmanager
 import logging
-import os
 import yaml
 import io
 
 logger = logging.getLogger('o3skim.utils')
-
-
-@contextmanager
-def cd(dir):
-    """Changes the directory inside a 'with' context. When the code
-    reaches the end of the 'with' block or the code fails, the 
-    previous folder is restored.
-
-    :param dir: Path folder where to change the working directory.
-    :type dir: str
-    """
-    prevdir = os.getcwd()
-    os.chdir(os.path.expanduser(dir))
-    newdir = os.getcwd()
-    try:
-        logger.debug("Changing directory: '%s'", newdir)
-        yield
-    finally:
-        os.chdir(prevdir)
-        logger.debug("Restoring directory: '%s'", prevdir)
 
 
 def load(yaml_file):
@@ -52,17 +30,17 @@ def load(yaml_file):
         return config
 
 
-def save(file_name, metadata):
+def save(yaml_file, metadata):
     """Saves the metadata dict on the current folder with yaml 
     format. 
 
-    :param file_name: Name for the output yaml file.
-    :type file_name: str
+    :param yaml_file: Name for the output yaml file.
+    :type yaml_file: str
 
     :param metadata: Dict with the data to save into.
     :type metadata: dict
     """
-    with open(file_name, 'w') as ymlfile:
+    with open(yaml_file, 'w') as ymlfile:
         yaml.dump(metadata, ymlfile, allow_unicode=True)
 
 
