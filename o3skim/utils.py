@@ -71,11 +71,25 @@ def mergedicts(d1, d2, if_conflict=lambda _, d: d):
             d1[key] = d2[key]
 
 
-def chunkio(headid, strio):
+def chunkio(headid, str_iter):
+    """Chunks an iterable of strings. The text passed by str_iter is
+    evaluated element by element (normally line by line). The elements
+    are grouped/chunked by every element (line) which contains a 
+    "headid".
+
+    :param headid: Line key word to separate chunks.
+    :type headid: str
+
+    :param str_iter: Iterable of strings to chunk.
+    :type str_iter: iter
+
+    :return: List of tuples with the header and chunk as StringIO.
+    :rtype: [(str, :class:`io.StringIO`)]
+    """
     heads = []
     chunks = []
     chunk = io.StringIO()
-    for line in strio:
+    for line in str_iter:
         if headid in line:
             heads.append(line)
             chunks.append(chunk)
