@@ -11,6 +11,10 @@ from o3skim.standardization import esacci_function, sbuv_function
 import o3skim
 
 
+# Script logger setup
+logger = logging.getLogger("o3norm")
+
+# Parser for script inputs
 parser = argparse.ArgumentParser(
     prog=f"o3norm", description=__doc__,
     formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -131,18 +135,18 @@ def run_command(command, parameter, verbosity, target, **kwargs):
         format='%(asctime)s %(name)-24s %(levelname)-8s %(message)s')
 
     # Common operations
-    logging.info("Program start")
+    logger.info("Program start")
 
     # Loading of DataArray and attributes
-    logging.info("Data loading and standardization of %s", parameter[0])
+    logger.info("Data loading and standardization of %s", parameter[0])
     dataset = command(parameter, **kwargs)
 
     # Saving
-    logging.info("Staving result into %s.nc", target)
+    logger.info("Staving result into %s.nc", target)
     o3skim.save(dataset, target)
 
     # End of program
-    logging.info("End of program")
+    logger.info("End of program")
 
 
 if __name__ == '__main__':

@@ -10,6 +10,10 @@ import o3skim
 import xarray as xr
 
 
+# Script logger setup
+logger = logging.getLogger("o3norm")
+
+# Parser for script inputs
 parser = argparse.ArgumentParser(
     prog=f"o3skim", description=__doc__,
     formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -53,25 +57,25 @@ def run_command(verbosity, operations, output, paths):
         format='%(asctime)s %(name)-24s %(levelname)-8s %(message)s')
 
     # Common operations
-    logging.info("Program start")
+    logger.info("Program start")
 
     # Loading of DataArray and attributes
-    logging.info("Data loading from %s", paths)
+    logger.info("Data loading from %s", paths)
     dataset = xr.open_mfdataset(paths)
 
     # Processing of skimming operations
-    logging.info("Data skimming using %s", operations)
+    logger.info("Data skimming using %s", operations)
     skimmed = o3skim.process(dataset, operations)
 
     # Saving
-    logging.info("Staving result into %s", output)
+    logger.info("Staving result into %s", output)
     for variable in skimmed:
         variable_ds = skimmed[variable].to_dataset()
         variable_ds.attrs = skimmed.attrs
         o3skim.save(variable_ds, f"{output}/{variable}")
 
     # End of program
-    logging.info("End of program")
+    logger.info("End of program")
 
 
 if __name__ == '__main__':
