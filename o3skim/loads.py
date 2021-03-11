@@ -57,7 +57,7 @@ def esacci(variable, time_position, paths):
     """Loads and returns a ESACCI DataArray model and the dataset
     attributes. Note the name structure is composed by sections:
     For example: ESACCI-OZONE-L3S-TC-MERGED-DLR_1M-20010302-fv0100.
-    Therefore is needed to indicate the position in the string 
+    Therefore is needed to indicate the position in the string
     for the dataset time (7 or -2 for the case above).
 
     :param variable: Variable to load from the dataset.
@@ -74,12 +74,14 @@ def esacci(variable, time_position, paths):
     """
     if len(paths) == 1:
         paths = paths[0]
+
     def pf(ds):
         fpath = ds.encoding["source"]
         fname = fpath.split('/')[-1]
         fdate = fname.split('-')[time_position]
         time = pd.to_datetime(fdate)
         return ds.expand_dims(time=[time])
+
     with xr.open_mfdataset(paths, preprocess=pf) as dataset:
         datarray = dataset[variable]
         ds_attrs = dataset.attrs

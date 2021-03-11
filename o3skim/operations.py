@@ -1,6 +1,4 @@
-"""
-Module in charge of implementing the o3skim operations.
-"""
+"""Module in charge of implementing the o3skim operations."""
 import logging
 import pandas as pd
 
@@ -14,7 +12,7 @@ def run(name, dataset):
         :lat_mean:  Latitudinal mean across the dataset.
         :year_mean: Time coordinate averaged by year.
 
-    :param name: Operation name to perform. 
+    :param name: Operation name to perform.
     :type name: str
 
     :param dataset: Original o3 dataset where to perform operations.
@@ -55,7 +53,7 @@ def lat_mean(dataset):
 def year_mean(dataset):
     logger.debug("Calculating mean over time by year")
     skimmed = dataset.groupby('time.year').mean('time')
-    newtime =[pd.datetime(y, 7, 2) for y in skimmed.year]
+    newtime = [pd.datetime(y, 7, 2) for y in skimmed.year]
     skimmed = skimmed.assign_coords(year=newtime)
     skimmed = skimmed.rename({'year': 'time'})
     skimmed.attrs = dataset.attrs

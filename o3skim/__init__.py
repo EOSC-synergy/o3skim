@@ -1,12 +1,7 @@
-"""
-O3as package with classes and utilities to handle ozone data skimming.
-"""
+"""O3as package with utilities to handle ozone data skimming."""
+from o3skim import operations
 import logging
 import xarray as xr
-
-from o3skim import loads
-from o3skim import operations
-from o3skim import utils
 
 logger = logging.getLogger('o3skim')
 
@@ -44,7 +39,7 @@ def process(dataset, actions):
 
 def save(dataset, target, split_by=None):
     """Function in charge of saving the input dataset into the file
-    system using an specified time range. The available type of 
+    system using an specified time range. The available type of
     output file formats are:
 
         :`None`: Output file format is {target}.nc
@@ -57,7 +52,7 @@ def save(dataset, target, split_by=None):
     :param target:
     :type target:
 
-    :param split_by: Type of saving format to apply. 
+    :param split_by: Type of saving format to apply.
     :type split_by:  str or None
     """
     if not split_by:

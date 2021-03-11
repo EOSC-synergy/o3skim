@@ -108,7 +108,7 @@ esacci_parser.add_argument(
 sbuv_parser = subparsers.add_parser('SBUV', help='SBUV Source input')
 sbuv_parser.set_defaults(command=sbuv_function)
 sbuv_parser.add_argument(
-    "-s", "--delimiter", type=str, default='\s+',
+    "-s", "--delimiter", type=str, default=r'\s+',
     help="Delimiter to use (default: %(default)s)")
 sbuv_parser.add_argument(
     "textfile", nargs=1, type=str, action='store',

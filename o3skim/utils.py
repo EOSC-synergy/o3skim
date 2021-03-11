@@ -8,7 +8,7 @@ logger = logging.getLogger('o3skim.utils')
 def chunkio(headid, str_iter):
     """Chunks an iterable of strings. The text passed by str_iter is
     evaluated element by element (normally line by line). The elements
-    are grouped/chunked by every element (line) which contains a 
+    are grouped/chunked by every element (line) which contains a
     "headid".
 
     :param headid: Line key word to separate chunks.

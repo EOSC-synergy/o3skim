@@ -12,7 +12,7 @@ def run(datarray, variable, **coords):
     :rtype: :class:`xarray.DataArray`
     """
     logger.debug("Normalizing DataArray as %s", variable)
-    datarray.name = variable    
+    datarray.name = variable
     datarray = _squeeze(datarray)
     datarray = _rename_coords(datarray, **coords)
     datarray = _sort(datarray)
