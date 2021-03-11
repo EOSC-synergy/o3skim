@@ -1,6 +1,4 @@
-"""
-Module in charge of data loading and standardization.
-"""
+"""Module in charge of model data loading."""
 import pandas as pd
 import numpy as np
 import logging
@@ -12,6 +10,18 @@ logger = logging.getLogger('o3skim.loads')
 
 
 def ccmi(variable, paths):
+    """Loads and returns a CCMI-1 DataArray model and the dataset
+    attributes.
+
+    :param variable: Variable to load from the dataset.
+    :type variable: str
+
+    :param paths: Paths expression to the dataset netCDF files.
+    :type paths: str or [str]
+
+    :return: Standardized DataArray.
+    :rtype: (:class:`xarray.DataArray`, dict)
+    """
     logger.debug("Loading CCMI-1 data from: %s", paths)
     if len(paths) == 1:
         paths = paths[0]
@@ -22,6 +32,18 @@ def ccmi(variable, paths):
 
 
 def ecmwf(variable, paths):
+    """Loads and returns a ECMWF DataArray model and the dataset
+    attributes.
+
+    :param variable: Variable to load from the dataset.
+    :type variable: str
+
+    :param paths: Paths expression to the dataset netCDF files.
+    :type paths: str or [str]
+
+    :return: Standardized DataArray.
+    :rtype: (:class:`xarray.DataArray`, dict)
+    """
     logger.debug("Loading ECMWF data from: %s", paths)
     if len(paths) == 1:
         paths = paths[0]
@@ -32,6 +54,24 @@ def ecmwf(variable, paths):
 
 
 def esacci(variable, time_position, paths):
+    """Loads and returns a ESACCI DataArray model and the dataset
+    attributes. Note the name structure is composed by sections:
+    For example: ESACCI-OZONE-L3S-TC-MERGED-DLR_1M-20010302-fv0100.
+    Therefore is needed to indicate the position in the string 
+    for the dataset time (7 or -2 for the case above).
+
+    :param variable: Variable to load from the dataset.
+    :type variable: str
+
+    :param time_position: Name position for the dataset time.
+    :type time_position: int
+
+    :param paths: Paths expression to the dataset netCDF files.
+    :type paths: str or [str]
+
+    :return: Standardized DataArray.
+    :rtype: (:class:`xarray.DataArray`, dict)
+    """
     if len(paths) == 1:
         paths = paths[0]
     def pf(ds):
@@ -47,6 +87,18 @@ def esacci(variable, time_position, paths):
 
 
 def sbuv(textfile, delimiter):
+    """Loads and returns a SBUV DataArray model and the dataset
+    attributes. Note SBUV models do not have longitude coordinate.
+
+    :param textfile: Location to the textfile with model information.
+    :type textfile: str
+
+    :param delimiter: Delimiter character for row values on the table.
+    :type delimiter: str or [str]
+
+    :return: Standardized DataArray.
+    :rtype: (:class:`xarray.DataArray`, {})
+    """
     with open(textfile, 'r') as strio:
         tables = utils.chunkio('SBUV', strio)
     arrays = []
