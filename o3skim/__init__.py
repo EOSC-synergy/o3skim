@@ -74,7 +74,7 @@ def save(dataset, target, split_by=None):
         years = dataset.indexes['time'].map(delta_map)
         groups = dataset.groupby(xr.DataArray(years))
     else:
-        message = "Bad input split_by {} use {None, 'year', 'decade'}"
+        message = "Bad input split_by '{}' use None, 'year' or 'decade'"
         raise KeyError(message.format(split_by))
     years, datasets = tuple(zip(*groups))
     try:
