@@ -1,67 +1,61 @@
 """Module in charge of dataset standardization when loading models."""
 import logging
-
+import o3skim.loads as loads
+import o3skim.normalization as normalization
 
 logger = logging.getLogger('o3skim.standardization')
 
 
-def tco3(array, coord):
-    """Standardizes a tco3 dataset.
+def ccmi_function(parameter, variable, paths, **coords):
+    """Returns an standardized dataset from a CCMI-1 model.
 
-    :param array: DataArray to standardize.
-    :type array: :class:`xarray.DataArray`
-
-    :param coord: Coordinates map for tco3 variable. 
-    :type coord: {'lon':str, 'lat':str, 'time':str}
-
-    :return: Standardized DataArray.
-    :rtype: :class:`xarray.DataArray`
+    :return: Standardized DataSet.
+    :rtype: :class:`xarray.DataSet`
     """
-    array.name = 'tco3_zm'
-    array = squeeze(array)
-    array = rename_coords_tco3(array, **coord)
-    array = sort(array)
-    return array
+    datarray, attrs = loads.ccmi(variable[0], paths)
+    datarray = normalization.run(datarray, parameter[0], **coords)
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    return dataset
 
 
-def rename_coords_tco3(array, time, lat, lon):
-    """Renames a tco3 array variable and coordinates"""
-    logger.debug("Renaming '{0}' coordinates".format('tco3_zm'))
-    return array.rename({time: 'time', lat: 'lat', lon: 'lon'})
+def ecmwf_function(parameter, variable, paths, **coords):
+    """Returns an standardized dataset from a ECMWF model.
 
-
-def vmro3(array, coord):
-    """Standardizes a vmro3 dataset.
-
-    :param array: DataArray to standardize.
-    :type array: :class:`xarray.DataArray`
-
-    :param coord: Coordinates map for vmro3 variable. 
-    :type coord: {'lon':str, 'lat':str, 'plev':str, 'time':str}
-
-    :return: Standardized DataArray.
-    :rtype: :class:`xarray.DataArray`
+    :return: Standardized DataSet.
+    :rtype: :class:`xarray.DataSet`
     """
-    array.name = 'vmro3_zm'
-    array = squeeze(array)
-    array = rename_coords_vmro3(array, **coord)
-    array = sort(array)
-    return array
+    datarray, attrs = loads.ecmwf(variable[0], paths)
+    datarray = normalization.run(datarray, parameter[0], **coords)
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    return dataset
 
 
-def rename_coords_vmro3(array, time, plev, lat, lon):
-    """Renames a vmro3 array variable and coordinates"""
-    logger.debug("Renaming '{0}' coordinates".format('vmro3_zm'))
-    return array.rename({time: 'time', plev: 'plev', lat: 'lat', lon: 'lon'})
+def esacci_function(parameter, variable, time_position, paths, **coords):
+    """Returns an standardized dataset from a ESACCI model.
+
+    :return: Standardized DataSet.
+    :rtype: :class:`xarray.DataSet`
+    """
+    datarray, attrs = loads.esacci(variable[0], time_position, paths)
+    datarray = normalization.run(datarray, parameter[0], **coords)
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    return dataset
 
 
-def squeeze(array):
-    """Squeezes the 1-size dimensions on an array"""
-    logger.debug("Squeezing coordinates in dataset")
-    return array.squeeze(drop=True)
+def sbuv_function(parameter, delimiter, textfile):
+    """Returns an standardized dataset from a SBUV model.
 
-
-def sort(array):
-    """Sorts an array by coordinates"""
-    logger.debug("Sorting coordinates in dataset")
-    return array.sortby(list(array.coords))
+    :return: Standardized DataSet.
+    :rtype: :class:`xarray.DataSet`
+    """
+    datarray, attrs = loads.sbuv(textfile[0], delimiter)
+    datarray = normalization.run(datarray, parameter[0])
+    dataset = datarray.to_dataset(name=parameter[0])
+    dataset.attrs = attrs
+    if parameter[0] == 'tco3_zm':
+        return dataset.assign_coords(lon=['nan'])
+    if parameter[0] == 'vmro3_zm':
+        raise NotImplementedError("Load of vmro3 not available")

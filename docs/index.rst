@@ -10,39 +10,34 @@ simplify and speed up ozone data transfer and plot.
 Getting started
 =========================================
 
-* Which :doc:`getting_started/prerequisites` you need to start.
-* How to :doc:`getting_started/build` your o3skim container.
-* How to :doc:`getting_started/deployment` your o3skim container.
-* How to use the o3skim :doc:`getting_started/cli`
-* Create your :doc:`getting_started/source-file` to point what to skim.
+* Which :doc:`getting_started/first_steps` you need to start.
+* How to use :doc:`getting_started/o3norm` to standardize your models.
+* How to use :doc:`getting_started/o3skim` to reduce your models.
 
 .. toctree::
    :maxdepth: 2
    :hidden:
    :caption: Getting started
 
-   getting_started/prerequisites
-   getting_started/build
-   getting_started/deployment
-   getting_started/cli
-   getting_started/source-file   
+   getting_started/first_steps
+   getting_started/o3norm
+   getting_started/o3skim
 
 
 Developer guide
 =========================================
 
-* How to do a :doc:`dev_guide/local-install`
-* How to use o3skim package :doc:`dev_guide/o3skim`
-* How to run and create new :doc:`dev_guide/tests`
+* Check the :doc:`getting_started/first_steps` before start.
+* Check the :doc:`dev_guide/o3skim` to learn about the functions.
+* Check the :doc:`dev_guide/tests` to extend the functionality.
 
 .. toctree::
    :maxdepth: 2
    :hidden:
    :caption: Developer guide:
 
-   dev_guide/local-install
-   dev_guide/tests
    dev_guide/o3skim
+   dev_guide/tests
 
 
 Authors 
