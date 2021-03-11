@@ -15,14 +15,6 @@ sqa_criteria:
           tox_file: /o3skim/tox.ini
           testenv:
             - stylecheck
-  qc_coverage:
-    repos:
-      o3skim:
-        container: testing
-        tox:
-          tox_file: /o3skim/tox.ini
-          testenv:
-            - unittesting
   qc_functional:
     repos:
       o3skim:
