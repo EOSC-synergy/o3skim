@@ -49,11 +49,11 @@ def save(dataset, target, split_by=None):
     :param dataset: DataSet to save in the target.
     :type dataset: :class:`xarray.DataSet`
 
-    :param target:
-    :type target:
+    :param target: Location where to save followed by the name prefix. 
+    :type target: str
 
     :param split_by: Type of saving format to apply.
-    :type split_by:  str or None
+    :type split_by:  str, optional
     """
     if not split_by:
         def path(_): return "{}.nc".format(target)

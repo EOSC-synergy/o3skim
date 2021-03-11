@@ -22,17 +22,17 @@ def run(name, dataset):
     :rtype: :class:`xarray.Dataset`
     """
     if name == 'lon_mean':
-        return lon_mean(dataset)
+        return _lon_mean(dataset)
     elif name == 'lat_mean':
-        return lat_mean(dataset)
+        return _lat_mean(dataset)
     elif name == 'year_mean':
-        return year_mean(dataset)
+        return _year_mean(dataset)
     else:
         message = "Bad selected operation: {}"
         raise KeyError(message.format(name))
 
 
-def lon_mean(dataset):
+def _lon_mean(dataset):
     logger.debug("Calculating mean over model longitude")
     skimmed = dataset.mean('lon')
     skimmed.attrs = dataset.attrs
@@ -41,7 +41,7 @@ def lon_mean(dataset):
     return skimmed
 
 
-def lat_mean(dataset):
+def _lat_mean(dataset):
     logger.debug("Calculating mean over model latitude")
     skimmed = dataset.mean('lat')
     skimmed.attrs = dataset.attrs
@@ -50,7 +50,7 @@ def lat_mean(dataset):
     return skimmed
 
 
-def year_mean(dataset):
+def _year_mean(dataset):
     logger.debug("Calculating mean over time by year")
     skimmed = dataset.groupby('time.year').mean('time')
     newtime = [pd.datetime(y, 7, 2) for y in skimmed.year]
