@@ -12,7 +12,7 @@ import o3skim
 
 
 parser = argparse.ArgumentParser(
-    prog='PROG', description=__doc__,
+    prog=f"o3norm", description=__doc__,
     formatter_class=argparse.RawDescriptionHelpFormatter,
     epilog="See '<command> --help' to read about a specific sub-command.")
 parser.add_argument(

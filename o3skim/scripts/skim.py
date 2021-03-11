@@ -11,7 +11,7 @@ import xarray as xr
 
 
 parser = argparse.ArgumentParser(
-    prog='PROG', description=__doc__,
+    prog=f"o3skim", description=__doc__,
     formatter_class=argparse.RawDescriptionHelpFormatter)
 parser.add_argument(
     "-v", "--verbosity", type=str, default='INFO',
