@@ -1,43 +1,27 @@
-o3skim package
+Package index
 ==============
 
 .. automodule:: o3skim
-   :members: loading, processing, grouping, saving
+   :members: process, save
 
 
 o3skim loads
 --------------------------
 
 .. automodule:: o3skim.loads
-   :members: tco3, vmro3
+   :members: ccmi, ecmwf, esacci, sbuv
 
 
-o3skim standardization
+o3skim normalization
 --------------------------
 
-.. automodule:: o3skim.standardization
-   :members: tco3, vmro3
+.. automodule:: o3skim.normalization
+   :members: run
 
 
 o3skim operations
 --------------------------
 
-.. automodule:: o3skim.loads
+.. automodule:: o3skim.operations
    :members: run
-
-
-o3skim extended_xarray
---------------------------
-
-.. automodule:: o3skim.extended_xarray
-   :inherited-members:
-   :members: O3Accessor, TCO3Accessor, VMRO3Accessor
-   
-
-o3skim utils
---------------------------
-
-.. automodule:: o3skim.utils
-   :inherited-members:
-   :members: cd, load, save, mergedicts
 

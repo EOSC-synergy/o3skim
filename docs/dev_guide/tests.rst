@@ -1,4 +1,4 @@
-Tests
+Test guidelines
 ==================================
 
 Testing is based on sqa-baseline_ criteria, tox_ automation is used to 

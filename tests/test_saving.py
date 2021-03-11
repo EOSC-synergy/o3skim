@@ -1,46 +1,35 @@
 """Pytest module to test sources as blackbox."""
-import os
-import o3skim
 import pytest
-import tests.conftest as conftest
+import o3skim
 import xarray as xr
 
-configs = conftest.available_configurations
-models = conftest.available_models
+
+@ pytest.fixture()
+def dataset(o3data_files):
+    return xr.open_mfdataset(o3data_files)
 
 
-@pytest.mark.parametrize('config', configs['correct'], indirect=True)
-@pytest.mark.parametrize('model', models['all'], indirect=True)
-@pytest.mark.parametrize('groupby', [None, 'year', 'decade'], indirect=True)
-class TestNetCDFSaving:
+@pytest.mark.parametrize('split_by', {None, 'year', 'decade'}, indirect=True)
+class TestSavedDataset:
 
-    def test_arefiles(self, output_cd, save_netCDF, expected_netCDF):
-        assert set(os.listdir()) == set(expected_netCDF)
+    def test_variables(self, dataset):
+        assert 'tco3_zm' in dataset.var()
+        assert 'vmro3_zm' in dataset.var()
 
-    def test_saved_data(self, dataset, saved_ds, variables):
-        xr.testing.assert_equal(dataset, saved_ds)
-        assert set(variables) == set(saved_ds.var())
-        assert set(dataset.coords) == set(saved_ds.coords)
+    def test_coordinates(self, dataset):
+        assert 'time' in dataset.coords
+        assert 'plev' in dataset.coords
+        assert 'lon' in dataset.coords
+        assert 'lat' in dataset.coords
 
-    def test_saved_attrs(self, dataset, saved_ds):
-        assert dataset.attrs == saved_ds.attrs
-
-
-@pytest.mark.parametrize('config', configs['correct'], indirect=True)
-@pytest.mark.parametrize('model', models['all'], indirect=True)
-class TestMetadataSaving:
-
-    def test_isfile(self, metadata_cd, save_metadata):
-        assert os.path.isfile("metadata.yaml")
-
-    def test_content(self, metadata, metadata_file_content):
-        assert metadata == metadata_file_content
+    def test_attrs(self, dataset):
+        assert dataset.attrs == dict(description="Test ozone dataset")
 
 
-@pytest.mark.parametrize('config', configs['correct'], indirect=True)
-@pytest.mark.parametrize('model', models['all'], indirect=True)
-@pytest.mark.parametrize('groupby', ['unknown'], indirect=True)
 class TestExceptions:
 
-    def test_BadGroup(self, output_cd, dataset, groupby):
-        pytest.raises(KeyError, o3skim.saving, dataset, groupby)
+    @pytest.mark.parametrize('split_by', {'wrong_split'})
+    def test_badSplit(self, random_dataset, target, split_by):
+        with pytest.raises(KeyError) as excinfo:
+            o3skim.save(random_dataset, target, split_by)
+        assert "Bad input split_by" in str(excinfo.value)
