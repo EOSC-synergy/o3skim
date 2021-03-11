@@ -1,6 +1,7 @@
 """Pytest module to test sources as blackbox."""
 import itertools
 from o3skim.scripts import skim
+from o3skim import operations as o3skim_operations
 import pandas as pd
 import pytest
 import xarray as xr
@@ -79,3 +80,13 @@ class TestYearMean:
     @pytest.mark.parametrize('operations', [['year_mean']], indirect=True)
     def test_coordinates(self, original, processed):
         assert len(original.coords) == len(processed.coords)
+
+
+@pytest.mark.parametrize('split_by', {None}, indirect=True)
+class TestExceptions:
+
+    @pytest.mark.parametrize('operation', {'wrong_operation'})
+    def test_badOperation(self, operation, original):
+        with pytest.raises(KeyError) as excinfo:
+            o3skim_operations.run(operation, original)
+        assert "Bad selected operation" in str(excinfo.value)
