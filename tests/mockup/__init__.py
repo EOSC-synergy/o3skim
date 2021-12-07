@@ -1,5 +1,5 @@
 """Mockup sub-package for tests"""
-from .cf import cf_19
+from .cf_datasets import cf_19
 
 
 __all__ = [
