@@ -2,7 +2,6 @@
 import cf_xarray as cfxr
 import numpy as np
 from pytest import fixture, mark
-
 from tests.utils import all_perm
 
 from . import Skimmed
