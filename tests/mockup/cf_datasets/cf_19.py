@@ -26,12 +26,12 @@ def toz_dataset(
             "toz": toz,
         },
         coords={
-            "time": time,
-            "time_bnds": coords.time_bounds(time),
+            "time": time[:-1],
+            "time_bnds": coords.bound_date(time),
             "lat": latitude,
-            "lat_bnds": coords.dim_bounds(latitude),
+            "lat_bnds": coords.bound_dim(latitude),
             "lon": longitude,
-            "lon_bnds": coords.dim_bounds(longitude),
+            "lon_bnds": coords.bound_dim(longitude),
         },
         attrs={
             "Conventions": CONVENTIONS,
