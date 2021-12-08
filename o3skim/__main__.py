@@ -14,12 +14,17 @@ import xarray as xr
 logger = logging.getLogger("o3norm")
 
 
-def parser() -> None:
+def main():
     """
     The main function executes on commands:
     `python -m o3skim` and `$ o3skim `.
     """
+    args = parser().parse_args()
+    run_command(**vars(args))
+    sys.exit(0)  # Shell return 0 == success
 
+
+def parser() -> None:
     # Parser for script inputs
     parser = argparse.ArgumentParser(
         prog=f"o3skim",
@@ -73,12 +78,6 @@ def parser() -> None:
         help="Time average accross the year",
     )
     return parser
-
-
-def main():
-    args = parser().parse_args()
-    run_command(**vars(args))
-    sys.exit(0)  # Shell return 0 == success
 
 
 def run_command(verbosity, operations, output, paths):
