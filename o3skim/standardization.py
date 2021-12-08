@@ -1,4 +1,7 @@
 """Module in charge of dataset standardization when loading models."""
+# TODO: Units conversion
+# TODO: Standardize variable names
+
 import logging
 import o3skim.loads as loads
 import o3skim.normalization as normalization
