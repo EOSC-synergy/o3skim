@@ -22,14 +22,33 @@ def run(operation, dataset):
     :return: Dataset after processing the specified operation.
     :rtype: :class:`xarray.Dataset`
     """
-    message = "Calculating '{}' over model"
-    logger.debug(message.format(operation))
     if operation == "lon_mean":
-        return dataset.cf.mean("longitude")
+        return _lon_mean(dataset)
     elif operation == "lat_mean":
-        return dataset.cf.mean("latitude")
+        return _lat_mean(dataset)
     elif operation == "year_mean":
-        return dataset.cf.resample(T="Y").mean()
+        return _year_mean(dataset)
     else:
         err = "Bad selected operation: {}"
         raise KeyError(err.format(operation))
+
+
+def _lon_mean(dataset):
+    logger.debug("Calculating mean over model longitude")
+    result = dataset.cf.mean("longitude")
+
+    return result
+
+
+def _lat_mean(dataset):
+    logger.debug("Calculating mean over model latitude")
+    result = dataset.cf.mean("latitude")
+
+    return result
+
+
+def _year_mean(dataset):
+    logger.debug("Calculating mean over time by year")
+    result = dataset.cf.resample(T="Y").mean()
+
+    return result
