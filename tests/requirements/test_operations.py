@@ -7,9 +7,23 @@ from tests.utils import all_perm
 from . import Skimmed
 
 
+class CommonTests(Skimmed):
+    def test_toz_var_attrs(self, dataset, skimmed, operations):
+        var = skimmed.cf["atmosphere_mole_content_of_ozone"]
+        if "lon_mean" in operations:
+            assert "longitude: mean" in var.cell_methods
+        if "lat_mean" in operations:
+            assert "latitude: mean" in var.cell_methods
+        if "year_mean" in operations:
+            assert "time: mean (interval: 1 years)" in var.cell_methods
+            assert "day" not in var.cell_methods
+            assert "month" not in var.cell_methods
+        assert var.attrs["units"] == "mol m-2"
+
+
 @mark.parametrize("operation", ["year_mean"], indirect=True)
 @mark.parametrize("extra", all_perm("lat_mean", "lon_mean"), indirect=True)
-class TestYearMean(Skimmed):
+class TestYearMean(CommonTests):
     def test_1date_per_year(self, skimmed):
         diff_time = skimmed.time.diff("time").values[:]
         assert np.all(diff_time.astype("timedelta64[D]") > np.timedelta64(364, "D"))
@@ -25,7 +39,7 @@ class TestYearMean(Skimmed):
 
 @mark.parametrize("operation", ["lat_mean"], indirect=True)
 @mark.parametrize("extra", all_perm("year_mean", "lon_mean"), indirect=True)
-class TestLatMean(Skimmed):
+class TestLatMean(CommonTests):
     def test_no_latitude(self, skimmed):
         assert not "Y" in skimmed.cf
 
@@ -42,7 +56,7 @@ class TestLatMean(Skimmed):
 
 @mark.parametrize("operation", ["lon_mean"], indirect=True)
 @mark.parametrize("extra", all_perm("lat_mean", "year_mean"), indirect=True)
-class TestLonMean(Skimmed):
+class TestLonMean(CommonTests):
     def test_no_longitude(self, skimmed):
         assert not "X" in skimmed.cf
 

@@ -6,7 +6,7 @@ from . import coords, variables
 
 
 # Global attributes
-CONVENTIONS = "CF-1.9"
+CONVENTIONS = "CF-1.8"
 REFERENCES = "https://cfconventions.org/Data/cf-conventions/cf-conventions-1.9"
 DAY = datetime.timedelta(days=1)
 
@@ -24,8 +24,6 @@ def toz_dataset(
     return xr.Dataset(
         data_vars={
             "toz": toz,
-        },
-        coords={
             "time": time[:-1],
             "time_bnds": coords.bound_date(time),
             "lat": latitude,

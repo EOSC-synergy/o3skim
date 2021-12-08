@@ -1,7 +1,7 @@
 """Mockup sub-package for tests"""
-from .cf_datasets import cf_19
+from .cf_datasets import cf_18
 
 
 __all__ = [
-    "cf_19",
+    "cf_18",
 ]

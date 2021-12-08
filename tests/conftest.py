@@ -3,7 +3,7 @@ import os
 
 from pytest import fixture
 
-from tests.mockup import cf_19 as datamock
+from tests.mockup import cf_18 as datamock
 
 
 @fixture(scope="session", autouse=True)
@@ -20,7 +20,7 @@ def dataset(request):
     return request.param()
 
 
-@fixture(scope="module", params=["toz_cf19.nc"])
+@fixture(scope="module", params=["toz_cf18.nc"])
 def dataset_file(request, dataset):
     dataset.to_netcdf(request.param)
     return request.param

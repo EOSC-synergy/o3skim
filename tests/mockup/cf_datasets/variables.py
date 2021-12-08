@@ -5,7 +5,7 @@ import numpy as np
 def toz_variable(
     long_name="Total Ozone Column",
     units="mol m-2",  # Alternatives: ["DU"]
-    cell_methods="time: mean (interval: 1 days) longitude: mean",
+    cell_methods="time: mean (interval: 1 months)",
     shape=dict(time=24, lat=18, lon=36),
 ):
     return xr.Variable(
