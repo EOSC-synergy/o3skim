@@ -2,6 +2,7 @@
 import os
 
 from pytest import fixture
+import xarray
 
 from tests.mockup import cf_18 as datamock
 
@@ -15,12 +16,12 @@ def dataset_folder(tmpdir_factory):
     os.chdir(prevdir)
 
 
-@fixture(scope="module", params=[datamock.toz_dataset])
-def dataset(request):
-    return request.param()
-
-
 @fixture(scope="module", params=["toz_cf18.nc"])
-def dataset_file(request, dataset):
-    dataset.to_netcdf(request.param)
+def netCDF_file(request):
+    datamock.toz_dataset(filename=request.param)
     return request.param
+
+
+@fixture(scope="module")
+def dataset(netCDF_file):
+    return xarray.open_dataset(netCDF_file)
