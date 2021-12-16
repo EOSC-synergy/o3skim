@@ -1,10 +1,9 @@
 """Fixtures module for pytest"""
 import os
 
-from pytest import fixture
+import o3mocks
 import xarray
-
-from tests.mockup import cf_18 as datamock
+from pytest import fixture
 
 
 @fixture(scope="session", autouse=True)
@@ -18,7 +17,7 @@ def dataset_folder(tmpdir_factory):
 
 @fixture(scope="module", params=["toz_cf18.nc"])
 def netCDF_file(request):
-    datamock.toz_dataset(filename=request.param)
+    o3mocks.cf_18.toz_dataset(filename=request.param)
     return request.param
 
 
