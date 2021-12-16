@@ -1,25 +1,22 @@
 import cf
 
 
-def time(dimT, data):
-    bnds = cf.Bounds()
-    bnds.nc_set_variable("time_bnds")
-    bnds.set_data(cf.Data(data, dtype="f8"))
-    dimT.set_bounds(bnds)
-    return bnds
+def time(data):
+    bounds = cf.Bounds()
+    bounds.nc_set_variable("time_bnds")
+    bounds.set_data(data)
+    return bounds
 
 
-def latitude(dimY, data):
-    bnds = cf.Bounds()
-    bnds.nc_set_variable("lat_bnds")
-    bnds.set_data(cf.Data(data, dtype="f8"))
-    dimY.set_bounds(bnds)
-    return bnds
+def latitude(data):
+    bounds = cf.Bounds()
+    bounds.nc_set_variable("lat_bnds")
+    bounds.set_data(data)
+    return bounds
 
 
-def longitude(dimX, data):
-    bnds = cf.Bounds()
-    bnds.nc_set_variable("lon_bnds")
-    bnds.set_data(cf.Data(data, dtype="f8"))
-    dimX.set_bounds(bnds)
-    return bnds
+def longitude(data):
+    bounds = cf.Bounds()
+    bounds.nc_set_variable("lon_bnds")
+    bounds.set_data(data)
+    return bounds
