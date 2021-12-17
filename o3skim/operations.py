@@ -9,18 +9,18 @@ xr.set_options(keep_attrs=True)  # Keep attributes
 toz_standard_name = "atmosphere_mole_content_of_ozone"
 
 
-def run(operation, dataset):
+def run(dataset, operation):
     """Main entry point for operation call on o3skimming functions:
 
         :lon_mean:  Longitudinal mean across the dataset.
         :lat_mean:  Latitudinal mean across the dataset.
         :year_mean: Time coordinate averaged by year.
 
-    :param operation: Operation name to perform.
-    :type operation: str
-
     :param dataset: Original o3 dataset where to perform operations.
     :type dataset: :class:`xarray.Dataset`
+
+    :param operation: Operation name to perform.
+    :type operation: str
 
     :return: Dataset after processing the specified operation.
     :rtype: :class:`xarray.Dataset`

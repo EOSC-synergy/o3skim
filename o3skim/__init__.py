@@ -1,9 +1,12 @@
 """O3as package with utilities to handle ozone data skimming."""
-from o3skim import operations
 import logging
+from functools import reduce
+
 import xarray as xr
 
-logger = logging.getLogger('o3skim')
+from o3skim import operations
+
+logger = logging.getLogger("o3skim")
 
 
 def process(dataset, actions):
@@ -29,12 +32,7 @@ def process(dataset, actions):
     :rtype: :class:`xarray.Dataset`
     """
     logger.debug("Processing queue: %s", actions)
-    actions = actions.copy()  # Do not edit original
-    operation = actions.pop()
-    processed = operations.run(operation, dataset)
-    if actions != []:
-        processed = process(processed, actions)
-    return processed
+    return reduce(operations.run, actions, dataset)
 
 
 def save(dataset, target, split_by=None):
@@ -49,24 +47,37 @@ def save(dataset, target, split_by=None):
     :param dataset: DataSet to save in the target.
     :type dataset: :class:`xarray.DataSet`
 
-    :param target: Location where to save followed by the name prefix. 
+    :param target: Location where to save followed by the name prefix.
     :type target: str
 
     :param split_by: Type of saving format to apply.
     :type split_by:  str, optional
     """
     if not split_by:
-        def path(_): return "{}.nc".format(target)
+
+        def path(_):
+            return "{}.nc".format(target)
+
         groups = [(None, dataset)]
-    elif split_by == 'year':
-        def path(y): return "{}_{}-{}.nc".format(target, y, y + 1)
-        def delta_map(x): return x.year
-        years = dataset.indexes['time'].map(delta_map)
+    elif split_by == "year":
+
+        def path(y):
+            return "{}_{}-{}.nc".format(target, y, y + 1)
+
+        def delta_map(x):
+            return x.year
+
+        years = dataset.indexes["time"].map(delta_map)
         groups = dataset.groupby(xr.DataArray(years))
-    elif split_by == 'decade':
-        def path(y): return "{}_{}-{}.nc".format(target, y, y + 10)
-        def delta_map(x): return x.year // 10 * 10
-        years = dataset.indexes['time'].map(delta_map)
+    elif split_by == "decade":
+
+        def path(y):
+            return "{}_{}-{}.nc".format(target, y, y + 10)
+
+        def delta_map(x):
+            return x.year // 10 * 10
+
+        years = dataset.indexes["time"].map(delta_map)
         groups = dataset.groupby(xr.DataArray(years))
     else:
         message = "Bad input split_by '{}' use None, 'year' or 'decade'"
@@ -74,11 +85,13 @@ def save(dataset, target, split_by=None):
     years, datasets = tuple(zip(*groups))
     try:
         xr.save_mfdataset(
-            mode='a',
+            mode="a",
             datasets=[dataset for dataset in datasets],
-            paths=[path(year) for year in years])
+            paths=[path(year) for year in years],
+        )
     except FileNotFoundError:
         xr.save_mfdataset(
-            mode='w',
+            mode="w",
             datasets=[dataset for dataset in datasets],
-            paths=[path(year) for year in years])
+            paths=[path(year) for year in years],
+        )

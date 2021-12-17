@@ -11,7 +11,7 @@ import xarray as xr
 
 
 # Script logger setup
-logger = logging.getLogger("o3norm")
+logger = logging.getLogger("o3skim")
 
 
 def main():
@@ -31,6 +31,15 @@ def parser() -> None:
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
+    # Positional arguments
+    parser.add_argument(
+        "paths",
+        nargs="+",
+        type=str,
+        action="store",
+        help="Paths to netCDF files with the data to skim",
+    )
+    # Optional arguments
     parser.add_argument(
         "-v",
         "--verbosity",
@@ -43,19 +52,17 @@ def parser() -> None:
         "-o",
         "--output",
         type=str,
-        default=".",
-        help="Folder for output files (default: %(default)s)",
+        default="toz-skimmed.nc",
+        help="Folder for output file (default: %(default)s)",
     )
     parser.add_argument(
-        "paths",
-        nargs="+",
+        "--mode",
         type=str,
-        action="store",
-        help="Paths to netCDF files with the data to skim",
+        default="w",
+        help="Write (‘w’) or append (‘a’) mode (default: %(default)s)",
     )
-
-    # Available operations group
-    operations = parser.add_argument_group("operations")
+    # Available operations
+    operations = parser.add_argument_group("available operations")
     operations.add_argument(
         "--lon_mean",
         action="append_const",
@@ -77,13 +84,14 @@ def parser() -> None:
         const="year_mean",
         help="Time average accross the year",
     )
+
     return parser
 
 
-def run_command(verbosity, operations, output, paths):
+def run_command(paths, operations, **options):
     # Set logging level
     logging.basicConfig(
-        level=getattr(logging, verbosity),
+        level=getattr(logging, options["verbosity"]),
         format="%(asctime)s %(name)-24s %(levelname)-8s %(message)s",
     )
 
@@ -92,15 +100,15 @@ def run_command(verbosity, operations, output, paths):
 
     # Loading of DataArray and attributes
     logger.info("Data loading from %s", paths)
-    dataset = xr.open_mfdataset(paths)
+    dataset = xr.open_mfdataset(paths, concat_dim="time", combine="nested")
 
     # Processing of skimming operations
     logger.info("Data skimming using %s", operations)
     skimmed = o3skim.process(dataset, operations)
 
     # Saving
-    logger.info("Staving result into %s", output)
-    o3skim.save(skimmed, f"{output}/skimmed")
+    logger.info("Staving result into %s", options["output"])
+    skimmed.to_netcdf(options["output"], mode=options["mode"])
 
     # End of program
     logger.info("End of program")

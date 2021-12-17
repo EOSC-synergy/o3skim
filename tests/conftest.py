@@ -2,7 +2,7 @@
 import os
 
 import o3mocks
-import xarray
+import xarray as xr
 from pytest import fixture
 
 
@@ -22,5 +22,18 @@ def netCDF_file(request):
 
 
 @fixture(scope="module")
-def dataset(netCDF_file):
-    return xarray.open_dataset(netCDF_file)
+def netCDF_files(netCDF_file):
+    ds = xr.open_dataset(netCDF_file)
+    dates, datasets = zip(*ds.groupby("time"))
+    paths = [f"{netCDF_file[:-3]}_{t}.nc" for t in dates]
+    xr.save_mfdataset(datasets, paths)
+    return paths
+
+
+@fixture(scope="module")
+def dataset(netCDF_files):
+    return xr.open_mfdataset(
+        paths=netCDF_files,
+        concat_dim="time",
+        combine="nested",
+    )
