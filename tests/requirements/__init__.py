@@ -1,6 +1,5 @@
 """Test definitions and groups"""
 import xarray as xr
-from o3skim import __main__
 from pytest import fixture
 
 import o3skim
