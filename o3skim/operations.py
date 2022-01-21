@@ -64,25 +64,9 @@ def year_mean(dataset):
     return result
 
 
-def __fix_area_mean(dataset, variable):
-    for var_name in ["lat", "lon", "latitude", "longitude"]:
-        method = var_name + ": mean "
-        __delete_method(dataset, variable, method)
-
-    __append_method(dataset, variable, "area: mean")
-
-
 def __append_method(dataset, variable, method):
     var_name = dataset.cf[variable].name
     var_attrs = dataset[var_name].attrs
     cell_methods = dataset[var_name].cell_methods
 
     var_attrs["cell_methods"] = cell_methods + " " + method
-
-
-def __delete_method(dataset, variable, method):
-    var_name = dataset.cf[variable].name
-    var_attrs = dataset[var_name].attrs
-    cell_methods = dataset[var_name].cell_methods
-
-    var_attrs["cell_methods"] = cell_methods.replace(method + " ", "")
