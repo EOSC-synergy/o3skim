@@ -1,7 +1,6 @@
 """Simple test module for testing"""
-import cf_xarray as cfxr
 import numpy as np
-from pytest import fixture, mark
+from pytest import mark
 
 from . import Skimmed
 

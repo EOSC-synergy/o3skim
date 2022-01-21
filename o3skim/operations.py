@@ -1,14 +1,10 @@
 """Module in charge of implementing the o3skim operations."""
 import logging
 
-import cf_xarray as cfxr
 import iris
 import iris.coord_categorisation
-import xarray as xr
 
 logger = logging.getLogger("o3skim.operations")
-xr.set_options(keep_attrs=True)  # Keep attributes
-toz_standard_name = "atmosphere_mole_content_of_ozone"
 
 
 def run(dataset, operation):
@@ -19,13 +15,13 @@ def run(dataset, operation):
         :year_mean: Time coordinate averaged by year.
 
     :param dataset: Original o3 dataset where to perform operations.
-    :type dataset: :class:`xarray.Dataset`
+    :type dataset: :class:`iris.Cube`
 
     :param operation: Operation name to perform.
     :type operation: str
 
     :return: Dataset after processing the specified operation.
-    :rtype: :class:`xarray.Dataset`
+    :rtype: :class:`iris.Cube`
     """
     if operation == "lon_mean":
         return lon_mean(dataset)
@@ -58,7 +54,6 @@ def lat_mean(dataset):
 
 def year_mean(dataset):
     logger.debug("Calculating mean over time by year")
-    iris.coord_categorisation.add_year(dataset, 'time', name='year')
-    result = dataset.aggregated_by(['year'], iris.analysis.MEAN)
+    iris.coord_categorisation.add_year(dataset, "time", name="year")
+    result = dataset.aggregated_by(["year"], iris.analysis.MEAN)
     return result
-

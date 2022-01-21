@@ -7,7 +7,6 @@ import logging
 import sys
 
 import iris
-import xarray as xr
 
 import o3skim
 

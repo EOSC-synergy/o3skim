@@ -13,7 +13,7 @@ def ccmi_function(parameter, variable, paths, **coords):
     """Returns an standardized dataset from a CCMI-1 model.
 
     :return: Standardized DataSet.
-    :rtype: :class:`xarray.DataSet`
+    :rtype: :class:`iris.Cube`
     """
     datarray, attrs = loads.ccmi(variable[0], paths)
     datarray = normalization.run(datarray, parameter[0], **coords)
@@ -26,7 +26,7 @@ def ecmwf_function(parameter, variable, paths, **coords):
     """Returns an standardized dataset from a ECMWF model.
 
     :return: Standardized DataSet.
-    :rtype: :class:`xarray.DataSet`
+    :rtype: :class:`iris.Cube`
     """
     datarray, attrs = loads.ecmwf(variable[0], paths)
     datarray = normalization.run(datarray, parameter[0], **coords)
@@ -39,7 +39,7 @@ def esacci_function(parameter, variable, time_position, paths, **coords):
     """Returns an standardized dataset from a ESACCI model.
 
     :return: Standardized DataSet.
-    :rtype: :class:`xarray.DataSet`
+    :rtype: :class:`iris.Cube`
     """
     datarray, attrs = loads.esacci(variable[0], time_position, paths)
     datarray = normalization.run(datarray, parameter[0], **coords)
@@ -52,7 +52,7 @@ def sbuv_function(parameter, delimiter, textfile):
     """Returns an standardized dataset from a SBUV model.
 
     :return: Standardized DataSet.
-    :rtype: :class:`xarray.DataSet`
+    :rtype: :class:`iris.Cube`
     """
     datarray, attrs = loads.sbuv(textfile[0], delimiter)
     datarray = normalization.run(datarray, parameter[0])

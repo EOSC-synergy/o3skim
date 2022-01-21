@@ -1,9 +1,8 @@
 """Simple test module for testing"""
 import subprocess
 
-import cf_xarray as cfxr
-import xarray as xr
-from pytest import fixture, mark, skip, fail
+import iris
+from pytest import fail, fixture, mark
 
 
 @fixture(scope="module")
@@ -42,7 +41,7 @@ class TestOperations:
 
     @fixture(scope="class")
     def skimmed(self, skim_process, output):
-        return xr.open_dataset(output)
+        return iris.load(output)
 
     def test_originals_not_edited(self, dataset):
         assert dataset

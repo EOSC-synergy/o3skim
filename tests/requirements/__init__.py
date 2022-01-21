@@ -1,12 +1,10 @@
 """Test definitions and groups"""
-import xarray as xr
-from pytest import fixture
-
 import o3skim
+from pytest import fixture
 
 
 class Skimmed:
-    @fixture(scope="class", autouse=True)  # Needs parametrization
+    @fixture(scope="class", autouse=True)  # Req. parametrization
     def operation(self, request):
         return request.param
 
