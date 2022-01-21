@@ -6,9 +6,10 @@ import argparse
 import logging
 import sys
 
-import o3skim
+import iris
 import xarray as xr
 
+import o3skim
 
 # Script logger setup
 logger = logging.getLogger("o3skim")
@@ -100,7 +101,7 @@ def run_command(paths, operations, **options):
 
     # Loading of DataArray and attributes
     logger.info("Data loading from %s", paths)
-    dataset = xr.open_mfdataset(paths, concat_dim="time", combine="nested")
+    dataset = iris.load_cube(paths, "atmosphere_mole_content_of_ozone")
 
     # Processing of skimming operations
     logger.info("Data skimming using %s", operations)
@@ -108,7 +109,7 @@ def run_command(paths, operations, **options):
 
     # Saving
     logger.info("Staving result into %s", options["output"])
-    skimmed.to_netcdf(options["output"], mode=options["mode"])
+    iris.save(skimmed, options["output"])
 
     # End of program
     logger.info("End of program")
