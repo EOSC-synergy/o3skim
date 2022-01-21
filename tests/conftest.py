@@ -1,6 +1,8 @@
 """Fixtures module for pytest"""
 import os
 
+import cf
+import iris
 import o3mocks
 import xarray as xr
 from pytest import fixture
@@ -28,10 +30,20 @@ def netCDF_files(netCDF_file):
     return paths
 
 
+# @fixture(scope="module")
+# def dataset(netCDF_files):
+#     return xr.open_mfdataset(
+#         paths=netCDF_files,
+#         concat_dim="time",
+#         combine="nested",
+#     )
+
+
+# @fixture(scope="module")
+# def dataset(netCDF_file):
+#     return cf.read(netCDF_file)[0]
+
+
 @fixture(scope="module")
 def dataset(netCDF_files):
-    return xr.open_mfdataset(
-        paths=netCDF_files,
-        concat_dim="time",
-        combine="nested",
-    )
+    return iris.load_cube(netCDF_files, "atmosphere_mole_content_of_ozone")

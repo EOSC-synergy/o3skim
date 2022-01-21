@@ -8,9 +8,11 @@ from . import Skimmed
 
 class CommonTests(Skimmed):
     def test_toz_var_attrs(self, skimmed):
-        var = skimmed.cf["atmosphere_mole_content_of_ozone"]
-        assert var.attrs["units"] == "mol m-2"
-        assert "area: mean" in var.cell_methods
+        assert skimmed.name() == "atmosphere_mole_content_of_ozone"
+        assert str(skimmed.units) == "mol m-2"
+
+    def cell_methods(self, cube):
+        return [f"{x.coord_names[0]}: {x.method}" for x in cube.cell_methods]
 
 
 @mark.parametrize("operation", ["year_mean"], indirect=True)
@@ -36,34 +38,30 @@ class TestYearMean(CommonTests):
 @mark.parametrize("operation", ["lat_mean"], indirect=True)
 class TestLatMean(CommonTests):
     def test_no_latitude(self, skimmed):
-        assert not "Y" in skimmed.cf
+        assert "latitude" not in [x.name() for x in skimmed.dim_coords]
 
     @mark.skip(reason="TODO")
     def test_lat_boundaries(self, skimmed):
         pass  # TODO
 
     def test_coords_reduction(self, dataset, skimmed):
-        assert len(dataset.coords) == len(skimmed.coords) + 1
+        assert dataset.ndim == skimmed.ndim + 1
 
-    @mark.parametrize("variable", ["atmosphere_mole_content_of_ozone"])
-    def test_cell_methods(self, skimmed, variable):
-        var = skimmed.cf[variable]
-        assert not "lat" in var.cell_methods
+    def test_cell_methods(self, skimmed):
+        assert "latitude: mean" in self.cell_methods(skimmed)
 
 
 @mark.parametrize("operation", ["lon_mean"], indirect=True)
 class TestLonMean(CommonTests):
     def test_no_longitude(self, skimmed):
-        assert not "X" in skimmed.cf
+        assert "longitude" not in [x.name() for x in skimmed.dim_coords]
 
     @mark.skip(reason="TODO")
     def test_lon_boundaries(self, skimmed):
         pass  # TODO
 
     def test_coords_reduction(self, dataset, skimmed):
-        assert len(dataset.coords) == len(skimmed.coords) + 1
+        assert dataset.ndim == skimmed.ndim + 1
 
-    @mark.parametrize("variable", ["atmosphere_mole_content_of_ozone"])
-    def test_cell_methods(self, skimmed, variable):
-        var = skimmed.cf[variable]
-        assert not "lon" in var.cell_methods
+    def test_cell_methods(self, skimmed):
+        assert "longitude: mean" in self.cell_methods(skimmed)

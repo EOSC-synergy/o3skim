@@ -2,6 +2,7 @@
 import logging
 
 import cf_xarray as cfxr
+import iris
 import xarray as xr
 
 logger = logging.getLogger("o3skim.operations")
@@ -38,17 +39,19 @@ def run(dataset, operation):
 
 def lon_mean(dataset):
     logger.debug("Calculating mean over model longitude")
-    result = dataset.cf.mean("longitude")
-
-    __fix_area_mean(result, toz_standard_name)
+    # dataset.coord('longitude').guess_bounds()  # Calc bounds if not pressent
+    areas = iris.analysis.cartography.area_weights(dataset)
+    result = dataset.collapsed("longitude", iris.analysis.MEAN, weights=areas)
+    result.remove_coord("longitude")  # No need to include: CF 7.3.4
     return result
 
 
 def lat_mean(dataset):
     logger.debug("Calculating mean over model latitude")
-    result = dataset.cf.mean("latitude")
-
-    __fix_area_mean(result, toz_standard_name)
+    # dataset.coord('latitude').guess_bounds()  # Calc bounds if not pressent
+    areas = iris.analysis.cartography.area_weights(dataset)
+    result = dataset.collapsed("latitude", iris.analysis.MEAN, weights=areas)
+    result.remove_coord("latitude")  # No need to include: CF 7.3.4
     return result
 
 
