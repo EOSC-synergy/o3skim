@@ -11,14 +11,19 @@ def paths(netCDF_files):
     return " ".join(netCDF_files)
 
 
+@fixture(scope="module", params=["1.7"])
+def convention(request):
+    return request.param
+
+
 @fixture(scope="class", params=["toz-skimmed"])
 def output(request, dataset_folder, operation):
     return f"{dataset_folder}/{request.param}_{operation}.nc"
 
 
-@fixture(scope="function")
-def conventions(skimmed, output):
-    command = f"cfchecks {output}"
+@fixture(scope="function", params=[""])
+def cfcheck(skimmed, convention, output):
+    command = f"cfchecks -v {convention} {output}"
     return subprocess.run(command, capture_output=True, shell=True)
 
 
@@ -42,5 +47,5 @@ class TestOperations:
     def test_originals_not_edited(self, dataset):
         assert dataset
 
-    def test_cf_conventions(self, conventions):
-        assert conventions.returncode == 0
+    def test_cf_conventions(self, cfcheck):
+        assert cfcheck.returncode == 0

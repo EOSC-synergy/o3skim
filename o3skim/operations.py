@@ -3,6 +3,7 @@ import logging
 
 import cf_xarray as cfxr
 import iris
+import iris.coord_categorisation
 import xarray as xr
 
 logger = logging.getLogger("o3skim.operations")
@@ -57,16 +58,7 @@ def lat_mean(dataset):
 
 def year_mean(dataset):
     logger.debug("Calculating mean over time by year")
-    result = dataset.cf.resample(T="Y").mean()
-
-    method = "time: mean (interval: 1 years)"
-    __append_method(result, toz_standard_name, method)
+    iris.coord_categorisation.add_year(dataset, 'time', name='year')
+    result = dataset.aggregated_by(['year'], iris.analysis.MEAN)
     return result
 
-
-def __append_method(dataset, variable, method):
-    var_name = dataset.cf[variable].name
-    var_attrs = dataset[var_name].attrs
-    cell_methods = dataset[var_name].cell_methods
-
-    var_attrs["cell_methods"] = cell_methods + " " + method

@@ -18,21 +18,18 @@ class CommonTests(Skimmed):
 @mark.parametrize("operation", ["year_mean"], indirect=True)
 class TestYearMean(CommonTests):
     def test_1date_per_year(self, skimmed):
-        diff_time = skimmed.time.diff("time").values[:]
-        assert np.all(diff_time.astype("timedelta64[D]") > np.timedelta64(364, "D"))
-        assert np.all(diff_time.astype("timedelta64[D]") < np.timedelta64(367, "D"))
+        diff_time = np.diff(skimmed.coord("time").bounds, 1)[:, 0]
+        assert np.all(x >= 365 for x in diff_time)
 
     @mark.skip(reason="TODO")
     def test_time_boundaries(self, skimmed):
         pass  # TODO
 
     def test_coords_reduction(self, dataset, skimmed):
-        assert len(dataset.coords) == len(skimmed.coords)
+        assert dataset.ndim == skimmed.ndim
 
-    @mark.parametrize("variable", ["atmosphere_mole_content_of_ozone"])
-    def test_cell_methods(self, skimmed, variable):
-        var = skimmed.cf[variable]
-        assert "time: mean (interval: 1 years)" in var.cell_methods
+    def test_cell_methods(self, skimmed):
+        assert "year: mean" in self.cell_methods(skimmed)
 
 
 @mark.parametrize("operation", ["lat_mean"], indirect=True)
