@@ -1,9 +1,9 @@
 """Fixtures module for pytest"""
 import os
 
-import iris
-import o3mocks
 import xarray as xr
+import o3mocks
+import iris
 from pytest import fixture
 
 

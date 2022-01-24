@@ -55,5 +55,9 @@ def lat_mean(dataset):
 def year_mean(dataset):
     logger.debug("Calculating mean over time by year")
     iris.coord_categorisation.add_year(dataset, "time", name="year")
-    result = dataset.aggregated_by(["year"], iris.analysis.MEAN)
+    result = dataset.aggregated_by(["year"], iris.analysis.MEAN)    
+    method = iris.coords.CellMethod('mean', coords=['time'], intervals='1 year')
+    result.cell_methods = result.cell_methods[:-1]
+    result.add_cell_method(method)
+    result.remove_coord("year")
     return result
