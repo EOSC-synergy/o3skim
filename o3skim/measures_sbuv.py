@@ -16,10 +16,6 @@ def sbuv_function(variable_name, delimiter, textfile, **kwargs):
     :rtype: :class:`iris.Cube`
     """
     datarray = sbuv(textfile[0], delimiter)
-    datarray = datarray.squeeze(drop=True)
-    for key, value in coords.items():
-        datarray = datarray.rename({value: key})
-    datarray = datarray.sortby(list(datarray.coords))
     dataset = datarray.to_dataset(name=variable_name)
     return dataset.assign_coords(lon=["nan"])
 

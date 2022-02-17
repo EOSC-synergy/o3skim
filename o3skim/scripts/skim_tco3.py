@@ -9,6 +9,12 @@ import sys
 import iris
 import o3skim
 
+
+class StripArgument(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, values.strip())
+
+
 # Script logger setup
 logger = logging.getLogger("o3norm")
 
@@ -21,7 +27,7 @@ parser.add_argument(
     choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
     help="Sets the logging level (default: %(default)s)")
 parser.add_argument(
-    "-o", "--output", type=str, default='.',
+    "-o", "--output", type=str, default='.', action=StripArgument,
     help="Folder for output files (default: %(default)s)")
 parser.add_argument(
     "paths", nargs='+', type=str, action='store',
@@ -73,6 +79,7 @@ def run_command(paths, operations, **options):
 
     # End of program
     logger.info("End of program")
+
 
 
 if __name__ == '__main__':

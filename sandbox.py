@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """Creates sandbox data inside 'data' forder"""
+import os
+
 import o3mocks
 import xarray as xr
 
 files_convention = "CF-1.8"
 files_prefix = "toz"
-data_folder = "data"
+data_folder = "data/model1"
 dataset_name = f"{data_folder}/{files_prefix}.{files_convention}.nc"
 
+os.makedirs(data_folder, exist_ok=True)
 if files_convention == "CF-1.8":
     o3mocks.cf_18.toz_dataset(dataset_name)
 else:

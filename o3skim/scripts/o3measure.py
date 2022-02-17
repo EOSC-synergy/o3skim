@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 """
-o3norm is a tool for data standardization of ozone applications:
+Collect and standardize measurement ozone data from multiple sources:
 """
 import argparse
 import logging
 import sys
 
 from o3skim.measures_sbuv import sbuv_function
+
+
+class StripArgument(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, values.strip())
+
 
 # Script logger setup
 logger = logging.getLogger("o3measure")
@@ -17,14 +23,14 @@ parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     epilog="See '<command> --help' to read about a specific sub-command.")
 parser.add_argument(
-    "-n", "--variable-name", type=str, default='tco3_zm',
-    help="Variable name inside netCDF output (default: %(default)s)")
-parser.add_argument(
     "-v", "--verbosity", type=str, default='INFO',
     choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
     help="Sets the logging level (default: %(default)s)")
 parser.add_argument(
-    "-t", "--target", type=str, default='measures.nc',
+    "-n", "--variable-name", type=str, default='tco3_zm', action=StripArgument,
+    help="Variable name inside netCDF output (default: %(default)s)")
+parser.add_argument(
+    "-o", "--output", type=str, default='measures.nc', action=StripArgument,
     help="Target netCDF file (default: %(default)s)")
 subparsers = parser.add_subparsers(dest='command', help='Sub-commands')
 
@@ -37,7 +43,7 @@ sbuv_parser.add_argument(
     help="Delimiter to use (default: %(default)s)")
 sbuv_parser.add_argument(
     "textfile", nargs=1, type=str, action='store',
-    help="File .txt with the data to load")
+    help="File .txt with sbuv measurements to load")
 
 
 def main():
@@ -60,11 +66,11 @@ def run_command(command, **options):
 
     # Loading of DataArray and attributes
     logger.info("Data loading and standardization of measurements")
-    dataset = command(options['variable-name'], **options)
+    dataset = command(**options)
 
     # Saving
-    logger.info("Staving result into %s.nc", options['target'])
-    dataset.to_netcdf(options['target'])
+    logger.info("Staving result into %s.nc", options['output'])
+    dataset.to_netcdf(options['output'])
 
     # End of program
     logger.info("End of program")
