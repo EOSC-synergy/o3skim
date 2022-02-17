@@ -6,9 +6,8 @@ import argparse
 import logging
 import sys
 
+import iris
 import o3skim
-import xarray as xr
-
 
 # Script logger setup
 logger = logging.getLogger("o3norm")
@@ -50,29 +49,27 @@ def main():
     sys.exit(0)  # Shell return 0 == success
 
 
-def run_command(verbosity, operations, output, paths):
+def run_command(paths, operations, **options):
     # Set logging level
     logging.basicConfig(
-        level=getattr(logging, verbosity),
-        format='%(asctime)s %(name)-24s %(levelname)-8s %(message)s')
+        level=getattr(logging, options["verbosity"]),
+        format="%(asctime)s %(name)-24s %(levelname)-8s %(message)s",
+    )
 
     # Common operations
     logger.info("Program start")
 
     # Loading of DataArray and attributes
     logger.info("Data loading from %s", paths)
-    dataset = xr.open_mfdataset(paths)
+    dataset = iris.load_cube(paths, "atmosphere_mole_content_of_ozone")
 
     # Processing of skimming operations
     logger.info("Data skimming using %s", operations)
     skimmed = o3skim.process(dataset, operations)
 
     # Saving
-    logger.info("Staving result into %s", output)
-    for variable in skimmed:
-        variable_ds = skimmed[variable].to_dataset()
-        variable_ds.attrs = skimmed.attrs
-        o3skim.save(variable_ds, f"{output}/{variable}")
+    logger.info("Staving result into %s", options["output"])
+    iris.save(skimmed, options["output"])
 
     # End of program
     logger.info("End of program")

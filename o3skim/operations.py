@@ -1,62 +1,63 @@
 """Module in charge of implementing the o3skim operations."""
 import logging
-import pandas as pd
 
-logger = logging.getLogger('o3skim.operations')
+import iris
+import iris.coord_categorisation
+
+logger = logging.getLogger("o3skim.operations")
 
 
-def run(name, dataset):
+def run(dataset, operation):
     """Main entry point for operation call on o3skimming functions:
 
         :lon_mean:  Longitudinal mean across the dataset.
         :lat_mean:  Latitudinal mean across the dataset.
         :year_mean: Time coordinate averaged by year.
 
-    :param name: Operation name to perform.
-    :type name: str
-
     :param dataset: Original o3 dataset where to perform operations.
-    :type dataset: :class:`xarray.Dataset`
+    :type dataset: :class:`iris.Cube`
+
+    :param operation: Operation name to perform.
+    :type operation: str
 
     :return: Dataset after processing the specified operation.
-    :rtype: :class:`xarray.Dataset`
+    :rtype: :class:`iris.Cube`
     """
-    if name == 'lon_mean':
-        return _lon_mean(dataset)
-    elif name == 'lat_mean':
-        return _lat_mean(dataset)
-    elif name == 'year_mean':
-        return _year_mean(dataset)
+    if operation == "lon_mean":
+        return lon_mean(dataset)
+    elif operation == "lat_mean":
+        return lat_mean(dataset)
+    elif operation == "year_mean":
+        return year_mean(dataset)
     else:
-        message = "Bad selected operation: {}"
-        raise KeyError(message.format(name))
+        err = "Bad selected operation: {}"
+        raise KeyError(err.format(operation))
 
 
-def _lon_mean(dataset):
+def lon_mean(dataset):
     logger.debug("Calculating mean over model longitude")
-    skimmed = dataset.mean('lon')
-    skimmed.attrs = dataset.attrs
-    for var in dataset.var():
-        skimmed[var].attrs = dataset[var].attrs
-    return skimmed
+    # dataset.coord('longitude').guess_bounds()  # Calc bounds if not pressent
+    areas = iris.analysis.cartography.area_weights(dataset)
+    result = dataset.collapsed("longitude", iris.analysis.MEAN, weights=areas)
+    result.remove_coord("longitude")  # No need to include: CF 7.3.4
+    return result
 
 
-def _lat_mean(dataset):
+def lat_mean(dataset):
     logger.debug("Calculating mean over model latitude")
-    skimmed = dataset.mean('lat')
-    skimmed.attrs = dataset.attrs
-    for var in dataset.var():
-        skimmed[var].attrs = dataset[var].attrs
-    return skimmed
+    # dataset.coord('latitude').guess_bounds()  # Calc bounds if not pressent
+    areas = iris.analysis.cartography.area_weights(dataset)
+    result = dataset.collapsed("latitude", iris.analysis.MEAN, weights=areas)
+    result.remove_coord("latitude")  # No need to include: CF 7.3.4
+    return result
 
 
-def _year_mean(dataset):
+def year_mean(dataset):
     logger.debug("Calculating mean over time by year")
-    skimmed = dataset.groupby('time.year').mean('time')
-    newtime = [pd.datetime(y, 7, 2) for y in skimmed.year]
-    skimmed = skimmed.assign_coords(year=newtime)
-    skimmed = skimmed.rename({'year': 'time'})
-    skimmed.attrs = dataset.attrs
-    for var in dataset.var():
-        skimmed[var].attrs = dataset[var].attrs
-    return skimmed
+    iris.coord_categorisation.add_year(dataset, "time", name="year")
+    result = dataset.aggregated_by(["year"], iris.analysis.MEAN)    
+    method = iris.coords.CellMethod('mean', coords=['time'], intervals='1 year')
+    result.cell_methods = result.cell_methods[:-1]
+    result.add_cell_method(method)
+    result.remove_coord("year")
+    return result
