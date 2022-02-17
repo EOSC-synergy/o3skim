@@ -1,0 +1,39 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: o3measure-sbuv",
+            "type": "python",
+            "request": "launch",
+            "program": "o3skim/scripts/o3measure.py",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "-o output/toz-measures.nc",
+                "-n tco3_measure",
+                "SBUV",
+                "data/Sbuv/sbuv.v86.mod_v10.70-18.za.txt",
+            ]
+        },
+        {
+            "name": "Python: skim_tco3-model1",
+            "type": "python",
+            "request": "launch",
+            "program": "o3skim/scripts/skim_tco3.py",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "-o output/toz-skimmed.nc",
+                "--lat_mean",
+                "data/model1/toz.CF-1.8_2000-01-16T12:*.nc",
+            ]
+        }
+    ]
+}
