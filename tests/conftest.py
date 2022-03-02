@@ -7,6 +7,14 @@ import iris
 from pytest import fixture
 
 
+
+@fixture(scope="session", autouse=True)
+def add_pythonpath():
+    import sys
+    sys.path.insert(0, str(os.getcwd()))
+
+
+
 @fixture(scope="session", autouse=True)
 def dataset_folder(tmpdir_factory):
     tmpdir = tmpdir_factory.mktemp("data")

@@ -34,7 +34,7 @@ class TestOperations:
 
     @fixture(scope="class", autouse=True)
     def skim_process(self, paths, output, operation):
-        command = f"python -m o3skim -o {output} --{operation} {paths}"
+        command = f"o3skim/scripts/skim_tco3.py -o {output} --{operation} {paths}"
         process = subprocess.run(command, capture_output=True, shell=True)
         if process.returncode != 0:
             fail(f"processing failed {process.stderr}")
