@@ -8,7 +8,7 @@ import sys
 
 import iris
 import o3skim
-
+from iris.experimental.equalise_cubes import equalise_attributes
 
 class StripArgument(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
@@ -16,7 +16,7 @@ class StripArgument(argparse.Action):
 
 
 # Script logger setup
-logger = logging.getLogger("o3norm")
+logger = logging.getLogger("skim_tco3")
 
 # Parser for script inputs
 parser = argparse.ArgumentParser(
@@ -29,6 +29,10 @@ parser.add_argument(
 parser.add_argument(
     "-o", "--output", type=str, default='.', action=StripArgument,
     help="Folder for output files (default: %(default)s)")
+parser.add_argument(
+    "-n", "--variable_name", type=str, action=StripArgument,
+    default='atmosphere_mole_content_of_ozone', 
+    help="Variable or standard_name to skim (default: %(default)s)")
 parser.add_argument(
     "paths", nargs='+', type=str, action='store',
     help="Paths to netCDF files with the data to skim")
@@ -55,7 +59,7 @@ def main():
     sys.exit(0)  # Shell return 0 == success
 
 
-def run_command(paths, operations, **options):
+def run_command(paths, operations, variable_name, **options):
     # Set logging level
     logging.basicConfig(
         level=getattr(logging, options["verbosity"]),
@@ -67,7 +71,9 @@ def run_command(paths, operations, **options):
 
     # Loading of DataArray and attributes
     logger.info("Data loading from %s", paths)
-    dataset = iris.load_cube(paths, "atmosphere_mole_content_of_ozone")
+    cubes = iris.load(paths, variable_name)
+    equalise_attributes(cubes)
+    dataset = cubes.concatenate_cube()
 
     # Processing of skimming operations
     logger.info("Data skimming using %s", operations)
