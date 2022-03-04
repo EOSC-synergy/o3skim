@@ -8,7 +8,7 @@ import sys
 
 import iris
 import o3skim
-from iris.experimental.equalise_cubes import equalise_attributes
+from iris.util import equalise_attributes
 
 class StripArgument(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
@@ -27,8 +27,8 @@ parser.add_argument(
     choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
     help="Sets the logging level (default: %(default)s)")
 parser.add_argument(
-    "-o", "--output", type=str, default='.', action=StripArgument,
-    help="Folder for output files (default: %(default)s)")
+    "-o", "--output", type=str, default='toz-skimmed.nc', action=StripArgument,
+    help="Output file for skimmed data (default: %(default)s)")
 parser.add_argument(
     "-n", "--variable_name", type=str, action=StripArgument,
     default='atmosphere_mole_content_of_ozone', 
