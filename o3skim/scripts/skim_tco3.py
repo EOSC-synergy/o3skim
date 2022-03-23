@@ -66,6 +66,7 @@ def run_command(paths, operations, variable_name, **options):
     logger.info("Program start")
 
     # Loading of DataArray and attributes
+    paths = paths[0] if len(paths) == 1 else paths 
     logger.info("Data loading from %s", paths)
     kwargs = dict(data_vars='minimal', concat_dim='time', combine='nested')
     dataset = xr.open_mfdataset(paths, **kwargs)
