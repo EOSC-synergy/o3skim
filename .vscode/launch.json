@@ -32,7 +32,7 @@
             "args": [
                 "-o output/toz-skimmed.nc",
                 "--lat_mean",
-                "data/model1/toz.CF-1.8_2000-01-16T12:*.nc",
+                "data/model1/toz.CF-1.8_2000-*.nc",
             ]
         }
     ]

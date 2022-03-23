@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""
-o3skim is a tool for data reduction for ozone applications.
+"""o3skim is a tool for data reduction for ozone applications.
 """
 import argparse
 import logging
 import sys
 
-import iris
+import cf_xarray as cfxr
 import o3skim
-from iris.util import equalise_attributes
+import xarray as xr
+
 
 class StripArgument(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
@@ -47,10 +47,6 @@ operations.add_argument(
     "--lat_mean", action='append_const',
     dest='operations', const='lat_mean',
     help="Latitudinal mean across the dataset")
-operations.add_argument(
-    "--year_mean", action='append_const',
-    dest='operations', const='year_mean',
-    help="Time average accross the year")
 
 
 def main():
@@ -71,20 +67,33 @@ def run_command(paths, operations, variable_name, **options):
 
     # Loading of DataArray and attributes
     logger.info("Data loading from %s", paths)
-    cubes = iris.load(paths, variable_name)
-    equalise_attributes(cubes)
-    dataset = cubes.concatenate_cube()
+    kwargs = dict(data_vars='minimal', concat_dim='time', combine='nested')
+    dataset = xr.open_mfdataset(paths, **kwargs)
+
+    # Extraction of variable as dataset
+    logger.info("Variable %s loading", variable_name)
+    ozone = dataset.cf[[variable_name]]
+
+    # Variable name standardization
+    logger.info("Renaming var %s to 'toz'/'toz_zm", variable_name)    
+    if any([x in operations for x in ['lat_mean', 'lon_mean']]):
+        ozone = ozone.cf.rename({variable_name: 'toz_zm'})
+    else:
+        ozone = ozone.cf.rename({variable_name: 'toz'})
 
     # Processing of skimming operations
     logger.info("Data skimming using %s", operations)
-    skimmed = o3skim.process(dataset, operations)
+    skimmed = o3skim.process(ozone, operations)
 
     # Saving
     logger.info("Staving result into %s", options["output"])
-    iris.save(skimmed, options["output"])
+    skimmed.to_netcdf(options["output"])
 
     # End of program
     logger.info("End of program")
+    dataset.close()
+    ozone.close()
+    skimmed.close()
 
 
 

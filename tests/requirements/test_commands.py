@@ -1,7 +1,7 @@
 """Simple test module for testing"""
 import subprocess
 
-import iris
+import xarray as xr
 from pytest import fail, fixture, mark
 
 
@@ -26,7 +26,7 @@ def cfcheck(skimmed, convention, output):
     return subprocess.run(command, capture_output=True, shell=True)
 
 
-@mark.parametrize("operation", ["lon_mean", "lat_mean", "year_mean"], indirect=True)
+@mark.parametrize("operation", ["lon_mean", "lat_mean"], indirect=True)
 class TestOperations:
     @fixture(scope="class")
     def operation(self, request):
@@ -41,7 +41,7 @@ class TestOperations:
 
     @fixture(scope="class")
     def skimmed(self, skim_process, output):
-        return iris.load(output)
+        return xr.open_dataset(output)
 
     def test_originals_not_edited(self, dataset):
         assert dataset

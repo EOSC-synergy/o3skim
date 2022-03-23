@@ -13,7 +13,7 @@ def sbuv_function(variable_name, delimiter, textfile, **kwargs):
     """Returns an standardized dataset from a SBUV model.
 
     :return: Standardized DataSet.
-    :rtype: :class:`iris.Cube`
+    :rtype: :class:`xarray.Dataset`
     """
     datarray = sbuv(textfile[0], delimiter)
     dataset = datarray.to_dataset(name=variable_name)

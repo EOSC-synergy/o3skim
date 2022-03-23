@@ -5,13 +5,7 @@ from . import (
     LatSkimRequirements,
     LonSkimRequirements,
     VariableRequirements,
-    YearSkimRequirements,
 )
-
-
-@mark.parametrize("operations", [["year_mean"]], indirect=True)
-class TestYearMean(VariableRequirements, YearSkimRequirements):
-    pass
 
 
 @mark.parametrize("operations", [["lat_mean"]], indirect=True)

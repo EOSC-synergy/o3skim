@@ -21,13 +21,13 @@ def process(dataset, actions):
     a latitudinal mean before returning the result.
 
     :param dataset: Original o3 dataset where to perform operations.
-    :type dataset: :class:`iris.Cube`
+    :type dataset: :class:`xarray.Dataset`
 
     :param actions: List of operation names to perform.
     :type actions: list
 
     :return: Dataset after processing listed operations.
-    :rtype: :class:`iris.Cube`
+    :rtype: :class:`xarray.Dataset`
     """
     logger.debug("Processing queue: %s", actions)
     return reduce(operations.run, actions, dataset)
