@@ -2,9 +2,10 @@
 import logging
 from functools import reduce
 
-from o3skim import operations
+from o3skim import operations, utils
 
 logger = logging.getLogger("o3skim")
+__all__ = ["process", "utils"]
 
 
 def process(dataset, actions):

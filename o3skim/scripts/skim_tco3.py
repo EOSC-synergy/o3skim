@@ -9,7 +9,6 @@ import cf_xarray as cfxr
 import o3skim
 import xarray as xr
 
-
 class StripArgument(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values.strip())
@@ -29,6 +28,9 @@ parser.add_argument(
 parser.add_argument(
     "-o", "--output", type=str, default='toz-skimmed.nc', action=StripArgument,
     help="Output file for skimmed data (default: %(default)s)")
+parser.add_argument(
+    "--original_attributes", action='store_true',
+    help="Skimming does not filter non cf attributes")
 parser.add_argument(
     "-n", "--variable_name", type=str, action=StripArgument,
     default='atmosphere_mole_content_of_ozone', 
@@ -70,6 +72,10 @@ def run_command(paths, operations, variable_name, **options):
     logger.info("Data loading from %s", paths)
     kwargs = dict(data_vars='minimal', concat_dim='time', combine='nested')
     dataset = xr.open_mfdataset(paths, **kwargs)
+
+    # Clean of non cf attributes
+    if not options["original_attributes"]:
+        o3skim.utils.cf_clean(dataset)
 
     # Extraction of variable as dataset
     logger.info("Variable %s loading", variable_name)

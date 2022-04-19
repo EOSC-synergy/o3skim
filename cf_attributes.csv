@@ -1,0 +1,53 @@
+Attribute,Type,Use,Links,Description
+actual_range,N,"C, D","Section 2.5.1, ""Missing data, valid and actual range of data""",The smallest and the largest valid non-missing values occurring in the variable.
+add_offset,N,"C, D","NUG Appendix A, ""Attribute Conventions"", and Section 8.1, ""Packed Data""","If present for a variable, this number is to be added to the data after it is read by an application. If both scale_factor and add_offset attributes are present, the data are first scaled before the offset is added. In cases where there is a strong constraint on dataset size, it is allowed to pack the coordinate variables (using add_offset and/or scale_factor), but this is not recommended in general."
+ancillary_variables,S,D,"Section 3.4, ""Ancillary Data""","Identifies a variable that contains closely associated data, e.g., the measurement uncertainties of instrument data."
+axis,S,C,"Chapter 4, Coordinate Types","Identifies latitude, longitude, vertical, or time axes."
+bounds,S,C,"Section 7.1, ""Cell Boundaries""",Identifies a boundary variable.
+calendar,S,C,"Section 4.4.1, ""Calendar""",Calendar used for encoding time axes.
+cell_measures,S,"D, Do","Section 7.2, ""Cell Measures""",Identifies variables that contain cell areas or volumes.
+cell_methods,S,D,"Section 7.3, ""Cell Methods"", Section 7.4, ""Climatological Statistics""",Records the method used to derive data that represents cell values.
+cf_role,S,C,"Section 9.5, ""Coordinates and metadata""",Identifies the roles of variables that identify features in discrete sampling geometries
+climatology,S,C,"Section 7.4, ""Climatological Statistics""",Identifies a climatology variable.
+comment,S,"G, C, D","Section 2.6.2, ""Description of file contents""",Miscellaneous information about the data or methods used to produce it.
+compress,S,C,"Section 8.2, ""Lossless Compression by Gathering"", Section 5.3, ""Reduced Horizontal Grid""",Records dimensions which have been compressed by gathering.
+computed_standard_name,S,C,"Section 4.3.3, ""Parametric Vertical Coordinate""","Indicates the standard name, from the standard name table, of the computed vertical coordinate values, computed according to the formula in the definition."
+Conventions,S,G,"NUG Appendix A, ""Attribute Conventions""",Name of the conventions followed by the dataset.
+coordinate_interpolation,S,"D, Do","Section 8.3, ""Lossy Compression by Coordinate Subsampling""",Indicates that coordinates have been compressed by sampling and identifies the tie point coordinate variables and their associated interpolation variables.
+coordinates,S,"D, M, Do","Chapter 5, Coordinate Systems and Domain, Section 6.1, ""Labels"", Section 6.2, ""Alternative Coordinates""","Identifies auxiliary coordinate variables, label variables, and alternate coordinate variables."
+dimensions,S,Do,"Section 5.8, ""Domain Variables""",Identifies the dimensions that define a domain variable.
+external_variables,S,G,"Section 2.6.3, ""External variables"", Section 7.2, ""Cell Measures""",Identifies variables which are named by cell_measures attributes in the file but which are not present in the file.
+_FillValue,D,"C, D","NUG Appendix A, ""Attribute Conventions"", and Section 2.5.1, ""Missing data, valid and actual range of data"", and Section 9.6, ""Missing Data""",A value used to represent missing or undefined data. Allowed for auxiliary coordinate variables but not allowed for coordinate variables.
+featureType,S,G,"Section 9.4, ""The featureType attribute""","Specifies the type of discrete sampling geometry to which the data in the scope of this attribute belongs, and implies that all data variables in the scope of this attribute contain collections of features of that type."
+flag_masks,D,D,"Section 3.5, ""Flags""",Provides a list of bit fields expressing Boolean or enumerated flags.
+flag_meanings,S,D,"Section 3.5, ""Flags""","Use in conjunction with flag_values to provide descriptive words or phrases for each flag value. If multi-word phrases are used to describe the flag values, then the words within a phrase should be connected with underscores."
+flag_values,D,D,"Section 3.5, ""Flags""",Provides a list of the flag values. Use in conjunction with flag_meanings.
+formula_terms,S,C,"Section 4.3.3, ""Parametric Vertical Coordinate""",Identifies variables that correspond to the terms in a formula.
+geometry,S,"C, D, Do","Section 7.5, ""Geometries""",Identifies a variable that defines geometry.
+geometry_type,S,M,"Section 7.5, ""Geometries""",Indicates the type of geometry present.
+grid_mapping,S,"D, M, Do","Section 5.6, ""Horizontal Coordinate Reference Systems, Grid Mappings, and Projections""",Identifies a variable that defines a grid mapping.
+history,S,"G, Gr","NUG Appendix A, ""Attribute Conventions""",List of the applications that have modified the original data.
+instance_dimension,S,-,"Section 9.3, ""Representations of collections of features in data variables""",An attribute which identifies an index variable and names the instance dimension to which it applies. The index variable indicates that the indexed ragged array representation is being used for a collection of features.
+institution,S,"G, D","Section 2.6.2, ""Description of file contents""",Where the original data was produced.
+interior_ring,S,M,"Section 7.5, ""Geometries""","Identifies a variable that indicates if polygon parts are interior rings (i.e., holes) or not."
+leap_month,N,C,"Section 4.4.1, ""Calendar""",Specifies which month is lengthened by a day in leap years for a user defined calendar.
+leap_year,N,C,"Section 4.4.1, ""Calendar""",Provides an example of a leap year for a user defined calendar. It is assumed that all years that differ from this year by a multiple of four are also leap years.
+long_name,S,"C, D, Do","NUG Appendix A, ""Attribute Conventions"", and Section 3.2, ""Long Name""","A descriptive name that indicates a variable""s content. This name is not standardized."
+missing_value,D,"C, D","Section 2.5.1, ""Missing data, valid and actual range of data"", and Section 9.6, ""Missing Data""",A value or values used to represent missing or undefined data. Allowed for auxiliary coordinate variables but not allowed for coordinate variables.
+month_lengths,N,C,"Section 4.4.1, ""Calendar""",Specifies the length of each month in a non-leap year for a user defined calendar.
+node_coordinates,S,M,"Section 7.5, ""Geometries""",Identifies variables that contain geometry node coordinates.
+node_count,S,M,"Section 7.5, ""Geometries""",Identifies a variable indicating the count of nodes per geometry.
+nodes,S,C,"Section 7.5, ""Geometries""",Identifies a coordinate node variable.
+part_node_count,S,M,"Section 7.5, ""Geometries""",Identifies a variable providing the count of nodes per geometry part.
+positive,S,C,[COARDS],Direction of increasing vertical coordinate value.
+references,S,"G, D","Section 2.6.2, ""Description of file contents""",References that describe the data or methods used to produce it.
+sample_dimension,S,-,"Section 9.3, ""Representations of collections of features in data variables""",An attribute which identifies a count variable and names the sample dimension to which it applies. The count variable indicates that the contiguous ragged array representation is being used for a collection of features.
+scale_factor,N,"C, D","NUG Appendix A, ""Attribute Conventions"", and Section 8.1, ""Packed Data""","If present for a variable, the data are to be multiplied by this factor after the data are read by an application. See also the add_offset attribute. In cases where there is a strong constraint on dataset size, it is allowed to pack the coordinate variables (using add_offset and/or scale_factor), but this is not recommended in general."
+source,S,"G, D","Section 2.6.2, ""Description of file contents""",Method of production of the original data.
+standard_error_multiplier,N,D,"Appendix C, Standard Name Modifiers","If a data variable with a standard_name modifier of standard_error has this attribute, it indicates that the values are the stated multiple of one standard error."
+standard_name,S,"C, D","Section 3.3, ""Standard Name""","A standard name that references a description of a variable""s content in the standard name table."
+title,S,"G, Gr","NUG Appendix A, ""Attribute Conventions""",Short description of the file contents.
+units,S,"C, D","NUG Appendix A, ""Attribute Conventions"", and Section 3.1, ""Units""","Units of a variable""s content."
+valid_max,N,"C, D","NUG Appendix A, ""Attribute Conventions""",Largest valid value of a variable.
+valid_min,N,"C, D","NUG Appendix A, ""Attribute Conventions""",Smallest valid value of a variable.
+valid_range,N,"C, D","NUG Appendix A, ""Attribute Conventions""",Smallest and largest valid values of a variable.
