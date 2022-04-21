@@ -52,8 +52,9 @@ def verbosity(request):
 
 
 @fixture(scope="module", params=["toz-skimmed.nc"])
-def output(request):
-    return request.param
+def output(request, tmpdir_factory):
+    tmpdir = tmpdir_factory.mktemp("data")
+    return str(tmpdir.join(request.param))
 
 
 @fixture(scope="module", params=[False])
