@@ -1,5 +1,5 @@
 """Fixtures module for pytest"""
-from pytest import fixture
+from pytest import fixture, xfail
 import o3skim
 
 
@@ -14,15 +14,18 @@ def skimmed(dataset, operations):
 
 
 @fixture(scope="class")
-def standard_name(skimmed):
-    return skimmed["toz_zm"].attrs["standard_name"]
+def standard_name(skimmed, variable):
+    return skimmed.cf[variable].attrs["standard_name"]
 
 
 @fixture(scope="class")
-def units(skimmed):
-    return skimmed["toz_zm"].attrs["units"]
+def units(skimmed, variable):
+    return skimmed.cf[variable].attrs["units"]
 
 
 @fixture(scope="class")
-def cell_methods(skimmed):
-    return skimmed["toz_zm"].attrs["cell_methods"]
+def cell_methods(dataset, skimmed, variable):
+    if "cell_methods" in dataset.cf[variable].attrs:
+        return skimmed.cf[variable].attrs["cell_methods"]
+    else:
+        xfail("Cell methods not in original dataset")

@@ -1,4 +1,6 @@
+from numpy import var
 from o3skim import utils
+from pytest import mark
 
 
 def test_cf_clean_global(dataset):
@@ -9,17 +11,18 @@ def test_cf_clean_global(dataset):
     assert dataset.attrs == original_attrs
 
 
-def test_cf_clean_coordinate(dataset):
-    original_attrs = dataset["time"].attrs
-    dataset["time"].attrs = {"no_standard": True, **dataset["time"].attrs}
+@mark.parametrize("coord", ["time"])
+def test_cf_clean_coordinate(dataset, coord):
+    original_attrs = dataset[coord].attrs
+    dataset[coord].attrs = {"no_standard": True, **dataset[coord].attrs}
     utils.cf_clean(dataset)
-    assert "no_standard" not in dataset["time"].attrs
-    assert dataset["time"].attrs == original_attrs
+    assert "no_standard" not in dataset[coord].attrs
+    assert dataset[coord].attrs == original_attrs
 
 
-def test_cf_clean_variable(dataset):
-    original_attrs = dataset["toz_zm"].attrs
-    dataset["toz_zm"].attrs = {"no_standard": True, **dataset["toz_zm"].attrs}
+def test_cf_clean_variable(dataset, variable):
+    original_attrs = dataset.cf[variable].attrs
+    dataset.cf[variable].attrs = {"no_standard": True, **dataset.cf[variable].attrs}
     utils.cf_clean(dataset)
-    assert "no_standard" not in dataset["toz_zm"].attrs
-    assert dataset["toz_zm"].attrs == original_attrs
+    assert "no_standard" not in dataset.cf[variable].attrs
+    assert dataset.cf[variable].attrs == original_attrs
