@@ -1,9 +1,10 @@
 """Simple test module for testing"""
-import argparse
 
-import xarray as xr
-from pytest import fail, fixture, mark
+from subprocess import run
+
 import o3skim.scripts.skim_tco3 as skim_tco3
+import xarray as xr
+from pytest import fixture, mark
 
 
 @fixture(scope="module")
@@ -60,5 +61,15 @@ def original_attributes(request):
     return request.param
 
 
-def test_something(paths, operations, variable_name, options):
+@fixture(scope="module", autouse=True)
+def skim(paths, operations, variable_name, options):
     skim_tco3.process(paths, operations, variable_name, **options)
+
+
+def test_originals_not_edited(dataset, paths):
+    kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
+    assert dataset == xr.open_mfdataset(paths, **kwargs)
+
+def test_cf_conventions(output):
+    cmd = f"cfchecks -v auto {output}"
+    assert 0 == run(cmd, capture_output=True, shell=True).returncode
