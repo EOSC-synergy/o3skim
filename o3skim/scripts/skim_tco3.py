@@ -18,46 +18,51 @@ class StripArgument(argparse.Action):
 logger = logging.getLogger("skim_tco3")
 
 # Parser for script inputs
-parser = argparse.ArgumentParser(
-    prog=f"o3skim", description=__doc__,
-    formatter_class=argparse.RawDescriptionHelpFormatter)
-parser.add_argument(
-    "-v", "--verbosity", type=str, default='INFO',
-    choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-    help="Sets the logging level (default: %(default)s)")
-parser.add_argument(
-    "-o", "--output", type=str, default='toz-skimmed.nc', action=StripArgument,
-    help="Output file for skimmed data (default: %(default)s)")
-parser.add_argument(
-    "--original_attributes", action='store_true',
-    help="Skimming does not filter non cf attributes")
-parser.add_argument(
-    "-n", "--variable_name", type=str, action=StripArgument,
-    default='atmosphere_mole_content_of_ozone', 
-    help="Variable or standard_name to skim (default: %(default)s)")
-parser.add_argument(
-    "paths", nargs='+', type=str, action='store',
-    help="Paths to netCDF files with the data to skim")
+def create_parser():
+    parser = argparse.ArgumentParser(
+        prog=f"o3skim", description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    
+    # Parser arguments
+    parser.add_argument(
+        "-v", "--verbosity", type=str, default='INFO',
+        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+        help="Sets the logging level (default: %(default)s)")
+    parser.add_argument(
+        "-o", "--output", type=str, default='toz-skimmed.nc', action=StripArgument,
+        help="Output file for skimmed data (default: %(default)s)")
+    parser.add_argument(
+        "--original_attributes", action='store_true',
+        help="Skimming does not filter non cf attributes")
+    parser.add_argument(
+        "-n", "--variable_name", type=str, action=StripArgument,
+        default='atmosphere_mole_content_of_ozone', 
+        help="Variable or standard_name to skim (default: %(default)s)")
+    parser.add_argument(
+        "paths", nargs='+', type=str, action='store',
+        help="Paths to netCDF files with the data to skim")
 
-# Available operations group
-operations = parser.add_argument_group('operations')
-operations.add_argument(
-    "--lon_mean", action='append_const',
-    dest='operations', const='lon_mean',
-    help="Longitudinal mean across the dataset")
-operations.add_argument(
-    "--lat_mean", action='append_const',
-    dest='operations', const='lat_mean',
-    help="Latitudinal mean across the dataset")
+    # Available operations group
+    operations = parser.add_argument_group('operations')
+    operations.add_argument(
+        "--lon_mean", action='append_const',
+        dest='operations', const='lon_mean',
+        help="Longitudinal mean across the dataset")
+    operations.add_argument(
+        "--lat_mean", action='append_const',
+        dest='operations', const='lat_mean',
+        help="Latitudinal mean across the dataset")
+
+    return parser
 
 
-def main():
-    args = parser.parse_args()
-    run_command(**vars(args))
-    sys.exit(0)  # Shell return 0 == success
+def main(args):
+    parser = create_parser()
+    process(**vars(parser.parse_args(args)))
+    return 0
 
 
-def run_command(paths, operations, variable_name, **options):
+def process(paths, operations, variable_name, **options):
     # Set logging level
     logging.basicConfig(
         level=getattr(logging, options["verbosity"]),
@@ -79,10 +84,15 @@ def run_command(paths, operations, variable_name, **options):
 
     # Extraction of variable as dataset
     logger.info("Variable %s loading", variable_name)
-    ozone = dataset.cf[[variable_name]]
+    bounds = [dataset[v].attrs.get('bounds', None) for v in dataset.coords]
+    bounds = [bound for bound in bounds if bound is not None]
+    keep_v = set([dataset.cf[variable_name].name] + bounds)
+    drop_v = [v for v in dataset.data_vars if v not in keep_v]
+    ozone = dataset.cf.drop_vars(drop_v)
 
     # Variable name standardization
     logger.info("Renaming var %s to 'toz'/'toz_zm", variable_name)    
+    operations = operations if operations else []
     if any([x in operations for x in ['lat_mean', 'lon_mean']]):
         ozone = ozone.cf.rename({variable_name: 'toz_zm'})
     else:
@@ -103,6 +113,5 @@ def run_command(paths, operations, variable_name, **options):
     skimmed.close()
 
 
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

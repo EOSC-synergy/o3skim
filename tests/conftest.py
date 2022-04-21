@@ -17,10 +17,10 @@ def dataset_path(request):
 
 
 @fixture(scope="session")
-def dataset(dataset_path, variable):
+def dataset(dataset_path):
     kwargs = dict(data_vars='minimal', concat_dim='time', combine='nested')
     with xr.open_mfdataset(dataset_path, **kwargs) as ds:
-        yield ds.cf[[variable]]
+        yield ds
 
 
 @fixture(scope="session")

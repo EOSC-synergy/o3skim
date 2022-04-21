@@ -36,6 +36,7 @@ def run(dataset, operation):
 
 def lon_mean(dataset):
     logger.debug("Calculating mean over model longitude")
+    bounds = dataset.cf["longitude"].attrs.get("bounds", None)
     dataset = dataset.cf.mean("longitude")
 
     # Dirty code: cell-methods patch
@@ -44,11 +45,15 @@ def lon_mean(dataset):
         if "cell_methods" in dataset[var].attrs:
             dataset[var].attrs["cell_methods"] += " longitude: mean"
 
+    # Remove bounds if not removed
+    dataset = dataset.cf.drop_vars(bounds) if bounds else dataset
+
     return dataset
 
 
 def lat_mean(dataset):
     logger.debug("Calculating mean over model latitude")
+    bounds = dataset.cf["latitude"].attrs.get("bounds", None)
     dataset = dataset.cf.mean("latitude")
 
     # Dirty code: cell-methods patch
@@ -56,5 +61,8 @@ def lat_mean(dataset):
     for var in dataset.data_vars:
         if "cell_methods" in dataset[var].attrs:
             dataset[var].attrs["cell_methods"] += " latitude: mean"
+
+    # Remove bounds if not removed
+    dataset = dataset.cf.drop_vars(bounds) if bounds else dataset
 
     return dataset
