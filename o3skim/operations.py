@@ -36,17 +36,33 @@ def run(dataset, operation):
 
 def lon_mean(dataset):
     logger.debug("Calculating mean over model longitude")
+    bounds = dataset.cf["longitude"].attrs.get('bounds', None)
     dataset = dataset.cf.mean("longitude")
+
     # Dirty code: cell-methods patch
     # See https://github.com/xarray-contrib/cf-xarray/discussions/314
-    dataset['toz_zm'].attrs['cell_methods'] += " longitude: mean"
+    for var in dataset.data_vars:
+        if "cell_methods" in dataset[var].attrs:
+            dataset[var].attrs["cell_methods"] += " longitude: mean"
+
+    # Ensure we remove bounds
+    dataset = dataset.cf.drop_vars(bounds) if bounds else dataset
+
     return dataset
 
 
 def lat_mean(dataset):
     logger.debug("Calculating mean over model latitude")
+    bounds = dataset.cf["latitude"].attrs.get('bounds', None)
     dataset = dataset.cf.mean("latitude")
-    # Dirty code: cell-methods patch 
+
+    # Dirty code: cell-methods patch
     # See https://github.com/xarray-contrib/cf-xarray/discussions/314
-    dataset['toz_zm'].attrs['cell_methods'] += " latitude: mean"
+    for var in dataset.data_vars:
+        if "cell_methods" in dataset[var].attrs:
+            dataset[var].attrs["cell_methods"] += " latitude: mean"
+
+    # Ensure we remove bounds
+    dataset = dataset.cf.drop_vars(bounds) if bounds else dataset
+
     return dataset
