@@ -34,6 +34,22 @@
                 "--lat_mean",
                 "data/model1/toz.CF-1.8_2000-*.nc",
             ]
-        }
+        },
+        {
+            "name": "Python: skim_tco3-model2",
+            "type": "python",
+            "request": "launch",
+            "program": "o3skim/scripts/skim_tco3.py",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "-o output/toz-skimmed.nc",
+                "--lat_mean",
+                "--variable_name=equivalent_thickness_at_stp_of_atmosphere_ozone_content",
+                "data/model2/toz_196001-210012.nc",
+            ]
+        },
     ]
 }

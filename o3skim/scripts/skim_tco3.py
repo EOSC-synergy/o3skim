@@ -98,6 +98,12 @@ def process(paths, operations, variable_name, **options):
     else:
         ozone = ozone.cf.rename({variable_name: 'toz'})
 
+    # Load cftime variables to support mean operations
+    # See https://github.com/NCAR/esmlab/issues/161
+    ozone.cf['time'].load()
+    if 'bounds' in ozone.cf['time'].attrs:
+        ozone[ozone.cf['time'].attrs['bounds']].load()
+
     # Processing of skimming operations
     logger.info("Data skimming using %s", operations)
     skimmed = o3skim.process(ozone, operations)
