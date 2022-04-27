@@ -56,10 +56,10 @@ def create_parser():
     return parser
 
 
-def main(args):
+def main():
     parser = create_parser()
-    process(**vars(parser.parse_args(args)))
-    return 0
+    process(**vars(parser.parse_args()))
+    sys.exit(0)  # Shell return 0 == success
 
 
 def process(paths, operations, variable_name, **options):
@@ -113,5 +113,5 @@ def process(paths, operations, variable_name, **options):
     skimmed.close()
 
 
-if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+if __name__ == '__main__':
+    main()
