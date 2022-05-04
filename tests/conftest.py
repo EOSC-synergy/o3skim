@@ -1,28 +1,19 @@
 """Fixtures module for pytest"""
 import xarray as xr
 from pytest import fixture
+from os import listdir
 
 
-@fixture(
-    scope="session",
-    params=[
-        "tests/datasets/toz_std.1.8.nc",
-        "tests/datasets/no_bounds/*.nc",
-        "tests/datasets/no_cellmx/*.nc",
-        "tests/datasets/splitted/*.nc",
-    ],
-)
-def dataset_path(request):
+@fixture(scope="session", params=listdir("tests/datasets/CCMI-1"))
+def CCMI_model(request):
     return request.param
 
 
-@fixture(scope="session")
-def dataset(dataset_path):
-    kwargs = dict(data_vars='minimal', concat_dim='time', combine='nested')
-    with xr.open_mfdataset(dataset_path, **kwargs) as ds:
-        yield ds
+@fixture(scope="session", params=listdir("tests/datasets/ESACCI"))
+def ESACCI_model(request):
+    return request.param
 
 
-@fixture(scope="session")
-def variable():
-    return "atmosphere_mole_content_of_ozone"
+@fixture(scope="session", params=listdir("tests/datasets/SBUV"))
+def SBUV_model(request):
+    return request.param
