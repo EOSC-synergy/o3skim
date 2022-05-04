@@ -1,0 +1,70 @@
+Using CF Checker Version 4.1.0
+Checking against CF Version CF-1.4
+Using Standard Name Table Version 79 (2022-03-19T15:25:54Z)
+Using Area Type Table Version 10 (23 June 2020)
+Using Standardized Region Name Table Version 4 (18 December 2018)
+
+WARN: (7.1): Failed to check data lies within/on bounds for variable lon. Problem with bounds variable: lon_bnds
+WARN: (7.1): Failed to check data lies within/on bounds for variable lat. Problem with bounds variable: lat_bnds
+WARN: (7.1): Failed to check data lies within/on bounds for variable time. Problem with bounds variable: time_bnds
+
+------------------
+Checking variable: lon
+------------------
+
+------------------
+Checking variable: lat
+------------------
+
+------------------
+Checking variable: time
+------------------
+
+------------------
+Checking variable: lon_bnds
+------------------
+
+------------------
+Checking variable: lat_bnds
+------------------
+
+------------------
+Checking variable: time_bnds
+------------------
+
+------------------
+Checking variable: ccmi_year
+------------------
+INFO: attribute comment is being used in a non-standard way
+WARN: (4.4): The unit 'year', defined by udunits to be exactly 365.242198781 days, should be used with caution. It is not a calendar year.
+
+------------------
+Checking variable: ccmi_month
+------------------
+INFO: attribute comment is being used in a non-standard way
+WARN: (4.4): The unit 'month', defined by udunits to be exactly year/12, should be used with caution
+
+------------------
+Checking variable: ccmi_day
+------------------
+INFO: attribute comment is being used in a non-standard way
+
+------------------
+Checking variable: ccmi_hour
+------------------
+INFO: attribute comment is being used in a non-standard way
+
+------------------
+Checking variable: ccmi_minute
+------------------
+INFO: attribute comment is being used in a non-standard way
+
+------------------
+Checking variable: toz
+------------------
+ERROR: (3.1): Units are not consistent with those given in the standard_name table.
+WARN: (7.2): cell_measures refers to variable areacella that doesn't exist in this netCDF file. This is strictly an error if the cell_measures variable is not included in the dataset.
+
+ERRORS detected: 1
+WARNINGS given: 6
+INFORMATION messages: 5

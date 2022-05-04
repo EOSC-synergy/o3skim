@@ -1,0 +1,31 @@
+Using CF Checker Version 4.1.0
+Checking against CF Version CF-1.4
+Using Standard Name Table Version 79 (2022-03-19T15:25:54Z)
+Using Area Type Table Version 10 (23 June 2020)
+Using Standardized Region Name Table Version 4 (18 December 2018)
+
+
+------------------
+Checking variable: lon
+------------------
+
+------------------
+Checking variable: lat
+------------------
+
+------------------
+Checking variable: time
+------------------
+
+------------------
+Checking variable: time_bnds
+------------------
+
+------------------
+Checking variable: toz
+------------------
+ERROR: (3.1): Units are not consistent with those given in the standard_name table.
+
+ERRORS detected: 1
+WARNINGS given: 0
+INFORMATION messages: 0
