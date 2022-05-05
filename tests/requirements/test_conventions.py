@@ -12,11 +12,6 @@ def source(request):
     return request.param
 
 
-@fixture(scope="class")
-def paths(source, model):
-    return f"tests/datasets/{source}/{model}/*.nc"
-
-
 # Requirements ------------------------------------------------------
 class AttrRequirements:
     def test_variable(self, dataset):
@@ -54,8 +49,8 @@ class TestCCMI(AttrRequirements):
         return request.param
 
     @fixture(scope="class")
-    def dataset(self, paths):
-        return loads.ccmi(paths)
+    def dataset(self, source, model):
+        return loads.ccmi(f"tests/datasets/{source}/{model}/*.nc")
 
 
 @mark.parametrize("source", ["ESACCI"], indirect=True)
@@ -65,5 +60,16 @@ class TestESACCI(AttrRequirements):
         return request.param
 
     @fixture(scope="class")
-    def dataset(self, paths):
-        return loads.esacci(paths)
+    def dataset(self, source, model):
+        return loads.esacci(f"tests/datasets/{source}/{model}/*.nc")
+
+
+@mark.parametrize("source", ["SBUV"], indirect=True)
+class TestSBUV(AttrRequirements):
+    @fixture(scope="class", params=listdir("tests/datasets/SBUV"))
+    def model(self, request):
+        return request.param
+
+    @fixture(scope="class")
+    def dataset(self, source, model):
+        return loads.sbuv(f"tests/datasets/{source}/{model}/*.za.txt")
