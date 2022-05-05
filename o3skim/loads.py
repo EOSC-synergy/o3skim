@@ -1,4 +1,5 @@
 """Module in charge of model data loading."""
+import glob
 import logging
 
 import numpy as np
@@ -13,22 +14,22 @@ logger = logging.getLogger("o3skim.loads")
 ## ------------------------------------------------------------------
 ## CCMI-1 Load function ---------------------------------------------
 def ccmi(
-    model_paths,
+    model_path,
     variable_name="equivalent_thickness_at_stp_of_atmosphere_ozone_content",
     original_attributes=False,
 ):
     """Loads and returns a CCMI-1 DataArray model and the dataset
     attributes.
-    :param model_paths: Paths expression to the dataset netCDF files
+    :param model_path: Paths expression to the dataset netCDF files
     :param variable_name: Variable to load from the dataset
     :param original_attributes: Flag to keep non CF standard attributes
     :return: Standardized Dataset.
     """
 
     # Loading of DataArray and attributes
-    logger.info("Loading CCMI-1 data from: %s", model_paths)
+    logger.info("Loading CCMI-1 data from: %s", model_path)
     kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
-    dataset = xr.open_mfdataset(model_paths, **kwargs)
+    dataset = xr.open_mfdataset(model_path, **kwargs)
 
     # Clean of non cf attributes
     if not original_attributes:
@@ -67,8 +68,8 @@ def ccmi(
 ## ------------------------------------------------------------------
 ## ESACCI Load function ---------------------------------------------
 def esacci(
-    model_paths, 
-    variable_name="atmosphere_mole_content_of_ozone", 
+    model_path,
+    variable_name="atmosphere_mole_content_of_ozone",
     original_attributes=False,
     time_position=-2,
 ):
@@ -77,7 +78,7 @@ def esacci(
     For example: ESACCI-OZONE-L3S-TC-MERGED-DLR_1M-20010302-fv0100.
     Therefore is needed to indicate the position in the string
     for the dataset time (7 or -2 for the case above).
-    :param model_paths: Paths expression to the dataset netCDF files
+    :param model_path: Paths expression to the dataset netCDF files
     :param variable_name: Variable to load from the dataset
     :param original_attributes: Flag to keep non CF standard attributes
     :param time_position: Name position for the dataset time.
@@ -92,14 +93,14 @@ def esacci(
         return ds.expand_dims(time=[time])
 
     # Loading of DataArray and attributes
-    logger.info("Loading ESACCI data from: %s", model_paths)
+    logger.info("Loading ESACCI data from: %s", model_path)
     kwargs = dict(preprocess=pf)
-    dataset = xr.open_mfdataset(model_paths, **kwargs)
+    dataset = xr.open_mfdataset(model_path, **kwargs)
 
     # Complete time coordinate attributes
     logger.debug("Completing dataset time coordinate")
-    dataset.time.attrs['standard_name'] = "time"
-    dataset.time.attrs['long_name'] = "time"
+    dataset.time.attrs["standard_name"] = "time"
+    dataset.time.attrs["long_name"] = "time"
 
     # Clean of non cf attributes
     if not original_attributes:
@@ -119,14 +120,14 @@ def esacci(
 
     # Coordinates name standardization
     logger.debug(f"Renaming coords '{dataset.coords}'")
-    dataset = dataset.cf.rename({'latitude': "lat"})
-    dataset = dataset.cf.rename({'longitude': "lon"})
+    dataset = dataset.cf.rename({"latitude": "lat"})
+    dataset = dataset.cf.rename({"longitude": "lon"})
 
     # Extend coordinates with axis
     logger.debug(f"Extending coords axis '[T,X,Y]'")
-    dataset['time'].attrs['axis'] = "T"
-    dataset['lon'].attrs['axis'] = "X"
-    dataset['lat'].attrs['axis'] = "Y"
+    dataset["time"].attrs["axis"] = "T"
+    dataset["lon"].attrs["axis"] = "X"
+    dataset["lat"].attrs["axis"] = "Y"
 
     # Deletion of not used coordinates
     logger.debug(f"Removing unused coords from '{dataset.coords}'")
@@ -148,21 +149,29 @@ def esacci(
 
 ## ------------------------------------------------------------------
 ## SBUV Load function -----------------------------------------------
-def sbuv(textfile, delimiter):
+def sbuv(model_path, delimiter="\s+"):
     """Loads and returns a SBUV DataArray model and the dataset
     attributes. Note SBUV models do not have longitude coordinate.
-
-    :param textfile: Location to the textfile with model information.
-    :type textfile: str
-
-    :param delimiter: Delimiter character for row values on the table.
-    :type delimiter: str or [str]
-
-    :return: Standardized DataArray.
-    :rtype: (:class:`xarray.DataArray`, {})
+    :param model_path: Paths expression to the dataset text file
+    :param delimiter: Delimiter character for row values on the table
+    :return: Standardized Dataset.
     """
+
+    # Loading of DataArray and attributes
+    logger.info("Loading SBUV data from: %s", model_path)
+    textfile = glob.glob(model_path)
+    if len(textfile) == 1:
+        textfile = textfile[0]
+    else:
+        raise ValueError(f"Only 1 text file supported '{textfile}'")
+
+    # Open textfile as tables using chunkio utility
+    logger.debug(f"Opening textfile {textfile} as strio")
     with open(textfile, "r") as strio:
         tables = utils.chunkio("SBUV", strio)
+
+    # Read tables as dataarrays and concatenate them
+    logger.debug(f"Extracting dataarrays from textfile")
     arrays = []
     for head, chunk in tables:
         header = head[0:-2].split(" ")
@@ -184,4 +193,61 @@ def sbuv(textfile, delimiter):
         )
         array.values.flat[array.values.flat == 0.0] = np.nan
         arrays.append(array)
-    return xr.concat(arrays, "time"), {}
+
+    # Generate dataset from dataarray
+    ozone = xr.concat(arrays, "time")
+    ozone = ozone.expand_dims(dim="lon", axis=0)
+    dataset = xr.Dataset(
+        data_vars=dict(
+            toz=xr.Variable(
+                ozone.dims,
+                ozone.values,
+                attrs=dict(
+                    standard_name="atmosphere_mole_content_of_ozone",
+                    units="DU",
+                    long_name="Total column of ozone in the atmosphere",
+                ),
+            )
+        ),
+        coords=dict(
+            lon=xr.Variable(
+                ["lon"],
+                [0],
+                attrs=dict(
+                    standard_name="longitude",
+                    axis="X",
+                    units="degrees_east",
+                    long_name="Longitude of the grid center",
+                ),
+            ),
+            lat=xr.Variable(
+                ["lat"],
+                ozone.lat,
+                attrs=dict(
+                    standard_name="latitude",
+                    axis="Y",
+                    units="degrees_north",
+                    long_name="Latitude of the grid center",
+                ),
+            ),
+            time=xr.Variable(
+                ["time"],
+                ozone.time,
+                attrs=dict(
+                    standard_name="time",
+                    axis="T",
+                    long_name="time",
+                    bounds="time_bounds",
+                ),
+            ),
+        ),
+        attrs=dict(
+            Conventions="CF-1.8",
+            title="SBUV Merged Ozone Data Set (MOD)",
+            institution="NASA Goddard Space Flight Center, Greenbelt, MD 20771",
+            source="https://acd-ext.gsfc.nasa.gov/Data_services/merged/data/sbuv.v87.mod_v12.70-20.za.txt",
+            comment="Text file parsed and extended to follow CF conventions",
+        ),
+    )
+
+    return dataset

@@ -51,4 +51,6 @@ def chunkio(headid, str_iter):
             chunk = io.StringIO()
         else:
             chunk.write(line)
-    return zip(heads, chunks[1:-1])
+    chunks.append(chunk)
+    chunk.seek(0)  # rewind the stream
+    return zip(heads, chunks[1:])
