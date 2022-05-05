@@ -195,13 +195,12 @@ def sbuv(model_path, delimiter="\s+"):
         arrays.append(array)
 
     # Generate dataset from dataarray
-    ozone = xr.concat(arrays, "time")
-    ozone = ozone.expand_dims(dim="lon", axis=0)
+    logger.debug(f"Generating dataset from datarray")
+    ozone = xr.concat(arrays, "time").expand_dims(dim="lon", axis=0)
     dataset = xr.Dataset(
         data_vars=dict(
             toz=xr.Variable(
-                ozone.dims,
-                ozone.values,
+                *[ozone.dims, ozone.values],
                 attrs=dict(
                     standard_name="atmosphere_mole_content_of_ozone",
                     units="DU",
@@ -211,8 +210,7 @@ def sbuv(model_path, delimiter="\s+"):
         ),
         coords=dict(
             lon=xr.Variable(
-                ["lon"],
-                [0],
+                *[["lon"], [0]],
                 attrs=dict(
                     standard_name="longitude",
                     axis="X",
@@ -221,8 +219,7 @@ def sbuv(model_path, delimiter="\s+"):
                 ),
             ),
             lat=xr.Variable(
-                ["lat"],
-                ozone.lat,
+                *[["lat"], ozone.lat],
                 attrs=dict(
                     standard_name="latitude",
                     axis="Y",
@@ -231,8 +228,7 @@ def sbuv(model_path, delimiter="\s+"):
                 ),
             ),
             time=xr.Variable(
-                ["time"],
-                ozone.time,
+                *[["time"], ozone.time],
                 attrs=dict(
                     standard_name="time",
                     axis="T",
