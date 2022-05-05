@@ -1,36 +1,70 @@
 """Module in charge of model data loading."""
-import pandas as pd
-import numpy as np
 import logging
-import xarray as xr
-import o3skim.utils as utils
 
+import numpy as np
+import pandas as pd
+import xarray as xr
+
+from o3skim import utils
 
 logger = logging.getLogger("o3skim.loads")
 
 
-def ccmi(variable, paths):
+## ------------------------------------------------------------------
+## CCMI-1 Load function ---------------------------------------------
+def ccmi(
+    model_paths,
+    variable_name="equivalent_thickness_at_stp_of_atmosphere_ozone_content",
+    original_attributes=False,
+):
     """Loads and returns a CCMI-1 DataArray model and the dataset
     attributes.
-
-    :param variable: Variable to load from the dataset.
-    :type variable: str
-
     :param paths: Paths expression to the dataset netCDF files.
-    :type paths: str or [str]
-
-    :return: Standardized DataArray.
-    :rtype: (:class:`xarray.DataArray`, dict)
+    :param variable: Variable to load from the dataset.
+    :return: Standardized Dataset.
     """
-    logger.debug("Loading CCMI-1 data from: %s", paths)
-    if len(paths) == 1:
-        paths = paths[0]
-    with xr.open_mfdataset(paths) as dataset:
-        datarray = dataset[variable]
-        ds_attrs = dataset.attrs
-    return datarray, ds_attrs
+
+    # Loading of DataArray and attributes
+    logger.info("Loading CCMI-1 data from: %s", model_paths)
+    kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
+    dataset = xr.open_mfdataset(model_paths, **kwargs)
+
+    # Clean of non cf attributes
+    if not original_attributes:
+        utils.cf_clean(dataset)
+
+    # Extraction of variable as dataset
+    logger.debug(f"Variable '{variable_name}' loading")
+    bounds = [dataset[v].attrs.get("bounds", None) for v in dataset.coords]
+    bounds = [bound for bound in bounds if bound is not None]
+    keep_v = set([dataset.cf[variable_name].name] + bounds)
+    drop_v = [v for v in dataset.data_vars if v not in keep_v]
+    dataset = dataset.cf.drop_vars(drop_v)
+
+    # Variable name standardization
+    logger.debug(f"Renaming var '{variable_name}' to 'toz'")
+    dataset = dataset.cf.rename({variable_name: "toz"})
+
+    # Deletion of not used coordinates
+    logger.debug(f"Removing unused coords from '{dataset.coords}'")
+    dataset = dataset.squeeze(drop=True)
+    keep_c = set(dataset.cf[c].name for c in ["X", "Y", "T"])
+    drop_c = [v for v in dataset.coords if v not in keep_c]
+    dataset = dataset.cf.drop_vars(drop_c)
+
+    # Load cftime variables to support mean operations
+    # See https://github.com/NCAR/esmlab/issues/161
+    logger.debug(f"Loading time variable '{dataset.cf}[time].load()'")
+    dataset.cf["time"].load()
+    if "bounds" in dataset.cf["time"].attrs:
+        dataset[dataset.cf["time"].attrs["bounds"]].load()
+
+    # Processing of skimming operations
+    return dataset
 
 
+## ------------------------------------------------------------------
+## ECMWF Load function ----------------------------------------------
 def ecmwf(variable, paths):
     """Loads and returns a ECMWF DataArray model and the dataset
     attributes.
@@ -53,6 +87,8 @@ def ecmwf(variable, paths):
     return datarray, ds_attrs
 
 
+## ------------------------------------------------------------------
+## ESACCI Load function ---------------------------------------------
 def esacci(variable, time_position, paths):
     """Loads and returns a ESACCI DataArray model and the dataset
     attributes. Note the name structure is composed by sections:
@@ -88,6 +124,8 @@ def esacci(variable, time_position, paths):
     return datarray, ds_attrs
 
 
+## ------------------------------------------------------------------
+## SBUV Load function -----------------------------------------------
 def sbuv(textfile, delimiter):
     """Loads and returns a SBUV DataArray model and the dataset
     attributes. Note SBUV models do not have longitude coordinate.
