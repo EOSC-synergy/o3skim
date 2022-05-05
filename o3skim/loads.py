@@ -65,18 +65,12 @@ def ccmi(
 
 ## ------------------------------------------------------------------
 ## ECMWF Load function ----------------------------------------------
-def ecmwf(variable, paths):
+def ecmwf(paths, variable):
     """Loads and returns a ECMWF DataArray model and the dataset
     attributes.
-
-    :param variable: Variable to load from the dataset.
-    :type variable: str
-
     :param paths: Paths expression to the dataset netCDF files.
-    :type paths: str or [str]
-
+    :param variable: Variable to load from the dataset.
     :return: Standardized DataArray.
-    :rtype: (:class:`xarray.DataArray`, dict)
     """
     logger.debug("Loading ECMWF data from: %s", paths)
     if len(paths) == 1:
