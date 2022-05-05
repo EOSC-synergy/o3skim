@@ -174,22 +174,15 @@ def sbuv(model_path, delimiter="\s+"):
     logger.debug(f"Extracting dataarrays from textfile")
     arrays = []
     for head, chunk in tables:
-        header = head[0:-2].split(" ")
-        year = int(header[0])
+        header = head[0:-2].split(" ")  # Split head strings
+        year = int(header[0])  # First value in header is the year
         table = pd.read_table(chunk, sep=delimiter, index_col=[0, 1])
         table.index = [(int(l1) + int(l2)) / 2 for l1, l2 in table.index]
+        time = [pd.datetime(year, m, 1) for m in range(1, 13)]
         array = xr.DataArray(
             data=table,
-            attrs=dict(
-                version=header[3],
-                name=header[1],
-                description=" ".join(header[-3:]),
-            ),
             dims=["lat", "time"],
-            coords=dict(
-                lat=table.index,
-                time=[pd.datetime(year, m, 1) for m in range(1, 13)],
-            ),
+            coords=dict(lat=table.index, time=time),
         )
         array.values.flat[array.values.flat == 0.0] = np.nan
         arrays.append(array)
