@@ -56,3 +56,14 @@ class TestCCMI(AttrRequirements):
     @fixture(scope="class")
     def dataset(self, paths):
         return loads.ccmi(paths)
+
+
+@mark.parametrize("source", ["ESACCI"], indirect=True)
+class TestESACCI(AttrRequirements):
+    @fixture(scope="class", params=listdir("tests/datasets/ESACCI"))
+    def model(self, request):
+        return request.param
+
+    @fixture(scope="class")
+    def dataset(self, paths):
+        return loads.esacci(paths)
