@@ -226,7 +226,6 @@ def sbuv(model_path, delimiter="\s+"):
                     standard_name="time",
                     axis="T",
                     long_name="time",
-                    bounds="time_bounds",
                 ),
             ),
         ),
