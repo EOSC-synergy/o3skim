@@ -177,13 +177,9 @@ def sbuv(model_path, delimiter="\s+"):
         header = head[0:-2].split(" ")  # Split head strings
         year = int(header[0])  # First value in header is the year
         table = pd.read_table(chunk, sep=delimiter, index_col=[0, 1])
-        table.index = [(int(l1) + int(l2)) / 2 for l1, l2 in table.index]
+        lat = [(l1 + l2) / 2 for l1, l2 in table.index]
         time = [pd.datetime(year, m, 1) for m in range(1, 13)]
-        array = xr.DataArray(
-            data=table,
-            dims=["lat", "time"],
-            coords=dict(lat=table.index, time=time),
-        )
+        array = xr.DataArray(table, dict(lat=lat, time=time), ["lat", "time"])
         array.values.flat[array.values.flat == 0.0] = np.nan
         arrays.append(array)
 
@@ -199,7 +195,9 @@ def sbuv(model_path, delimiter="\s+"):
                     units="DU",
                     long_name="Total column of ozone in the atmosphere",
                 ),
-            )
+            ),
+            lon_bnds=xr.Variable(["lon", "bnds"], [(0, 360)]),
+            lat_bnds=xr.Variable(["lat", "bnds"], table.index.to_list()),
         ),
         coords=dict(
             lon=xr.Variable(
@@ -209,15 +207,17 @@ def sbuv(model_path, delimiter="\s+"):
                     axis="X",
                     units="degrees_east",
                     long_name="Longitude of the grid center",
+                    bounds="lon_bnds",
                 ),
             ),
             lat=xr.Variable(
-                *[["lat"], ozone.lat],
+                *[["lat"], lat],
                 attrs=dict(
                     standard_name="latitude",
                     axis="Y",
                     units="degrees_north",
                     long_name="Latitude of the grid center",
+                    bounds="lat_bnds",
                 ),
             ),
             time=xr.Variable(

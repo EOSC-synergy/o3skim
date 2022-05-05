@@ -17,7 +17,7 @@ class AttrRequirements:
     def test_variable(self, dataset):
         assert "toz" in set(dataset.variables)
         if dataset.cf.bounds:  # Bounds are variables
-            assert len(dataset.cf.data_vars) == 4
+            assert len(dataset.cf.data_vars) <= 4
         else:
             assert len(dataset.cf.data_vars) == 1
 
@@ -27,10 +27,11 @@ class AttrRequirements:
         assert dataset["lat"].standard_name == "latitude"
         assert dataset["lon"].standard_name == "longitude"
 
-    def test_bounds(self, dataset):
-        if dataset.cf.bounds:  # Not required
+        if 'T' in dataset.cf.bounds:  # Not required
             assert dataset.cf.bounds["T"] == ["time_bnds"]
+        if 'X' in dataset.cf.bounds:  # Not required
             assert dataset.cf.bounds["X"] == ["lon_bnds"]
+        if 'Y' in dataset.cf.bounds:  # Not required
             assert dataset.cf.bounds["Y"] == ["lat_bnds"]
 
     @mark.parametrize("attrs", [global_attributes().index])
