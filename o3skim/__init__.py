@@ -1,34 +1,50 @@
 """O3as package with utilities to handle ozone data skimming."""
 import logging
-from functools import reduce
 
-from o3skim import operations, utils
+import cf_xarray as cfxr
+import xarray as xr
 
 logger = logging.getLogger("o3skim")
-__all__ = ["process", "utils"]
+xr.set_options(keep_attrs=True)
 
 
-def process(dataset, actions):
-    """Function in charge of processing the list of o3skim operations
-    to the ozone variables dataset. The available list of operations
-    to perform are:
-
-        :lon_mean: Longitudinal mean accross the dataset.
-        :lat_mean: Latitudinal mean accross the dataset.
-
-    Note that multiple operations can be concatenated. For example
-    using the list ['lon_mean', 'lat_mean'] as actions parameter
-    input would perform a longitudinal mean followed afterwards by
-    a latitudinal mean before returning the result.
-
-    :param dataset: Original o3 dataset where to perform operations.
-    :type dataset: :class:`xarray.Dataset`
-
-    :param actions: List of operation names to perform.
-    :type actions: list
-
-    :return: Dataset after processing listed operations.
-    :rtype: :class:`xarray.Dataset`
+def lon_mean(dataset):
+    """Longitudinal mean across the dataset following CF conventions.
+    :param dataset: xarray.dataset following CF conventions
+    :return: xarray.dataset
     """
-    logger.debug("Processing queue: %s", actions)
-    return reduce(operations.run, actions, dataset)
+    logger.debug("Calculating mean over model longitude")
+    bounds = dataset.cf["longitude"].attrs.get("bounds", None)
+    dataset = dataset.cf.mean("longitude")
+
+    # Dirty code: cell-methods patch
+    # See https://github.com/xarray-contrib/cf-xarray/discussions/314
+    for var in dataset.data_vars:
+        if "cell_methods" in dataset[var].attrs:
+            dataset[var].attrs["cell_methods"] += " longitude: mean"
+
+    # Remove bounds if not removed
+    dataset = dataset.cf.drop_vars(bounds) if bounds else dataset
+
+    return dataset
+
+
+def lat_mean(dataset):
+    """Latitudinal mean across the dataset following CF conventions.
+    :param dataset: xarray.dataset following CF conventions
+    :return: xarray.dataset
+    """
+    logger.debug("Calculating mean over model latitude")
+    bounds = dataset.cf["latitude"].attrs.get("bounds", None)
+    dataset = dataset.cf.mean("latitude")
+
+    # Dirty code: cell-methods patch
+    # See https://github.com/xarray-contrib/cf-xarray/discussions/314
+    for var in dataset.data_vars:
+        if "cell_methods" in dataset[var].attrs:
+            dataset[var].attrs["cell_methods"] += " latitude: mean"
+
+    # Remove bounds if not removed
+    dataset = dataset.cf.drop_vars(bounds) if bounds else dataset
+
+    return dataset
