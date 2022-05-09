@@ -233,7 +233,7 @@ def sbuv(model_path, delimiter="\s+"):
             Conventions="CF-1.8",
             title="SBUV Merged Ozone Data Set (MOD)",
             institution="NASA Goddard Space Flight Center, Greenbelt, MD 20771",
-            source="https://acd-ext.gsfc.nasa.gov/Data_services/merged/data/sbuv.v87.mod_v12.70-20.za.txt",
+            source="https://acd-ext.gsfc.nasa.gov",
             comment="Text file parsed and extended to follow CF conventions",
         ),
     )
