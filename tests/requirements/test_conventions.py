@@ -27,11 +27,11 @@ class AttrRequirements:
         assert dataset["lat"].standard_name == "latitude"
         assert dataset["lon"].standard_name == "longitude"
 
-        if 'T' in dataset.cf.bounds:  # Not required
+        if "T" in dataset.cf.bounds:  # Not required
             assert dataset.cf.bounds["T"] == ["time_bnds"]
-        if 'X' in dataset.cf.bounds:  # Not required
+        if "X" in dataset.cf.bounds:  # Not required
             assert dataset.cf.bounds["X"] == ["lon_bnds"]
-        if 'Y' in dataset.cf.bounds:  # Not required
+        if "Y" in dataset.cf.bounds:  # Not required
             assert dataset.cf.bounds["Y"] == ["lat_bnds"]
 
     @mark.parametrize("attrs", [global_attributes().index])
@@ -52,6 +52,17 @@ class TestCCMI(AttrRequirements):
     @fixture(scope="class")
     def dataset(self, source, model):
         return loads.ccmi(f"tests/datasets/{source}/{model}/*.nc")
+
+
+@mark.parametrize("source", ["ECMWF"], indirect=True)
+class TestECMWF(AttrRequirements):
+    @fixture(scope="class", params=listdir("tests/datasets/ECMWF"))
+    def model(self, request):
+        return request.param
+
+    @fixture(scope="class")
+    def dataset(self, source, model):
+        return loads.ecmwf(f"tests/datasets/{source}/{model}/*.nc")
 
 
 @mark.parametrize("source", ["ESACCI"], indirect=True)
