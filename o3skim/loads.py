@@ -66,6 +66,83 @@ def ccmi(
 
 
 ## ------------------------------------------------------------------
+## ECMWF Load function ----------------------------------------------
+def ecmwf(
+    model_path,
+    variable_name="tco3",
+    original_attributes=False,
+):
+    """Loads and returns a ECMWF DataArray model and the dataset
+    attributes.
+    :param model_path: Paths expression to the dataset netCDF files
+    :param variable_name: Variable to load from the dataset
+    :param original_attributes: Flag to keep non CF standard attributes
+    :return: Standardized Dataset.
+    """
+
+    # Loading of DataArray and attributes
+    logger.info("Loading ECMWF data from: %s", model_path)
+    kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
+    dataset = xr.open_mfdataset(model_path, **kwargs)
+
+    # Complete coordinate attributes
+    logger.debug("Completing dataset coordinate")
+    dataset.longitude.attrs["standard_name"] = "longitude"
+    dataset.latitude.attrs["standard_name"] = "latitude"
+    dataset.time.attrs["standard_name"] = "time"
+
+    # Clean of non cf attributes
+    if not original_attributes:
+        utils.cf_clean(dataset)
+
+    # Extraction of variable as dataset
+    logger.debug(f"Variable '{variable_name}' loading")
+    bounds = [dataset[v].attrs.get("bounds", None) for v in dataset.coords]
+    bounds = [bound for bound in bounds if bound is not None]
+    keep_v = set([dataset.cf[variable_name].name] + bounds)
+    drop_v = [v for v in dataset.data_vars if v not in keep_v]
+    dataset = dataset.cf.drop_vars(drop_v)
+
+    # Variable name standardization
+    logger.debug(f"Renaming var '{variable_name}' to 'toz'")
+    dataset = dataset.cf.rename({variable_name: "toz"})
+
+    # Coordinates name standardization
+    logger.debug(f"Renaming coords '{dataset.coords}'")
+    dataset = dataset.cf.rename({"latitude": "lat"})
+    dataset = dataset.cf.rename({"longitude": "lon"})
+
+    # Extend coordinates with axis
+    logger.debug(f"Extending coords axis '[T,X,Y]'")
+    dataset["time"].attrs["axis"] = "T"
+    dataset["lon"].attrs["axis"] = "X"
+    dataset["lat"].attrs["axis"] = "Y"
+
+    # Deletion of not used coordinates
+    logger.debug(f"Removing unused coords from '{dataset.coords}'")
+    dataset = dataset.squeeze(drop=True)
+    keep_c = set(dataset.cf[c].name for c in ["X", "Y", "T"])
+    drop_c = [v for v in dataset.coords if v not in keep_c]
+    dataset = dataset.cf.drop_vars(drop_c)
+
+    # Load cftime variables to support mean operations
+    # See https://github.com/NCAR/esmlab/issues/161
+    logger.debug(f"Loading time variable '{dataset.cf}[time].load()'")
+    dataset.cf["time"].load()
+    if "bounds" in dataset.cf["time"].attrs:
+        dataset[dataset.cf["time"].attrs["bounds"]].load()
+
+    # Fill missing attributes
+    dataset.attrs["source"] = ""  # TODO: Add source
+    dataset.attrs[
+        "institution"
+    ] = "European Centre for Medium-Range Weather Forecasts"
+
+    # Processing of skimming operations
+    return dataset
+
+
+## ------------------------------------------------------------------
 ## ESACCI Load function ---------------------------------------------
 def esacci(
     model_path,
