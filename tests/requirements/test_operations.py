@@ -31,6 +31,9 @@ class VariableRequirements:
 
 
 class LatSkimRequirements:
+    def test_variable_name(self, skimmed, dataset):
+        assert set(dataset.data_vars).issuperset(skimmed.data_vars)
+        
     def test_no_latitude(self, skimmed):
         assert "latitude" not in skimmed.cf.coordinates
 
@@ -44,6 +47,9 @@ class LatSkimRequirements:
 
 
 class LonSkimRequirements:
+    def test_variable_name(self, skimmed, dataset):
+        assert set(dataset.data_vars).issuperset(skimmed.data_vars)
+
     def test_no_longitude(self, skimmed):
         assert "longitude" not in skimmed.cf.coordinates
 

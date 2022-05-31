@@ -15,7 +15,7 @@ def source(request):
 # Requirements ------------------------------------------------------
 class AttrRequirements:
     def test_variable(self, dataset):
-        assert "toz" in set(dataset.variables)
+        assert "tco3" in set(dataset.variables)
         if dataset.cf.bounds:  # Bounds are variables
             assert len(dataset.cf.data_vars) <= 4
         else:

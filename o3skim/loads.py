@@ -44,8 +44,8 @@ def ccmi(
     dataset = dataset.cf.drop_vars(drop_v)
 
     # Variable name standardization
-    logger.debug(f"Renaming var '{variable_name}' to 'toz'")
-    dataset = dataset.cf.rename({variable_name: "toz"})
+    logger.debug(f"Renaming var '{variable_name}' to 'tco3'")
+    dataset = dataset.cf.rename({variable_name: "tco3"})
 
     # Deletion of not used coordinates
     logger.debug(f"Removing unused coords from '{dataset.coords}'")
@@ -104,8 +104,8 @@ def ecmwf(
     dataset = dataset.cf.drop_vars(drop_v)
 
     # Variable name standardization
-    logger.debug(f"Renaming var '{variable_name}' to 'toz'")
-    dataset = dataset.cf.rename({variable_name: "toz"})
+    logger.debug(f"Renaming var '{variable_name}' to 'tco3'")
+    dataset = dataset.cf.rename({variable_name: "tco3"})
 
     # Coordinates name standardization
     logger.debug(f"Renaming coords '{dataset.coords}'")
@@ -192,8 +192,8 @@ def esacci(
     dataset = dataset.cf.drop_vars(drop_v)
 
     # Variable name standardization
-    logger.debug(f"Renaming var '{variable_name}' to 'toz'")
-    dataset = dataset.cf.rename({variable_name: "toz"})
+    logger.debug(f"Renaming var '{variable_name}' to 'tco3'")
+    dataset = dataset.cf.rename({variable_name: "tco3"})
 
     # Coordinates name standardization
     logger.debug(f"Renaming coords '{dataset.coords}'")
@@ -265,7 +265,7 @@ def sbuv(model_path, delimiter="\s+"):
     ozone = xr.concat(arrays, "time").expand_dims(dim="lon", axis=0)
     dataset = xr.Dataset(
         data_vars=dict(
-            toz=xr.Variable(
+            tco3=xr.Variable(
                 *[ozone.dims, ozone.values],
                 attrs=dict(
                     standard_name="atmosphere_mole_content_of_ozone",
