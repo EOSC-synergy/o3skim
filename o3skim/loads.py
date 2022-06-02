@@ -132,6 +132,15 @@ def ecmwf(
     if "bounds" in dataset.cf["time"].attrs:
         dataset[dataset.cf["time"].attrs["bounds"]].load()
 
+    # Normalize values to Dobson Units
+    # See, https://sacs.aeronomie.be/info/dobson.php
+    logger.debug(f"Converting '{dataset.tco3.units}' data units to 'DU")
+    if dataset.tco3.units == "kg**m-2":  # 1 DU == 2.1415x10-5 kg[O3]/m2
+        dataset["tco3"] /= 2.1415e-05
+        dataset["tco3"].attrs["units"] = "DU"
+    else:
+        raise ValueError(f"Unexpected unit {dataset.tco3.units}")
+
     # Fill missing attributes
     dataset.attrs["source"] = ""  # TODO: Add source
     dataset.attrs[

@@ -16,6 +16,7 @@ def source(request):
 class AttrRequirements:
     def test_variable(self, dataset):
         assert "tco3" in set(dataset.variables)
+        assert dataset.tco3.units == 'DU'
         if dataset.cf.bounds:  # Bounds are variables
             assert len(dataset.cf.data_vars) <= 4
         else:
