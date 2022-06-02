@@ -5,67 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: o3measure-sbuv",
+            "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "o3skim/scripts/o3measure.py",
-            "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}"
-            },
-            "args": [
-                "-o output/toz-measures.nc",
-                "-n tco3_measure",
-                "SBUV",
-                "data/Sbuv/sbuv.v86.mod_v10.70-18.za.txt",
-            ]
-        },
-        {
-            "name": "Python: skim_tco3-model1",
-            "type": "python",
-            "request": "launch",
-            "program": "o3skim/scripts/skim_tco3.py",
-            "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}"
-            },
-            "args": [
-                "-o output/toz-skimmed.nc",
-                "--lat_mean",
-                "data/model1/toz.CF-1.8_2000-*.nc",
-            ]
-        },
-        {
-            "name": "Python: skim_tco3-model2",
-            "type": "python",
-            "request": "launch",
-            "program": "o3skim/scripts/skim_tco3.py",
-            "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}"
-            },
-            "args": [
-                "-o output/toz-skimmed.nc",
-                "--lat_mean",
-                "--variable_name=equivalent_thickness_at_stp_of_atmosphere_ozone_content",
-                "data/model2/toz_*.nc",
-            ]
-        },
-        {
-            "name": "Python: skim_tco3-model3",
-            "type": "python",
-            "request": "launch",
-            "program": "o3skim/scripts/skim_tco3.py",
-            "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}"
-            },
-            "args": [
-                "-o output/toz-skimmed.nc",
-                "--lat_mean",
-                "--variable_name=equivalent_thickness_at_stp_of_atmosphere_ozone_content",
-                "data/model3/toz_*.nc",
-            ]
-        },
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
     ]
 }
