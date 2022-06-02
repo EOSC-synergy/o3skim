@@ -48,7 +48,7 @@ def ccmi(
     dataset = dataset.cf.rename({variable_name: "tco3"})
 
     # Deletion of not used coordinates
-    logger.debug(f"Removing unused coords from '{dataset.coords}'")
+    logger.debug(f"Removing unused coords from '{list(dataset.coords)}'")
     dataset = dataset.squeeze(drop=True)
     keep_c = set(dataset.cf[c].name for c in ["X", "Y", "T"])
     drop_c = [v for v in dataset.coords if v not in keep_c]
@@ -56,7 +56,7 @@ def ccmi(
 
     # Load cftime variables to support mean operations
     # See https://github.com/NCAR/esmlab/issues/161
-    logger.debug(f"Loading time variable '{dataset.cf}[time].load()'")
+    logger.debug(f"Loading time variable '{dataset.cf['time'].name}'")
     dataset.cf["time"].load()
     if "bounds" in dataset.cf["time"].attrs:
         dataset[dataset.cf["time"].attrs["bounds"]].load()
@@ -119,7 +119,7 @@ def ecmwf(
     dataset["lat"].attrs["axis"] = "Y"
 
     # Deletion of not used coordinates
-    logger.debug(f"Removing unused coords from '{dataset.coords}'")
+    logger.debug(f"Removing unused coords from '{list(dataset.coords)}'")
     dataset = dataset.squeeze(drop=True)
     keep_c = set(dataset.cf[c].name for c in ["X", "Y", "T"])
     drop_c = [v for v in dataset.coords if v not in keep_c]
@@ -127,7 +127,7 @@ def ecmwf(
 
     # Load cftime variables to support mean operations
     # See https://github.com/NCAR/esmlab/issues/161
-    logger.debug(f"Loading time variable '{dataset.cf}[time].load()'")
+    logger.debug(f"Loading time variable '{dataset.cf['time'].name}'")
     dataset.cf["time"].load()
     if "bounds" in dataset.cf["time"].attrs:
         dataset[dataset.cf["time"].attrs["bounds"]].load()
@@ -207,7 +207,7 @@ def esacci(
     dataset["lat"].attrs["axis"] = "Y"
 
     # Deletion of not used coordinates
-    logger.debug(f"Removing unused coords from '{dataset.coords}'")
+    logger.debug(f"Removing unused coords from '{list(dataset.coords)}'")
     dataset = dataset.squeeze(drop=True)
     keep_c = set(dataset.cf[c].name for c in ["X", "Y", "T"])
     drop_c = [v for v in dataset.coords if v not in keep_c]
@@ -215,7 +215,7 @@ def esacci(
 
     # Load cftime variables to support mean operations
     # See https://github.com/NCAR/esmlab/issues/161
-    logger.debug(f"Loading time variable '{dataset.cf}[time].load()'")
+    logger.debug(f"Loading time variable '{dataset.cf['time'].name}'")
     dataset.cf["time"].load()
     if "bounds" in dataset.cf["time"].attrs:
         dataset[dataset.cf["time"].attrs["bounds"]].load()
