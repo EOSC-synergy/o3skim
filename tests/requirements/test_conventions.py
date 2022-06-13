@@ -16,24 +16,34 @@ def source(request):
 class AttrRequirements:
     def test_variable(self, dataset):
         assert "tco3" in set(dataset.variables)
-        assert dataset.tco3.units == 'DU'
+        assert dataset.tco3.units == "DU"
         if dataset.cf.bounds:  # Bounds are variables
             assert len(dataset.cf.data_vars) <= 4
         else:
             assert len(dataset.cf.data_vars) == 1
 
-    def test_coordinates(self, dataset):
-        assert set(dataset.coords) == {"time", "lat", "lon"}
-        assert dataset["time"].standard_name == "time"
+    def test_coord_lat(self, dataset):
+        assert "lat" in dataset.coords
         assert dataset["lat"].standard_name == "latitude"
-        assert dataset["lon"].standard_name == "longitude"
-
-        if "T" in dataset.cf.bounds:  # Not required
-            assert dataset.cf.bounds["T"] == ["time_bnds"]
-        if "X" in dataset.cf.bounds:  # Not required
-            assert dataset.cf.bounds["X"] == ["lon_bnds"]
+        assert dataset["lat"].axis == "Y"
+        assert dataset["lat"].units == "degrees_north"
         if "Y" in dataset.cf.bounds:  # Not required
             assert dataset.cf.bounds["Y"] == ["lat_bnds"]
+
+    def test_coord_lon(self, dataset):
+        assert "lon" in dataset.coords
+        assert dataset["lon"].standard_name == "longitude"
+        assert dataset["lon"].axis == "X"
+        assert dataset["lon"].units == "degrees_east"
+        if "X" in dataset.cf.bounds:  # Not required
+            assert dataset.cf.bounds["X"] == ["lon_bnds"]
+
+    def test_coord_time(self, dataset):
+        assert "time" in dataset.coords
+        assert dataset["time"].standard_name == "time"
+        assert dataset["time"].axis == "T"
+        if "T" in dataset.cf.bounds:  # Not required
+            assert dataset.cf.bounds["T"] == ["time_bnds"]
 
     @mark.parametrize("attrs", [global_attributes().index])
     def test_attributes(self, dataset, attrs):
