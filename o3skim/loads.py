@@ -135,7 +135,7 @@ def ecmwf(
     # Normalize values to Dobson Units
     # See, https://sacs.aeronomie.be/info/dobson.php
     logger.debug(f"Converting '{dataset.tco3.units}' data units to 'DU")
-    if dataset.tco3.units == "kg**m-2":  # 1 DU == 2.1415x10-5 kg[O3]/m2
+    if dataset.tco3.units == "kg m**-2":  # 1 DU == 2.1415x10-5 kg[O3]/m2
         dataset["tco3"] /= 2.1415e-05
         dataset["tco3"].attrs["units"] = "DU"
     else:
