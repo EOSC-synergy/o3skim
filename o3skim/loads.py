@@ -157,26 +157,35 @@ def esacci(
     model_path,
     variable_name="atmosphere_mole_content_of_ozone",
     original_attributes=False,
-    time_position=-2,
 ):
     """Loads and returns a ESACCI DataArray model and the dataset
     attributes. Note the name structure is composed by sections:
     For example: ESACCI-OZONE-L3S-TC-MERGED-DLR_1M-20010302-fv0100.
-    Therefore is needed to indicate the position in the string
-    for the dataset time (7 or -2 for the case above).
     :param model_path: Paths expression to the dataset netCDF files
     :param variable_name: Variable to load from the dataset
     :param original_attributes: Flag to keep non CF standard attributes
-    :param time_position: Name position for the dataset time.
     :return: Standardized Dataset.
     """
 
-    def pf(ds):
-        fpath = ds.encoding["source"]
-        fname = fpath.split("/")[-1]
-        fdate = fname.split("-")[time_position]
-        time = pd.to_datetime(fdate)
-        return ds.expand_dims(time=[time])
+    def pf(dataset):
+        if not "id" in dataset.attrs:
+            raise ValueError("Unknown ESACCI dataset")
+        if "ESACCI-OZONE-L3S-TC-MERGED-DLR_1M" in dataset.id:
+            fpath = dataset.encoding["source"]
+            fname = fpath.split("/")[-1]
+            fdate = fname.split("-")[-2]
+            time = pd.to_datetime(fdate)
+            return dataset.expand_dims(time=[time])
+        elif "C3S_OZONE-L4-TC-ASSIM_MSR" in dataset.id:
+            dataset.attrs["Conventions"] = "CF-1.8"
+            dataset.attrs["institution"] = dataset.Affiliation
+            dataset.attrs["source"] = dataset.Data_created_by
+            tco3 = dataset.total_ozone_column
+            assert tco3.standard_name == "atmosphere mole content of ozone"
+            assert tco3.units == "Dobson units"
+            tco3.attrs["standard_name"] = "atmosphere_mole_content_of_ozone"
+            tco3.attrs["units"] = "DU"
+            return dataset
 
     # Loading of DataArray and attributes
     logger.info("Loading ESACCI data from: %s", model_path)
