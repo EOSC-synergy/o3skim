@@ -1,9 +1,10 @@
 """Simple test module for testing"""
+from glob import glob
 from os import listdir
 
-from o3skim import loads
 from o3skim.attributes import global_attributes
-from pytest import fixture, mark
+from o3skim.load_tco3 import ccmi, ecmwf, esacci, sbuv
+from pytest import fixture, mark, skip
 
 
 # Module fixtures ---------------------------------------------------
@@ -12,11 +13,23 @@ def source(request):
     return request.param
 
 
+@fixture(scope="class", params=[])
+def model(request):
+    return request.param
+
+
+@fixture(scope="class", autouse=True)
+def files(request, source, model):
+    if glob(request.cls.path.format(source, model)) == []:
+        skip(f"No dataset {source}/{model}")
+
+
 # Requirements ------------------------------------------------------
 class AttrRequirements:
     def test_variable(self, dataset):
         assert "tco3" in set(dataset.variables)
         assert dataset.tco3.units == "DU"
+        assert dataset.tco3.ndim == 3
         if dataset.cf.bounds:  # Bounds are variables
             assert len(dataset.cf.data_vars) <= 4
         else:
@@ -45,9 +58,8 @@ class AttrRequirements:
         if "T" in dataset.cf.bounds:  # Not required
             assert dataset.cf.bounds["T"] == ["time_bnds"]
 
-    @mark.parametrize("attrs", [global_attributes().index])
-    def test_attributes(self, dataset, attrs):
-        assert all(k in attrs for k in dataset.attrs)
+    def test_attributes(self, dataset):
+        assert all(k in global_attributes.index for k in dataset.attrs)
         assert "Conventions" in dataset.attrs
         assert "institution" in dataset.attrs
         assert "source" in dataset.attrs
@@ -55,44 +67,40 @@ class AttrRequirements:
 
 # Parametrization ---------------------------------------------------
 @mark.parametrize("source", ["CCMI-1"], indirect=True)
+@mark.parametrize("model", listdir("tests/datasets/CCMI-1"), indirect=True)
 class TestCCMI(AttrRequirements):
-    @fixture(scope="class", params=listdir("tests/datasets/CCMI-1"))
-    def model(self, request):
-        return request.param
+    path = "tests/datasets/{}/{}/toz*.nc"
 
     @fixture(scope="class")
     def dataset(self, source, model):
-        return loads.ccmi(f"tests/datasets/{source}/{model}/*.nc")
+        return ccmi(self.path.format(source, model))
 
 
 @mark.parametrize("source", ["ECMWF"], indirect=True)
+@mark.parametrize("model", listdir("tests/datasets/ECMWF"), indirect=True)
 class TestECMWF(AttrRequirements):
-    @fixture(scope="class", params=listdir("tests/datasets/ECMWF"))
-    def model(self, request):
-        return request.param
+    path = "tests/datasets/{}/{}/*.nc"
 
     @fixture(scope="class")
     def dataset(self, source, model):
-        return loads.ecmwf(f"tests/datasets/{source}/{model}/*.nc")
+        return ecmwf(self.path.format(source, model))
 
 
 @mark.parametrize("source", ["ESACCI"], indirect=True)
+@mark.parametrize("model", listdir("tests/datasets/ESACCI"), indirect=True)
 class TestESACCI(AttrRequirements):
-    @fixture(scope="class", params=listdir("tests/datasets/ESACCI"))
-    def model(self, request):
-        return request.param
+    path = "tests/datasets/{}/{}/*.nc"
 
     @fixture(scope="class")
     def dataset(self, source, model):
-        return loads.esacci(f"tests/datasets/{source}/{model}/*.nc")
+        return esacci(self.path.format(source, model))
 
 
 @mark.parametrize("source", ["SBUV"], indirect=True)
+@mark.parametrize("model", listdir("tests/datasets/SBUV"), indirect=True)
 class TestSBUV(AttrRequirements):
-    @fixture(scope="class", params=listdir("tests/datasets/SBUV"))
-    def model(self, request):
-        return request.param
+    path = "tests/datasets/{}/{}/*.za.txt"
 
     @fixture(scope="class")
     def dataset(self, source, model):
-        return loads.sbuv(f"tests/datasets/{source}/{model}/*.za.txt")
+        return sbuv(self.path.format(source, model))

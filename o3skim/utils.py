@@ -11,15 +11,15 @@ def cf_clean(dataset):
     :param dataset: Xarray dataset following CF conventions
     """
     # Clean global attributes
-    cfds_attrs = set(attributes.global_attributes().index)
+    cfds_attrs = set(attributes.global_attributes.index)
     dataset.attrs = {k: v for k, v in dataset.attrs.items() if k in cfds_attrs}
     # Clean coordinate attributes
-    cfds_attrs = set(attributes.coordinate_attributes().index)
+    cfds_attrs = set(attributes.coordinate_attributes.index)
     for var in dataset.coords:
         var = dataset[var]
         var.attrs = {k: v for k, v in var.attrs.items() if k in cfds_attrs}
     # Clean data variables attributes
-    cfds_attrs = set(attributes.variables_attributes().index)
+    cfds_attrs = set(attributes.variables_attributes.index)
     for var in dataset.data_vars:
         var = dataset[var]
         var.attrs = {k: v for k, v in var.attrs.items() if k in cfds_attrs}
