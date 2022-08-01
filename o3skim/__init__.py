@@ -4,8 +4,36 @@ import logging
 import cf_xarray as cfxr
 import xarray as xr
 
+from o3skim import loadfunctions_tco3
+
 logger = logging.getLogger("o3skim")
 xr.set_options(keep_attrs=True)
+
+
+def load_tco3(path, source, model):
+    """Module in charge of standardized data model loading.
+    :param path: Expresion with netcdf files containing the model
+    :param source: Name of model source
+    :param model: Name of model
+    :return: Standardized loaded dataset
+    """
+    source_package = __source_loader(loadfunctions_tco3, source)
+    load = __model_loader(source_package, model).load_tco3
+    return load(path)
+
+
+def __source_loader(package, source):
+    try:
+        return package.__dict__[source]
+    except KeyError:
+        raise ValueError(f"Unknown source '{source}'")
+
+
+def __model_loader(package, model):
+    try:
+        return package.__dict__[model]
+    except KeyError:
+        raise ValueError(f"Unknown model '{model}'")
 
 
 def lon_mean(dataset):
