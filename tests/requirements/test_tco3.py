@@ -2,8 +2,8 @@
 from glob import glob
 from os import listdir
 
+import o3skim
 from o3skim.attributes import global_attributes
-from o3skim.load_tco3 import ccmi, ecmwf, esacci, sbuv
 from pytest import fixture, mark, skip
 
 
@@ -18,9 +18,14 @@ def model(request):
     return request.param
 
 
+@fixture(scope="class", params=[])
+def expresion(request):
+    return request.param
+
+
 @fixture(scope="class", autouse=True)
-def files(request, source, model):
-    if glob(request.cls.path.format(source, model)) == []:
+def files(source, model, expresion):
+    if glob(f"tests/datasets/{source}/{model}/{expresion}") == []:
         skip(f"No dataset {source}/{model}")
 
 
@@ -75,39 +80,39 @@ class AttrRequirements:
 # Parametrization ---------------------------------------------------
 @mark.parametrize("source", ["CCMI-1"], indirect=True)
 @mark.parametrize("model", listdir("tests/datasets/CCMI-1"), indirect=True)
+@mark.parametrize("expresion", ["toz*.nc"], indirect=True)
 class TestCCMI(AttrRequirements):
-    path = "tests/datasets/{}/{}/toz*.nc"
-
     @fixture(scope="class")
-    def dataset(self, source, model):
-        return ccmi(self.path.format(source, model))
+    def dataset(self, source, model, expresion):
+        path = f"tests/datasets/{source}/{model}/{expresion}"
+        return o3skim.load_tco3(path, source, model)
 
 
 @mark.parametrize("source", ["ECMWF"], indirect=True)
 @mark.parametrize("model", listdir("tests/datasets/ECMWF"), indirect=True)
+@mark.parametrize("expresion", ["toz*.nc"], indirect=True)
 class TestECMWF(AttrRequirements):
-    path = "tests/datasets/{}/{}/*.nc"
-
     @fixture(scope="class")
     def dataset(self, source, model):
-        return ecmwf(self.path.format(source, model))
+        path = f"tests/datasets/{source}/{model}/{expresion}"
+        return o3skim.load_tco3(path, source, model)
 
 
 @mark.parametrize("source", ["ESACCI"], indirect=True)
 @mark.parametrize("model", listdir("tests/datasets/ESACCI"), indirect=True)
+@mark.parametrize("expresion", ["toz*.nc"], indirect=True)
 class TestESACCI(AttrRequirements):
-    path = "tests/datasets/{}/{}/*.nc"
-
     @fixture(scope="class")
     def dataset(self, source, model):
-        return esacci(self.path.format(source, model))
+        path = f"tests/datasets/{source}/{model}/{expresion}"
+        return o3skim.load_tco3(path, source, model)
 
 
 @mark.parametrize("source", ["SBUV"], indirect=True)
 @mark.parametrize("model", listdir("tests/datasets/SBUV"), indirect=True)
+@mark.parametrize("expresion", ["*.za.txt"], indirect=True)
 class TestSBUV(AttrRequirements):
-    path = "tests/datasets/{}/{}/*.za.txt"
-
     @fixture(scope="class")
     def dataset(self, source, model):
-        return sbuv(self.path.format(source, model))
+        path = f"tests/datasets/{source}/{model}/{expresion}"
+        return o3skim.load_tco3(path, source, model)
