@@ -64,6 +64,13 @@ class AttrRequirements:
         assert "institution" in dataset.attrs
         assert "source" in dataset.attrs
 
+    @mark.parametrize("coord", ["latitude", "longitude"])
+    def test_operations(self, dataset, coord):
+        try:
+            dataset.cf.mean(coord)
+        except Exception:
+            assert False
+
 
 # Parametrization ---------------------------------------------------
 @mark.parametrize("source", ["CCMI-1"], indirect=True)
