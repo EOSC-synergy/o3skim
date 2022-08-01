@@ -54,12 +54,12 @@ def ccmi(
     drop_c = [v for v in dataset.coords if v not in keep_c]
     dataset = dataset.cf.drop_vars(drop_c)
 
-    # Load cftime variables to support mean operations
-    # See https://github.com/NCAR/esmlab/issues/161
-    logger.debug(f"Loading time variable '{dataset.cf['time'].name}'")
-    dataset.cf["time"].load()
-    if "bounds" in dataset.cf["time"].attrs:
-        dataset[dataset.cf["time"].attrs["bounds"]].load()
+    # # Load cftime variables to support mean operations
+    # # See https://github.com/NCAR/esmlab/issues/161
+    # logger.debug(f"Loading time variable '{dataset.cf['time'].name}'")
+    # dataset.cf["time"].load()
+    # if "bounds" in dataset.cf["time"].attrs:
+    #     dataset[dataset.cf["time"].attrs["bounds"]].load()
 
     # Processing of skimming operations
     return dataset
@@ -125,12 +125,12 @@ def ecmwf(
     drop_c = [v for v in dataset.coords if v not in keep_c]
     dataset = dataset.cf.drop_vars(drop_c)
 
-    # Load cftime variables to support mean operations
-    # See https://github.com/NCAR/esmlab/issues/161
-    logger.debug(f"Loading time variable '{dataset.cf['time'].name}'")
-    dataset.cf["time"].load()
-    if "bounds" in dataset.cf["time"].attrs:
-        dataset[dataset.cf["time"].attrs["bounds"]].load()
+    # # Load cftime variables to support mean operations
+    # # See https://github.com/NCAR/esmlab/issues/161
+    # logger.debug(f"Loading time variable '{dataset.cf['time'].name}'")
+    # dataset.cf["time"].load()
+    # if "bounds" in dataset.cf["time"].attrs:
+    #     dataset[dataset.cf["time"].attrs["bounds"]].load()
 
     # Normalize values to Dobson Units
     # See, https://sacs.aeronomie.be/info/dobson.php
@@ -231,12 +231,12 @@ def esacci(
     drop_c = [v for v in dataset.coords if v not in keep_c]
     dataset = dataset.cf.drop_vars(drop_c)
 
-    # Load cftime variables to support mean operations
-    # See https://github.com/NCAR/esmlab/issues/161
-    logger.debug(f"Loading time variable '{dataset.cf['time'].name}'")
-    dataset.cf["time"].load()
-    if "bounds" in dataset.cf["time"].attrs:
-        dataset[dataset.cf["time"].attrs["bounds"]].load()
+    # # Load cftime variables to support mean operations
+    # # See https://github.com/NCAR/esmlab/issues/161
+    # logger.debug(f"Loading time variable '{dataset.cf['time'].name}'")
+    # dataset.cf["time"].load()
+    # if "bounds" in dataset.cf["time"].attrs:
+    #     dataset[dataset.cf["time"].attrs["bounds"]].load()
 
     # Processing of skimming operations
     return dataset
