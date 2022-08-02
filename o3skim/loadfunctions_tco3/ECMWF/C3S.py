@@ -44,6 +44,9 @@ def load_tco3(model_path):
     # Variable name standardization
     logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{config.TCO3_VAR}'")
     dataset = dataset.cf.rename({VARIABLE_NAME: config.TCO3_VAR})
+    dataset[config.TCO3_VAR].attrs.update(
+        {"standard_name": config.TCO3_STANDARD_NAME}
+    )
 
     # Coordinates name standardization
     logger.debug(f"Renaming coords '{dataset.coords}'")
