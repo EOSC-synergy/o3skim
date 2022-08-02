@@ -90,7 +90,7 @@ class TestCCMI(AttrRequirements):
 
 @mark.parametrize("source", ["ECMWF"], indirect=True)
 @mark.parametrize("model", listdir("tests/datasets/ECMWF"), indirect=True)
-@mark.parametrize("expression", ["toz*.nc"], indirect=True)
+@mark.parametrize("expression", ["era*.nc"], indirect=True)
 class TestECMWF(AttrRequirements):
     @fixture(scope="class")
     def dataset(self, source, model, expression):
