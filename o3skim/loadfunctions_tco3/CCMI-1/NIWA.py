@@ -44,5 +44,18 @@ def load_tco3(model_path):
     drop_c = [v for v in dataset.coords if v not in keep_c]
     dataset = dataset.cf.drop_vars(drop_c)
 
+    # Loading cftime variables to support mean operations
+    # See https://github.com/NCAR/esmlab/issues/161
+    logger.debug(f"Loading time variable '{dataset.cf['time'].name}'")
+    dataset.cf["time"].load()
+    if "bounds" in dataset.cf["time"].attrs:
+        dataset[dataset.cf["time"].attrs["bounds"]].load()
+
+    # Convert cftime variables to support mean operations
+    logger.debug(f"Converting time variable '{dataset.cf['time'].name}'")
+    attrs = dataset['time'].attrs
+    dataset['time'] = dataset.indexes['time'].to_datetimeindex()
+    dataset['time'].attrs = attrs
+
     # Return standard loaded tco3 dataset
     return dataset
