@@ -11,14 +11,14 @@ VARIABLE_NAME = "equivalent_thickness_at_stp_of_atmosphere_ozone_content"
 
 
 def load_tco3(model_path):
-    """Loads and returns a CCMI-1 IPLS DataArray model and the dataset
+    """Loads and returns a CCMI-1 IPSL DataArray model and the dataset
     attributes.
     :param model_path: Paths expression to the dataset netCDF files
     :return: Standardized Dataset
     """
 
     # Loading of DataArray and attributes
-    logger.info("Loading CCMI-1 IPLS data from: %s", model_path)
+    logger.info("Loading CCMI-1 IPSL data from: %s", model_path)
     kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
