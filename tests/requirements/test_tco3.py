@@ -3,6 +3,7 @@ from glob import glob
 from os import listdir
 
 import o3skim
+from o3skim import config
 from o3skim.attributes import global_attributes
 from pytest import fixture, mark, skip
 
@@ -33,7 +34,7 @@ def files(source, model, expression):
 class AttrRequirements:
     def test_variable(self, dataset):
         assert "tco3" in set(dataset.variables)
-        assert dataset.tco3.standard_name == "atmosphere_mole_content_of_ozone"
+        assert dataset.tco3.standard_name == config.TCO3_STANDARD_NAME
         assert dataset.tco3.units == "DU"
         assert dataset.tco3.ndim == 3
         if dataset.cf.bounds:  # Bounds are variables
