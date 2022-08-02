@@ -12,7 +12,7 @@ xr.set_options(keep_attrs=True)
 
 def load_tco3(path, source, model):
     """Module in charge of standardized data model loading.
-    :param path: Expresion with netcdf files containing the model
+    :param path: Expression with netcdf files containing the model
     :param source: Name of model source
     :param model: Name of model
     :return: Standardized loaded dataset
