@@ -33,6 +33,7 @@ def files(source, model, expression):
 class AttrRequirements:
     def test_variable(self, dataset):
         assert "tco3" in set(dataset.variables)
+        assert dataset.tco3.standard_name == "atmosphere_mole_content_of_ozone"
         assert dataset.tco3.units == "DU"
         assert dataset.tco3.ndim == 3
         if dataset.cf.bounds:  # Bounds are variables
