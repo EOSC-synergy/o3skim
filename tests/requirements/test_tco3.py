@@ -102,7 +102,7 @@ class TestECMWF(AttrRequirements):
 
 @mark.parametrize("source", ["ESACCI"], indirect=True)
 @mark.parametrize("model", listdir("tests/datasets/ESACCI"), indirect=True)
-@mark.parametrize("expression", ["toz*.nc"], indirect=True)
+@mark.parametrize("expression", ["*OZONE*.nc"], indirect=True)
 class TestESACCI(AttrRequirements):
     @fixture(scope="class")
     def dataset(self, source, model, expression):
