@@ -38,7 +38,7 @@ and pip installed. If not, please check [pip documentation](https://pip.pypa.io/
 
 
 # Extending functions
-Create a new python module into `loadfunctions_tco3` with the name to use for model matching and define a `load_tco3(model_path)` function with the procedure to load the model. Note `model_path` should be a string expression which might contain more than one file. See parameter paths at [xarray.open_mfdataset](https://docs.xarray.dev/en/stable/generated/xarray.open_mfdataset.html).
+Create a new python module into `loadfunctions_tco3` with the name to use for model matching and a `load_tco3(model_path)` function with the load procedure. Note the `model_path` argument is a string expression which might contain more than one file. See parameter `paths` at [xarray.open_mfdataset](https://docs.xarray.dev/en/stable/generated/xarray.open_mfdataset.html).
 
 Some examples:
  - `CCMI-1_ACCESS` matches `CCMI-1_ACCESS_CCM-refC2` and `CCMI-1_ACCESS_ACCESS-CCM`
@@ -54,10 +54,9 @@ To run unit and functional tests with coverage use:
 $ tox
 ```
 
-If you want to test new added modules to load models, you can just create a folder into the corresponding `dataset` directory under `./tests` with the name of the model and data. Before adding test data consider the following:
- - Ensure your test sample does not contain private information such emails.
- - Size of the sample impact repository size and testing speed. Try to minimize the sample as much as possible.
-
+If you want to test new load modules, create a folder into the corresponding `./tests/dataset_*` directory with the name of the model to use on the load function. Before adding test data into the folder consider the following:
+ - Ensure your test sample does not contain any private information, for example emails.
+ - Minimize the sample data as much as possible. Files size impact repository size and testing speed. 
 
 # Documentation <a name = "doc"></a>
 All o3as project module documents can be found at [o3as.readthedocs.io](https://o3as.readthedocs.io/en/latest/). 
