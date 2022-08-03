@@ -37,6 +37,15 @@ and pip installed. If not, please check [pip documentation](https://pip.pypa.io/
 > Non admin rights? Check how to run [conda](https://docs.conda.io/en/latest/) in your machine.
 
 
+# Extending functions
+Create a new python module into `loadfunctions_tco3` with the name to use for model matching and define a `load_tco3(model_path)` function with the procedure to load the model. Note `model_path` should be a string expression which might contain more than one file. See parameter paths at [xarray.open_mfdataset](https://docs.xarray.dev/en/stable/generated/xarray.open_mfdataset.html).
+
+Some examples:
+ - `CCMI-1_ACCESS` matches `CCMI-1_ACCESS_CCM-refC2` and `CCMI-1_ACCESS_ACCESS-CCM`
+ - `CCMI-1_IPSL` matches `CCMI-1_IPSL-refC2` and `CCMI-1_IPSL_IPSL-senC2fGHG`
+ - `ECMWF_C3S` matches `ECMWF_C3S` and `ECMWF_C3S_ERA5`
+
+
 # Testing <a name = "testing"></a>
 Testing is based on [sqa-baseline](https://indigo-dc.github.io/sqa-baseline/) criteria. On top, [tox](https://tox.readthedocs.io/en/latest/) automation is used to simplify the testing process.
 
@@ -44,6 +53,10 @@ To run unit and functional tests with coverage use:
 ```sh
 $ tox
 ```
+
+If you want to test new added modules to load models, you can just create a folder into the corresponding `dataset` directory under `./tests` with the name of the model and data. Before adding test data consider the following:
+ - Ensure your test sample does not contain private information such emails.
+ - Size of the sample impact repository size and testing speed. Try to minimize the sample as much as possible.
 
 
 # Documentation <a name = "doc"></a>
