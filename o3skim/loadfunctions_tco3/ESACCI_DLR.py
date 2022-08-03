@@ -34,8 +34,6 @@ def load_tco3(model_path):
             dataset.attrs["institution"] = dataset.Affiliation
             dataset.attrs["source"] = dataset.Data_created_by
             tco3 = dataset.total_ozone_column
-            assert tco3.standard_name == "atmosphere mole content of ozone"
-            assert tco3.units == "Dobson units"
             tco3.attrs["standard_name"] = "atmosphere_mole_content_of_ozone"
             tco3.attrs["units"] = "DU"
             return dataset
