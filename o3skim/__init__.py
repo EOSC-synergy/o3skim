@@ -10,30 +10,24 @@ logger = logging.getLogger("o3skim")
 xr.set_options(keep_attrs=True)
 
 
-def load_tco3(path, source, model):
+def load_tco3(path, model):
     """Module in charge of standardized data model loading.
     :param path: Expression with netcdf files containing the model
-    :param source: Name of model source
     :param model: Name of model
     :return: Standardized loaded dataset
     """
-    source_package = __source_loader(loadfunctions_tco3, source)
-    load = __model_loader(source_package, model).load_tco3
+    load = __model_loader(loadfunctions_tco3, model).load_tco3
     return load(path)
 
 
-def __source_loader(package, source):
-    try:
-        return package.__dict__[source]
-    except KeyError:
-        raise ValueError(f"Unknown source '{source}'")
-
-
 def __model_loader(package, model):
-    try:
-        return package.__dict__[model]
-    except KeyError:
-        raise ValueError(f"Unknown model '{model}'")
+    modules = [m for m in package.__all__ if m in model]
+    if len(modules) == 1:
+        return package.__dict__[modules[0]]
+    if modules == []:
+        raise ValueError(f"Unknown model '{model}' from {package.__all__}")
+    elif modules.len > 1:
+        raise ValueError(f"Multiple match '{model}' for {modules}")
 
 
 def lon_mean(dataset):
