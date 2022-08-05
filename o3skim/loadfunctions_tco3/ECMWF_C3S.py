@@ -22,6 +22,7 @@ def load_tco3(model_path):
     # Loading of DataArray and attributes
     logger.info("Loading ECMWF C3S data from: %s", model_path)
     kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
+    kwargs["chunks"] = {"time": "auto"}
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
     # Complete coordinate attributes
@@ -44,9 +45,7 @@ def load_tco3(model_path):
     # Variable name standardization
     logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{config.TCO3_VAR}'")
     dataset = dataset.cf.rename({VARIABLE_NAME: config.TCO3_VAR})
-    dataset[config.TCO3_VAR].attrs.update(
-        {"standard_name": config.TCO3_STANDARD_NAME}
-    )
+    dataset[config.TCO3_VAR].attrs.update({"standard_name": config.TCO3_STANDARD_NAME})
 
     # Coordinates name standardization
     logger.debug(f"Renaming coords '{dataset.coords}'")

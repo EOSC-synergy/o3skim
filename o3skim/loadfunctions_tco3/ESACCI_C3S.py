@@ -24,6 +24,7 @@ def load_tco3(model_path):
     # Loading of DataArray and attributes
     logger.info("Loading ESACCI C3S data from: %s", model_path)
     kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
+    kwargs["chunks"] = {"time": "auto"}
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
     # Clean of non cf attributes

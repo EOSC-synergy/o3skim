@@ -40,7 +40,7 @@ def load_tco3(model_path):
 
     # Loading of DataArray and attributes
     logger.info("Loading ESACCI data from: %s", model_path)
-    kwargs = dict(preprocess=pf)
+    kwargs = dict(preprocess=pf, chunks={"time": "auto"})
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
     # Complete time coordinate attributes
