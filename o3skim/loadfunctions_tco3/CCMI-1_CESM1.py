@@ -50,9 +50,7 @@ def load_tco3(model_path):
 
     # Convert cftime variables to support mean operations
     logger.debug(f"Converting time variable '{dataset.cf['time'].name}'")
-    attrs = dataset['time'].attrs
-    dataset['time'] = dataset.indexes['time'].to_datetimeindex()
-    dataset['time'].attrs = attrs
+    utils.cftime_to_datetime(dataset)
 
     # Return standard loaded tco3 dataset
     return dataset
