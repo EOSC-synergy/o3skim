@@ -1,7 +1,11 @@
 import logging
 
 import xarray as xr
-from o3skim import settings, utils
+from o3skim import utils
+from o3skim.settings import TCO3_DATA_VARIABLE as DATA_VARIABLE
+from o3skim.settings import TCO3_STANDARD_NAME as STANDARD_NAME
+from o3skim.settings import TCO3_STANDARD_UNIT as STANDARD_UNIT
+from o3skim.settings import TCO3_UNITS_CONVERSION as CONVERSION
 
 ## Application logger
 logger = logging.getLogger(__name__)
@@ -39,10 +43,10 @@ def load_tco3(model_path):
     dataset = utils.drop_vars_except(dataset, VARIABLE_NAME)
 
     # Variable name standardization
-    logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{settings.TCO3_VAR}'")
-    dataset = dataset.cf.rename({VARIABLE_NAME: settings.TCO3_VAR})
-    dataset[settings.TCO3_VAR].attrs.update(
-        {"standard_name": settings.TCO3_STANDARD_NAME}
+    logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{DATA_VARIABLE}'")
+    dataset = dataset.cf.rename({VARIABLE_NAME: DATA_VARIABLE})
+    dataset[DATA_VARIABLE].attrs.update(
+        {"standard_name": STANDARD_NAME}
     )
 
     # Coordinates name standardization
@@ -63,11 +67,11 @@ def load_tco3(model_path):
     # Normalize values to Dobson Units
     # See, https://sacs.aeronomie.be/info/dobson.php
     logger.debug("Converting source data units to 'DU")
-    if dataset[settings.TCO3_VAR].units == "kg m**-2":  # 2.1415x10-5 kg[O3]/m2
-        dataset[settings.TCO3_VAR] /= 2.1415e-05
-        dataset[settings.TCO3_VAR].attrs.update({'units': "DU"})
+    if dataset[DATA_VARIABLE].units == "kg m**-2":  # 2.1415x10-5 kg[O3]/m2
+        dataset[DATA_VARIABLE] /= 2.1415e-05
+        dataset[DATA_VARIABLE].attrs.update({'units': "DU"})
     else:
-        raise ValueError(f"Unexpected {dataset[settings.TCO3_VAR].units} unit")
+        raise ValueError(f"Unexpected {dataset[DATA_VARIABLE].units} unit")
 
     # Fill missing attributes
     dataset.attrs["institution"] = INSTITUTION

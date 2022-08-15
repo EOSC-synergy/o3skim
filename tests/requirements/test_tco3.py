@@ -1,9 +1,12 @@
 """Simple test module for testing"""
+import datetime
 from os import listdir
 
 import o3skim
-from o3skim import settings
 from o3skim.attributes import global_attributes
+from o3skim.settings import TCO3_DATA_VARIABLE as DATA_VARIABLE
+from o3skim.settings import TCO3_STANDARD_NAME as STANDARD_NAME
+from o3skim.settings import TCO3_STANDARD_UNIT as STANDARD_UNIT
 from pytest import fixture, mark
 
 
@@ -16,10 +19,10 @@ def model(request):
 # Requirements ------------------------------------------------------
 class AttrRequirements:
     def test_variable(self, dataset):
-        assert "tco3" in set(dataset.variables)
-        assert dataset.tco3.standard_name == settings.TCO3_STANDARD_NAME
-        assert dataset.tco3.units == "DU"
-        assert dataset.tco3.ndim == 3
+        assert DATA_VARIABLE in set(dataset.variables)
+        assert dataset[DATA_VARIABLE].standard_name == STANDARD_NAME
+        assert dataset[DATA_VARIABLE].units == STANDARD_UNIT
+        assert dataset[DATA_VARIABLE].ndim == 3
         if dataset.cf.bounds:  # Bounds are variables
             assert len(dataset.cf.data_vars) <= 4
         else:
@@ -43,6 +46,7 @@ class AttrRequirements:
 
     def test_coord_time(self, dataset):
         assert "time" in dataset.coords
+        assert dataset["time"].dtype == '<M8[ns]'
         assert dataset["time"].standard_name == "time"
         assert dataset["time"].axis == "T"
         if "T" in dataset.cf.bounds:  # Not required

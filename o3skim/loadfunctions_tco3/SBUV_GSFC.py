@@ -4,7 +4,11 @@ import logging
 import numpy as np
 import pandas as pd
 import xarray as xr
-from o3skim import settings, utils
+from o3skim import utils
+from o3skim.settings import TCO3_DATA_VARIABLE as DATA_VARIABLE
+from o3skim.settings import TCO3_STANDARD_NAME as STANDARD_NAME
+from o3skim.settings import TCO3_STANDARD_UNIT as STANDARD_UNIT
+from o3skim.settings import TCO3_UNITS_CONVERSION as CONVERSION
 
 ## Application logger
 logger = logging.getLogger(__name__)
@@ -51,7 +55,7 @@ def load_tco3(model_path):
     ozone = xr.concat(arrays, "time").expand_dims(dim="lon", axis=0)
     dataset = xr.Dataset(
         data_vars={
-            settings.TCO3_VAR: xr.Variable(
+            DATA_VARIABLE: xr.Variable(
                 *[ozone.dims, ozone.values],
                 attrs=dict(
                     standard_name="atmosphere_mole_content_of_ozone",
