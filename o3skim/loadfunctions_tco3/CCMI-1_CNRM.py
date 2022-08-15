@@ -30,7 +30,6 @@ def load_tco3(model_path):
     logger.debug(f"Removing all variable except '{VARIABLE_NAME}'")
     dataset = utils.drop_except(dataset, VARIABLE_NAME)
 
-
     # Variable name standardization
     logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{config.TCO3_VAR}'")
     dataset = dataset.cf.rename({VARIABLE_NAME: config.TCO3_VAR})
