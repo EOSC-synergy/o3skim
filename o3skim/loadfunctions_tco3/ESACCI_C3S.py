@@ -2,7 +2,7 @@ import logging
 
 
 import xarray as xr
-from o3skim import config, utils
+from o3skim import settings, utils
 
 ## Application logger
 logger = logging.getLogger(__name__)
@@ -36,10 +36,10 @@ def load_tco3(model_path):
     dataset = utils.drop_vars_except(dataset, VARIABLE_NAME)
 
     # Variable name standardization
-    logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{config.TCO3_VAR}'")
-    dataset = dataset.cf.rename({VARIABLE_NAME: config.TCO3_VAR})
-    dataset[config.TCO3_VAR].attrs.update(
-        {"standard_name": config.TCO3_STANDARD_NAME, "units": "DU"}
+    logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{settings.TCO3_VAR}'")
+    dataset = dataset.cf.rename({VARIABLE_NAME: settings.TCO3_VAR})
+    dataset[settings.TCO3_VAR].attrs.update(
+        {"standard_name": settings.TCO3_STANDARD_NAME, "units": "DU"}
     )
 
     # Coordinates name standardization
