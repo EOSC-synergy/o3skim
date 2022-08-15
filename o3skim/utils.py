@@ -6,6 +6,20 @@ from o3skim import attributes
 logger = logging.getLogger("o3skim.utils")
 
 
+def drop_except(dataset, variable):
+    """Drops all dataset variables except the listed and relative.
+    :param variable: Variable to keep on the dataset
+    """
+    # Find the bound variables linked to the coordinates
+    bounds = [dataset[v].attrs.get("bounds", None) for v in dataset.coords]
+    bounds = [bound for bound in bounds if bound is not None]
+    # Add variable to set of variables to keep
+    keep_v = set([dataset.cf[variable].name] + bounds)
+    drop_v = [v for v in dataset.data_vars if v not in keep_v]
+    # Drop variables not used
+    return dataset.cf.drop_vars(drop_v)
+
+
 def delete_non_CFConvention_attributes(dataset):
     """Removes those existing attributes which are not in the CF specifications.
     :param dataset: Xarray dataset following CF conventions
