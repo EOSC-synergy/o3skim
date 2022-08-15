@@ -59,8 +59,13 @@ def load_tco3(model_path):
         dataset[dataset.cf["time"].attrs["bounds"]].load()
 
     # Convert cftime variables to support mean operations
-    logger.debug(f"Converting time variable '{dataset.cf['time'].name}'")
+    logger.debug(f"Converting time coordinate to 'datetime64'")
     utils.cftime_to_datetime(dataset)
+
+    # Convert dtype lon and lat to common float32 to reduce size
+    logger.debug(f"Converting lat&lon coordinates to 'float32'")
+    utils.float_to_float32(dataset, "lon")
+    utils.float_to_float32(dataset, "lat")
 
     # Return standard loaded tco3 dataset
     return dataset

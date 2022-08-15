@@ -30,6 +30,7 @@ class AttrRequirements:
 
     def test_coord_lat(self, dataset):
         assert "lat" in dataset.coords
+        assert dataset["lat"].dtype == "float32"
         assert dataset["lat"].standard_name == "latitude"
         assert dataset["lat"].axis == "Y"
         assert dataset["lat"].units == "degrees_north"
@@ -38,6 +39,7 @@ class AttrRequirements:
 
     def test_coord_lon(self, dataset):
         assert "lon" in dataset.coords
+        assert dataset["lon"].dtype == "float32"
         assert dataset["lon"].standard_name == "longitude"
         assert dataset["lon"].axis == "X"
         assert dataset["lon"].units == "degrees_east"
@@ -46,7 +48,7 @@ class AttrRequirements:
 
     def test_coord_time(self, dataset):
         assert "time" in dataset.coords
-        assert dataset["time"].dtype == '<M8[ns]'
+        assert dataset["time"].dtype == "<M8[ns]"
         assert dataset["time"].standard_name == "time"
         assert dataset["time"].axis == "T"
         if "T" in dataset.cf.bounds:  # Not required

@@ -1,6 +1,9 @@
 """This module offers some utils for code management."""
-import logging
 import io
+import logging
+
+import numpy as np
+
 from o3skim import attributes
 
 logger = logging.getLogger("o3skim.utils")
@@ -60,6 +63,15 @@ def cftime_to_datetime(dataset):
     attrs = dataset["time"].attrs
     dataset["time"] = dataset.indexes["time"].to_datetimeindex()
     dataset["time"].attrs = attrs
+
+
+def float_to_float32(dataset, variable):
+    """Converts the float variable from the dataset to standard float32.
+    :param dataset: Dataset to modify
+    """
+    attrs = dataset[variable].attrs
+    dataset[variable] = np.float32(dataset.indexes[variable])
+    dataset[variable].attrs = attrs
 
 
 def chunkio(headid, str_iter):

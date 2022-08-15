@@ -82,5 +82,10 @@ def load_tco3(model_path):
     logger.debug(f"Removing unused coords from '{list(dataset.coords)}'")
     dataset = utils.drop_unused_coords(dataset)
 
+    # Convert dtype lon and lat to common float32 to reduce size
+    logger.debug(f"Converting lat&lon coordinates to 'float32'")
+    utils.float_to_float32(dataset, "lon")
+    utils.float_to_float32(dataset, "lat")
+
     # Return standard loaded tco3 dataset
     return dataset

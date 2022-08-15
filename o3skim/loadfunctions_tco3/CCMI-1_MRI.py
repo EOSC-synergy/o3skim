@@ -60,5 +60,10 @@ def load_tco3(model_path):
     # logger.debug(f"Converting time variable '{dataset.cf['time'].name}'")
     # utils.cftime_to_datetime(dataset)
 
+    # Convert dtype lon and lat to common float32 to reduce size
+    logger.debug(f"Converting lat&lon coordinates to 'float32'")
+    utils.float_to_float32(dataset, "lon")
+    utils.float_to_float32(dataset, "lat")
+
     # Return standard loaded tco3 dataset
     return dataset
