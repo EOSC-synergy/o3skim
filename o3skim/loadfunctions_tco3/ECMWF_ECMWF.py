@@ -36,7 +36,7 @@ def load_tco3(model_path):
 
     # Extraction of variable as dataset
     logger.debug(f"Removing all variable except '{VARIABLE_NAME}'")
-    dataset = utils.drop_except(dataset, VARIABLE_NAME)
+    dataset = utils.drop_vars_except(dataset, VARIABLE_NAME)
 
     # Variable name standardization
     logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{config.TCO3_VAR}'")
@@ -58,10 +58,7 @@ def load_tco3(model_path):
 
     # Deletion of not used coordinates
     logger.debug(f"Removing unused coords from '{list(dataset.coords)}'")
-    dataset = dataset.squeeze(drop=True)
-    keep_c = set(dataset.cf[c].name for c in ["X", "Y", "T"])
-    drop_c = [v for v in dataset.coords if v not in keep_c]
-    dataset = dataset.cf.drop_vars(drop_c)
+    dataset = utils.drop_unused_coords(dataset)
 
     # Normalize values to Dobson Units
     # See, https://sacs.aeronomie.be/info/dobson.php

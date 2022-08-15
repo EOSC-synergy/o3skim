@@ -6,8 +6,9 @@ from o3skim import attributes
 logger = logging.getLogger("o3skim.utils")
 
 
-def drop_except(dataset, variable):
+def drop_vars_except(dataset, variable):
     """Drops all dataset variables except the listed and relative.
+    :param dataset: Dataset to modify
     :param variable: Variable to keep on the dataset
     """
     # Find the bound variables linked to the coordinates
@@ -18,6 +19,19 @@ def drop_except(dataset, variable):
     drop_v = [v for v in dataset.data_vars if v not in keep_v]
     # Drop variables not used
     return dataset.cf.drop_vars(drop_v)
+
+
+def drop_unused_coords(dataset):
+    """Deletion of non standard coordinates (lon, lat and time).
+    :param dataset: Dataset to modify
+    """
+    # Squeeze to remove dimensions with only 1 value
+    dataset = dataset.squeeze(drop=True)
+    # Set the unexpected coordinates
+    keep_c = set(dataset.cf[c].name for c in ["X", "Y", "T"])
+    drop_c = [v for v in dataset.coords if v not in keep_c]
+    # Remove the non standard coordinates
+    return dataset.cf.drop_vars(drop_c)
 
 
 def delete_non_CFConvention_attributes(dataset):
