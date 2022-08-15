@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 DELIMITER = "\s+"  # Delimiter character for row values on the table
-
+LOADING_UNITS = "DU"
 
 def load_tco3(model_path):
     """Loads and returns a SBUV DataArray model and the dataset
@@ -56,11 +56,11 @@ def load_tco3(model_path):
     dataset = xr.Dataset(
         data_vars={
             DATA_VARIABLE: xr.Variable(
-                *[ozone.dims, ozone.values],
+                *[ozone.dims, ozone.values/CONVERSION[LOADING_UNITS]],
                 attrs=dict(
-                    standard_name="atmosphere_mole_content_of_ozone",
+                    standard_name=STANDARD_NAME,
                     long_name="Total column of ozone in the atmosphere",
-                    units="DU",
+                    units=STANDARD_UNIT,
                 ),
             ),
             "lon_bnds": xr.Variable(["lon", "bnds"], [(0, 360)]),
