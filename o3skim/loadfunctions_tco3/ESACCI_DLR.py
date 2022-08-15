@@ -12,8 +12,8 @@ import pandas as pd
 ## Application logger
 logger = logging.getLogger(__name__)
 
-
 VARIABLE_NAME = "atmosphere_mole_content_of_ozone"
+LOAD_CHUNKS = None
 
 
 def load_tco3(model_path):
@@ -45,6 +45,7 @@ def load_tco3(model_path):
     # Loading of DataArray and attributes
     logger.info("Loading ESACCI data from: %s", model_path)
     kwargs = dict(preprocess=pf, chunks={"time": "auto"})
+    kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
     # Complete time coordinate attributes

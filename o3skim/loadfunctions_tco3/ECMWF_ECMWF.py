@@ -10,10 +10,11 @@ from o3skim.settings import TCO3_UNITS_CONVERSION as CONVERSION
 ## Application logger
 logger = logging.getLogger(__name__)
 
-
 VARIABLE_NAME = "tco3"
 INSTITUTION = "European Centre for Medium-Range Weather Forecasts"
 SOURCE = ""  # TODO: Define source
+LOAD_CHUNKS = {"time": "auto"}
+
 
 def load_tco3(model_path):
     """Loads and returns a ECMWF ECMWF DataArray model and the dataset
@@ -25,7 +26,7 @@ def load_tco3(model_path):
     # Loading of DataArray and attributes
     logger.info("Loading ECMWF ECMWF data from: %s", model_path)
     kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
-    kwargs["chunks"] = {"time": "auto"}
+    kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
     # Complete coordinate attributes

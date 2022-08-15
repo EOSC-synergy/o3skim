@@ -10,8 +10,8 @@ from o3skim.settings import TCO3_UNITS_CONVERSION as CONVERSION
 ## Application logger
 logger = logging.getLogger(__name__)
 
-
 VARIABLE_NAME = "equivalent_thickness_at_stp_of_atmosphere_ozone_content"
+LOAD_CHUNKS = {"time": "auto"}
 
 
 def load_tco3(model_path):
@@ -24,7 +24,7 @@ def load_tco3(model_path):
     # Loading of DataArray and attributes
     logger.info("Loading CCMI-1 GSFC data from: %s", model_path)
     kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
-    kwargs["chunks"] = {"time": "auto"}
+    kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
     # Extraction of variable as dataset

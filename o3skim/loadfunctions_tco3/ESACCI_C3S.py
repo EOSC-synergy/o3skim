@@ -11,11 +11,11 @@ from o3skim.settings import TCO3_UNITS_CONVERSION as CONVERSION
 ## Application logger
 logger = logging.getLogger(__name__)
 
-
 VARIABLE_NAME = "total_ozone_column"
 CONVENTIONS = "CF-1.8"
 INSTITUTION = "Copernicus Climate Change Service"
 SOURCE = ""  # TODO: Define source
+LOAD_CHUNKS = {"time": "auto"}
 
 
 def load_tco3(model_path):
@@ -28,7 +28,7 @@ def load_tco3(model_path):
     # Loading of DataArray and attributes
     logger.info("Loading ESACCI C3S data from: %s", model_path)
     kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
-    kwargs["chunks"] = {"time": "auto"}
+    kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
     # Clean of non cf attributes
