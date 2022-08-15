@@ -24,7 +24,7 @@ def load_tco3(model_path):
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
     # Clean non cf attributes
-    utils.cf_clean(dataset)
+    utils.delete_non_CFConvention_attributes(dataset)
 
     # Extraction of variable as dataset
     logger.debug(f"Variable '{VARIABLE_NAME}' loading")

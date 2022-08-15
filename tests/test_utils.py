@@ -16,7 +16,7 @@ def dataset(dataset_gen):
 class TestCleanGlobal:
     @fixture(scope="class", autouse=True)
     def clean_attributes(self, dataset):
-        utils.cf_clean(dataset)
+        utils.delete_non_CFConvention_attributes(dataset)
 
     def test_rm_non_standard(self, dataset):
         assert "non_standard" not in dataset.attrs
@@ -38,7 +38,7 @@ class TestCleanGlobal:
 class TestCleanCoordinates:
     @fixture(scope="class", autouse=True)
     def clean_attributes(self, dataset):
-        utils.cf_clean(dataset)
+        utils.delete_non_CFConvention_attributes(dataset)
 
     def test_rm_non_standard(self, dataset, coord):
         assert "non_standard" not in dataset[coord].attrs
@@ -57,7 +57,7 @@ class TestCleanCoordinates:
 class TestCleanVariables:
     @fixture(scope="class", autouse=True)
     def clean_attributes(self, dataset):
-        utils.cf_clean(dataset)
+        utils.delete_non_CFConvention_attributes(dataset)
 
     def test_rm_non_standard(self, dataset, var):
         assert "non_standard" not in dataset[var].attrs

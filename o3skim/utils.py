@@ -6,7 +6,7 @@ from o3skim import attributes
 logger = logging.getLogger("o3skim.utils")
 
 
-def cf_clean(dataset):
+def delete_non_CFConvention_attributes(dataset):
     """Removes those existing attributes which are not in the CF specifications.
     :param dataset: Xarray dataset following CF conventions
     """

@@ -49,7 +49,7 @@ def load_tco3(model_path):
     dataset.time.attrs["long_name"] = "time"
 
     # Clean of non cf attributes
-    utils.cf_clean(dataset)
+    utils.delete_non_CFConvention_attributes(dataset)
 
     # Extraction of variable as dataset
     logger.debug(f"Variable '{VARIABLE_NAME}' loading")
