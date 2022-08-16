@@ -56,24 +56,6 @@ def delete_non_CFConvention_attributes(dataset):
         var.attrs = {k: v for k, v in var.attrs.items() if k in cfds_attrs}
 
 
-def cftime_to_datetime(dataset):
-    """Converts the cftime from the dataset to standard datetime64.
-    :param dataset: Dataset to modify
-    """
-    attrs = dataset["time"].attrs
-    dataset["time"] = dataset.indexes["time"].to_datetimeindex()
-    dataset["time"].attrs = attrs
-
-
-def float_to_float32(dataset, variable):
-    """Converts the float variable from the dataset to standard float32.
-    :param dataset: Dataset to modify
-    """
-    attrs = dataset[variable].attrs
-    dataset[variable] = np.float32(dataset.indexes[variable])
-    dataset[variable].attrs = attrs
-
-
 def chunkio(headid, str_iter):
     """Chunks an iterable of strings. The text passed by str_iter is
     evaluated element by element (normally line by line). The elements

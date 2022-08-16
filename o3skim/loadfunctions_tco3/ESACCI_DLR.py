@@ -84,8 +84,12 @@ def load_tco3(model_path):
 
     # Convert dtype lon and lat to common float32 to reduce size
     logger.debug(f"Converting lat&lon coordinates to 'float32'")
-    utils.float_to_float32(dataset, "lon")
-    utils.float_to_float32(dataset, "lat")
+    dataset["lat"] = dataset["lat"].astype("float32")
+    dataset["lon"] = dataset["lon"].astype("float32")
+
+    # Convert dtype variable to common float32 to reduce size
+    logger.debug(f"Converting {DATA_VARIABLE} var to 'float32'")
+    dataset[DATA_VARIABLE] = dataset[DATA_VARIABLE].astype("float32")
 
     # Return standard loaded tco3 dataset
     return dataset

@@ -58,13 +58,13 @@ def load_zmo3(model_path):
         dataset[dataset.cf["time"].attrs["bounds"]].load()
 
     # Convert cftime variables to support mean operations
-    logger.debug(f"Converting time coordinate to 'datetime64'")
-    utils.cftime_to_datetime(dataset)
+    logger.debug(f"Converting time coordinate to '<M8[ns]'")
+    dataset["time"] = dataset["time"].astype("<M8[ns]")
 
-    # Convert dtype lon and lat to common float32 to reduce size
-    logger.debug(f"Converting lat&lon coordinates to 'float32'")
-    utils.float_to_float32(dataset, "plev")
-    utils.float_to_float32(dataset, "lat")
+    # Convert dtype plev and lat to common float32 to reduce size
+    logger.debug(f"Converting lat&plev coordinates to 'float32'")
+    dataset["lat"] = dataset["lat"].astype("float32")
+    dataset["plev"] = dataset["plev"].astype("float32")
 
     # Processing of skimming operations
     return dataset
