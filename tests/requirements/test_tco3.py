@@ -19,6 +19,7 @@ def model(request):
 class AttrRequirements:
     def test_variable(self, dataset):
         assert DATA_VARIABLE in set(dataset.variables)
+        assert dataset[DATA_VARIABLE].dtype == "float32"
         assert dataset[DATA_VARIABLE].standard_name == STANDARD_NAME
         assert dataset[DATA_VARIABLE].units == STANDARD_UNIT
         assert dataset[DATA_VARIABLE].ndim == 3
