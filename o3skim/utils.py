@@ -24,14 +24,14 @@ def drop_vars_except(dataset, variable):
     return dataset.cf.drop_vars(drop_v)
 
 
-def drop_unused_coords(dataset):
+def drop_unused_coords(dataset, coords=['X', 'Y', 'Z', 'T']):
     """Deletion of non standard coordinates (lon, lat and time).
     :param dataset: Dataset to modify
     """
     # Squeeze to remove dimensions with only 1 value
     dataset = dataset.squeeze(drop=True)
     # Set the unexpected coordinates
-    keep_c = set(dataset.cf[c].name for c in ["X", "Y", "T"])
+    keep_c = set(dataset.cf[c].name for c in dataset.cf.coords if c in coords)
     drop_c = [v for v in dataset.coords if v not in keep_c]
     # Remove the non standard coordinates
     return dataset.cf.drop_vars(drop_c)

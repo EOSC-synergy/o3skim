@@ -17,3 +17,13 @@ TCO3_STANDARD_NAME = "atmosphere_mole_content_of_ozone"
 TCO3_DATA_VARIABLE = "tco3"
 TCO3_STANDARD_UNIT = "DU"
 TCO3_UNITS_CONVERSION = {"DU": 1, "kg m**-2": 2.1415e-05}
+
+
+# Mole fraction of ozone in air
+"""Mole fraction is used in the construction mole_fraction_of_X_in_Y, where
+X is a material constituent of Y.
+"""
+VMRO3_STANDARD_NAME = "mole_fraction_of_ozone_in_air"
+VMRO3_DATA_VARIABLE = "vmro3"
+VMRO3_STANDARD_UNIT = "mole mole-1"
+VMRO3_UNITS_CONVERSION = {"mole mole-1": 1, "1": 1}

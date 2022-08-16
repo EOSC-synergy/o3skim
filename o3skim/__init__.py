@@ -4,19 +4,30 @@ import logging
 import cf_xarray as cfxr
 import xarray as xr
 
-from o3skim import loadfunctions_tco3
+import o3skim.loadfunctions_tco3 as loadfunctions_tco3
+import o3skim.loadfunctions_zmo3 as loadfunctions_zmo3
 
 logger = logging.getLogger("o3skim")
 xr.set_options(keep_attrs=True)
 
 
 def load_tco3(path, model):
-    """Module in charge of standardized data model loading.
+    """Module in charge of standardized data model loading for tco3.
     :param path: Expression with netcdf files containing the model
     :param model: Name of model
     :return: Standardized loaded dataset
     """
     load = __model_loader(loadfunctions_tco3, model).load_tco3
+    return load(path)
+
+
+def load_zmo3(path, model):
+    """Module in charge of standardized data model loading for zmo3.
+    :param path: Expression with netcdf files containing the model
+    :param model: Name of model
+    :return: Standardized loaded dataset
+    """
+    load = __model_loader(loadfunctions_zmo3, model).load_zmo3
     return load(path)
 
 

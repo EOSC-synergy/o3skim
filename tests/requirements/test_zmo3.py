@@ -3,9 +3,9 @@ from os import listdir
 
 import o3skim
 from o3skim.attributes import global_attributes
-from o3skim.settings import TCO3_DATA_VARIABLE as DATA_VARIABLE
-from o3skim.settings import TCO3_STANDARD_NAME as STANDARD_NAME
-from o3skim.settings import TCO3_STANDARD_UNIT as STANDARD_UNIT
+from o3skim.settings import VMRO3_DATA_VARIABLE as DATA_VARIABLE
+from o3skim.settings import VMRO3_STANDARD_NAME as STANDARD_NAME
+from o3skim.settings import VMRO3_STANDARD_UNIT as STANDARD_UNIT
 from pytest import fixture, mark
 
 
@@ -59,7 +59,7 @@ class AttrRequirements:
         assert "institution" in dataset.attrs
         assert "source" in dataset.attrs
 
-    @mark.parametrize("coord", ["latitude", "longitude", "time"])
+    @mark.parametrize("coord", ["latitude", "time"])
     def test_operations(self, dataset, coord):
         try:
             dataset.cf.mean(coord)
@@ -68,8 +68,8 @@ class AttrRequirements:
 
 
 # Parametrization ---------------------------------------------------
-@mark.parametrize("model", listdir("tests/datasets_tco3"), indirect=True)
-class TestTCO3LoadFunction(AttrRequirements):
+@mark.parametrize("model", listdir("tests/datasets_zmo3"), indirect=True)
+class TestZMO3LoadFunction(AttrRequirements):
     @fixture(scope="class")
     def dataset(self, model):
-        return o3skim.load_tco3(f"tests/datasets_tco3/{model}/*", model)
+        return o3skim.load_zmo3(f"tests/datasets_zmo3/{model}/*", model)
