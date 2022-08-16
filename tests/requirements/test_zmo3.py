@@ -8,6 +8,7 @@ from o3skim.settings import VMRO3_STANDARD_NAME as STANDARD_NAME
 from o3skim.settings import VMRO3_STANDARD_UNIT as STANDARD_UNIT
 from pytest import fixture, mark
 
+DATA_VARIABLE = DATA_VARIABLE + "_zm"
 
 # Module fixtures ---------------------------------------------------
 @fixture(scope="class", params=[])

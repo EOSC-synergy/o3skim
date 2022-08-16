@@ -11,6 +11,7 @@ from o3skim.settings import VMRO3_UNITS_CONVERSION as CONVERSION
 logger = logging.getLogger(__name__)
 
 VARIABLE_NAME = "mole_fraction_of_ozone_in_air"
+DATA_VARIABLE = DATA_VARIABLE + "_zm"
 LOAD_CHUNKS = None
 
 
