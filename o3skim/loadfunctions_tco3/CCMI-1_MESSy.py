@@ -15,14 +15,13 @@ LOAD_CHUNKS = {"time": "auto"}
 
 
 def load_tco3(model_path):
-    """Loads and returns a CCMI-1 MESSy DataArray model and the dataset
-    attributes.
+    """Loads and returns a model and the dataset attributes.
     :param model_path: Paths expression to the dataset netCDF files
     :return: Standardized Dataset
     """
 
     # Loading of DataArray and attributes
-    logger.info("Loading CCMI-1 MESSy data from: %s", model_path)
+    logger.info("Loading model data from: %s", model_path)
     kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
     kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)

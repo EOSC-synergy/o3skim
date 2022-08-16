@@ -10,20 +10,18 @@ from o3skim.settings import VMRO3_UNITS_CONVERSION as CONVERSION
 ## Application logger
 logger = logging.getLogger(__name__)
 
-
 VARIABLE_NAME = "mole_fraction_of_ozone_in_air"
 LOAD_CHUNKS = None
 
 
 def load_zmo3(model_path):
-    """Loads and returns a CCMI-1 ACCESS DataArray model and the dataset
-    attributes.
+    """Loads and returns a model and the dataset attributes.
     :param model_path: Paths expression to the dataset netCDF files
     :return: Standardized Dataset
     """
 
     # Loading of DataArray and attributes
-    logger.info("Loading CCMI-1 ACCESS data from: %s", model_path)
+    logger.info("Loading model data from: %s", model_path)
     kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
     kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)

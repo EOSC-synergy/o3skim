@@ -16,7 +16,7 @@ consistency with mole content names for chemical species other than ozone.
 TCO3_STANDARD_NAME = "atmosphere_mole_content_of_ozone"
 TCO3_DATA_VARIABLE = "tco3"
 TCO3_STANDARD_UNIT = "DU"
-TCO3_UNITS_CONVERSION = {"DU": 1, "kg m**-2": 2.1415e-05}
+TCO3_UNITS_CONVERSION = {"DU": 1, "Dobson units":1, "kg m**-2": 2.1415e-05}
 
 
 # Mole fraction of ozone in air

@@ -17,8 +17,8 @@ LOAD_CHUNKS = {"time": "auto"}
 
 
 def load_tco3(model_path):
-    """Loads and returns a ESACCI DLR DataArray model and the dataset
-    attributes. Note the name structure is composed by sections:
+    """Loads and returns a model and the dataset attributes. Note the name
+    structure is composed by sections:
     For example: ESACCI-OZONE-L3S-TC-MERGED-DLR_1M-20010302-fv0100.
     :param model_path: Paths expression to the dataset netCDF files
     :return: Standardized Dataset.
@@ -43,7 +43,7 @@ def load_tco3(model_path):
             return dataset
 
     # Loading of DataArray and attributes
-    logger.info("Loading ESACCI data from: %s", model_path)
+    logger.info("Loading model data from: %s", model_path)
     kwargs = dict(preprocess=pf, chunks=LOAD_CHUNKS)
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
