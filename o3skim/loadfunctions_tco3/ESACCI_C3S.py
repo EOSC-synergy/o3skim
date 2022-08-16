@@ -30,18 +30,9 @@ def load_tco3(model_path):
     kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
-    # Coordinates name standardization
-    logger.debug(f"Renaming coords '{dataset.coords}'")
-    dataset = dataset.cf.rename({"latitude": "lat"})
-    dataset = dataset.cf.rename({"longitude": "lon"})
-    logger.debug(f"Adding standard_name to time coord")
-    dataset.time.attrs["standard_name"] = "time"
-
-    # Extend coordinates with axis
-    logger.debug(f"Extending coords axis '[T,X,Y]'")
-    dataset["time"].attrs["axis"] = "T"
-    dataset["lon"].attrs["axis"] = "X"
-    dataset["lat"].attrs["axis"] = "Y"
+    # Complete coordinate attributes
+    logger.debug("Completing dataset coordinate")
+    utils.complete_coords(dataset)
 
     # Extraction of variable as dataset
     logger.debug(f"Removing all variable except '{VARIABLE_NAME}'")
@@ -59,6 +50,11 @@ def load_tco3(model_path):
     logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{DATA_VARIABLE}'")
     dataset = dataset.cf.rename({VARIABLE_NAME: DATA_VARIABLE})
     dataset[DATA_VARIABLE].attrs["standard_name"] = STANDARD_NAME
+
+    # Coordinates name standardization
+    logger.debug(f"Renaming coords '{dataset.coords}'")
+    dataset = dataset.cf.rename({"latitude": "lat"})
+    dataset = dataset.cf.rename({"longitude": "lon"})
 
     # Variable unit standardization
     logger.debug(f"Normalizing units to '{STANDARD_UNIT}'")

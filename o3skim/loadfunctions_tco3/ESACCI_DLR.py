@@ -16,6 +16,11 @@ VARIABLE_NAME = "atmosphere_mole_content_of_ozone"
 LOAD_CHUNKS = {"time": "auto"}
 
 
+def pf(dataset):
+    date = dataset.encoding["source"].split("-")[-2]
+    return dataset.expand_dims(time=[pd.to_datetime(date)])
+
+
 def load_tco3(model_path):
     """Loads and returns a model and the dataset attributes. Note the name
     structure is composed by sections:
@@ -24,63 +29,45 @@ def load_tco3(model_path):
     :return: Standardized Dataset.
     """
 
-    def pf(dataset):
-        if not "id" in dataset.attrs:
-            raise ValueError("Unknown ESACCI dataset")
-        if "ESACCI-OZONE-L3S-TC-MERGED-DLR_1M" in dataset.id:
-            fpath = dataset.encoding["source"]
-            fname = fpath.split("/")[-1]
-            fdate = fname.split("-")[-2]
-            time = pd.to_datetime(fdate)
-            return dataset.expand_dims(time=[time])
-        elif "C3S_OZONE-L4-TC-ASSIM_MSR" in dataset.id:
-            dataset.attrs["Conventions"] = "CF-1.8"
-            dataset.attrs["institution"] = dataset.Affiliation
-            dataset.attrs["source"] = dataset.Data_created_by
-            tco3 = dataset.total_ozone_column
-            tco3.attrs["standard_name"] = "atmosphere_mole_content_of_ozone"
-            tco3.attrs["units"] = "DU"
-            return dataset
-
     # Loading of DataArray and attributes
     logger.info("Loading model data from: %s", model_path)
     kwargs = dict(preprocess=pf, chunks=LOAD_CHUNKS)
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
-    # Complete time coordinate attributes
-    logger.debug("Completing dataset time coordinate")
-    dataset.time.attrs["standard_name"] = "time"
-    dataset.time.attrs["long_name"] = "time"
-
-    # Clean of non cf attributes
-    logger.debug(f"Removing all non CF convention attributes")
-    utils.delete_non_CFConvention_attributes(dataset)
+    # Complete coordinate attributes
+    logger.debug("Completing dataset coordinate")
+    utils.complete_coords(dataset)
 
     # Extraction of variable as dataset
     logger.debug(f"Removing all variable except '{VARIABLE_NAME}'")
     dataset = utils.drop_vars_except(dataset, VARIABLE_NAME)
 
+    # Deletion of not used coordinates
+    logger.debug(f"Removing unused coords from '{list(dataset.coords)}'")
+    dataset = utils.drop_unused_coords(dataset)
+
+    # Clean of non cf attributes
+    logger.debug(f"Removing all non CF convention attributes")
+    utils.delete_non_CFConvention_attributes(dataset)
+
     # Variable name standardization
     logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{DATA_VARIABLE}'")
     dataset = dataset.cf.rename({VARIABLE_NAME: DATA_VARIABLE})
-    dataset[DATA_VARIABLE].attrs.update(
-        {"standard_name": STANDARD_NAME}
-    )
+    dataset[DATA_VARIABLE].attrs["standard_name"] = STANDARD_NAME
 
     # Coordinates name standardization
     logger.debug(f"Renaming coords '{dataset.coords}'")
     dataset = dataset.cf.rename({"latitude": "lat"})
     dataset = dataset.cf.rename({"longitude": "lon"})
 
-    # Extend coordinates with axis
-    logger.debug(f"Extending coords axis '[T,X,Y]'")
-    dataset["time"].attrs["axis"] = "T"
-    dataset["lon"].attrs["axis"] = "X"
-    dataset["lat"].attrs["axis"] = "Y"
+    # Variable unit standardization
+    logger.debug(f"Normalizing units to '{STANDARD_UNIT}'")
+    dataset[DATA_VARIABLE] /= CONVERSION[dataset[DATA_VARIABLE].units]
+    dataset[DATA_VARIABLE].attrs["units"] = STANDARD_UNIT
 
-    # Deletion of not used coordinates
-    logger.debug(f"Removing unused coords from '{list(dataset.coords)}'")
-    dataset = utils.drop_unused_coords(dataset)
+    # Convert cftime variables to support mean operations
+    logger.debug(f"Converting time coordinate to '<M8[ns]'")
+    dataset["time"] = dataset["time"].astype("<M8[ns]")
 
     # Convert dtype lon and lat to common float32 to reduce size
     logger.debug(f"Converting lat&lon coordinates to 'float32'")

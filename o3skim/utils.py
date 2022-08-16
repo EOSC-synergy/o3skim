@@ -9,6 +9,28 @@ from o3skim import attributes
 logger = logging.getLogger("o3skim.utils")
 
 
+def complete_coords(dataset):
+    """Completes coordinates with CF standard attributes
+    :param dataset: Dataset to modify
+    """
+    if "time" in dataset.cf.coords:  # Complete time attributes
+        name = dataset.cf["time"].name
+        dataset[name].attrs["standard_name"] = "time"
+        dataset[name].attrs["axis"] = "T"
+    if "longitude" in dataset.cf.coords:  # Complete longitude attributes
+        name = dataset.cf["longitude"].name
+        dataset[name].attrs["standard_name"] = "longitude"
+        dataset[name].attrs["axis"] = "X"
+    if "latitude" in dataset.cf.coords:  # Complete latitude attributes
+        name = dataset.cf["latitude"].name
+        dataset[name].attrs["standard_name"] = "latitude"
+        dataset[name].attrs["axis"] = "Y"
+    if "air_pressure" in dataset.cf.coords:  # Complete level attributes
+        name = dataset.cf["air_pressure"].name
+        dataset[name].attrs["standard_name"] = "air_pressure"
+        dataset[name].attrs["axis"] = "Z"
+
+
 def drop_vars_except(dataset, variable):
     """Drops all dataset variables except the listed and relative.
     :param dataset: Dataset to modify
@@ -24,7 +46,7 @@ def drop_vars_except(dataset, variable):
     return dataset.cf.drop_vars(drop_v)
 
 
-def drop_unused_coords(dataset, coords=['X', 'Y', 'Z', 'T']):
+def drop_unused_coords(dataset, coords=["X", "Y", "Z", "T"]):
     """Deletion of non standard coordinates (lon, lat and time).
     :param dataset: Dataset to modify
     """

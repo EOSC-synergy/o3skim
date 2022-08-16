@@ -30,17 +30,19 @@ def load_tco3(model_path):
 
     # Complete coordinate attributes
     logger.debug("Completing dataset coordinate")
-    dataset.longitude.attrs["standard_name"] = "longitude"
-    dataset.latitude.attrs["standard_name"] = "latitude"
-    dataset.time.attrs["standard_name"] = "time"
-
-    # Clean of non cf attributes
-    logger.debug(f"Removing all non CF convention attributes")
-    utils.delete_non_CFConvention_attributes(dataset)
+    utils.complete_coords(dataset)
 
     # Extraction of variable as dataset
     logger.debug(f"Removing all variable except '{VARIABLE_NAME}'")
     dataset = utils.drop_vars_except(dataset, VARIABLE_NAME)
+
+    # Deletion of not used coordinates
+    logger.debug(f"Removing unused coords from '{list(dataset.coords)}'")
+    dataset = utils.drop_unused_coords(dataset)
+
+    # Clean of non cf attributes
+    logger.debug(f"Removing all non CF convention attributes")
+    utils.delete_non_CFConvention_attributes(dataset)
 
     # Variable name standardization
     logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{DATA_VARIABLE}'")
@@ -52,24 +54,19 @@ def load_tco3(model_path):
     dataset = dataset.cf.rename({"latitude": "lat"})
     dataset = dataset.cf.rename({"longitude": "lon"})
 
-    # Extend coordinates with axis
-    logger.debug(f"Extending coords axis '[T,X,Y]'")
-    dataset["time"].attrs["axis"] = "T"
-    dataset["lon"].attrs["axis"] = "X"
-    dataset["lat"].attrs["axis"] = "Y"
+    # Variable unit standardization
+    logger.debug(f"Normalizing units to '{STANDARD_UNIT}'")
+    dataset[DATA_VARIABLE] /= CONVERSION[dataset[DATA_VARIABLE].units]
+    dataset[DATA_VARIABLE].attrs["units"] = STANDARD_UNIT
 
-    # Deletion of not used coordinates
-    logger.debug(f"Removing unused coords from '{list(dataset.coords)}'")
-    dataset = utils.drop_unused_coords(dataset)
+    # Convert dtype lon and lat to common float32 to reduce size
+    logger.debug(f"Converting lat&lon coordinates to 'float32'")
+    dataset["lat"] = dataset["lat"].astype("float32")
+    dataset["lon"] = dataset["lon"].astype("float32")
 
-    # Normalize values to Dobson Units
-    # See, https://sacs.aeronomie.be/info/dobson.php
-    logger.debug("Converting source data units to 'DU")
-    if dataset[DATA_VARIABLE].units == "kg m**-2":  # 2.1415x10-5 kg[O3]/m2
-        dataset[DATA_VARIABLE] /= 2.1415e-05
-        dataset[DATA_VARIABLE].attrs.update({"units": "DU"})
-    else:
-        raise ValueError(f"Unexpected {dataset[DATA_VARIABLE].units} unit")
+    # Convert dtype variable to common float32 to reduce size
+    logger.debug(f"Converting {DATA_VARIABLE} var to 'float32'")
+    dataset[DATA_VARIABLE] = dataset[DATA_VARIABLE].astype("float32")
 
     # Fill missing attributes
     dataset.attrs["institution"] = INSTITUTION

@@ -26,6 +26,10 @@ def load_tco3(model_path):
     kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
+    # Complete coordinate attributes
+    logger.debug("Completing dataset coordinate")
+    utils.complete_coords(dataset)
+
     # Extraction of variable as dataset
     logger.debug(f"Removing all variable except '{VARIABLE_NAME}'")
     dataset = utils.drop_vars_except(dataset, VARIABLE_NAME)
