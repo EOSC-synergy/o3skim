@@ -9,26 +9,98 @@ from o3skim import attributes
 logger = logging.getLogger("o3skim.utils")
 
 
-def complete_coords(dataset):
+def normalize_coords(dataset):
     """Completes coordinates with CF standard attributes
     :param dataset: Dataset to modify
+    :return: Modified dataset
     """
-    if "time" in dataset.cf.coords:  # Complete time attributes
-        name = dataset.cf["time"].name
-        dataset[name].attrs["standard_name"] = "time"
-        dataset[name].attrs["axis"] = "T"
-    if "longitude" in dataset.cf.coords:  # Complete longitude attributes
-        name = dataset.cf["longitude"].name
-        dataset[name].attrs["standard_name"] = "longitude"
-        dataset[name].attrs["axis"] = "X"
-    if "latitude" in dataset.cf.coords:  # Complete latitude attributes
-        name = dataset.cf["latitude"].name
-        dataset[name].attrs["standard_name"] = "latitude"
-        dataset[name].attrs["axis"] = "Y"
-    if "air_pressure" in dataset.cf.coords:  # Complete level attributes
-        name = dataset.cf["air_pressure"].name
-        dataset[name].attrs["standard_name"] = "air_pressure"
-        dataset[name].attrs["axis"] = "Z"
+    if "time" in dataset.cf.coords:
+        dataset = normalize_coord_time(dataset)
+    if "longitude" in dataset.cf.coords:
+        dataset = normalize_coord_lon(dataset)
+    if "latitude" in dataset.cf.coords:
+        dataset = normalize_coord_lat(dataset)
+    if "air_pressure" in dataset.cf.coords:
+        dataset = normalize_coord_plev(dataset)
+    return dataset
+
+
+def normalize_coord_time(dataset, name="time"):
+    """Normalizes time coordinate with CF standard values and attributes.
+    :param dataset: Dataset to modify
+    :param name: New name for coordinate, defaults to "time"
+    :return: Modified dataset
+    """
+    old_name = dataset.cf["time"].name
+    dataset = dataset.cf.rename({old_name: name})
+    dataset[name] = dataset[name].astype("<M8[ns]")
+    dataset[name].attrs["axis"] = "T"
+    dataset[name].attrs["long_name"] = "time"
+    dataset[name].attrs["standard_name"] = "time"
+    return dataset
+
+
+def normalize_coord_lon(dataset, name="lon"):
+    """Normalizes longitude coordinate with CF standard values and attributes.
+    :param dataset: Dataset to modify
+    :param name: New name for coordinate, defaults to "lon"
+    :return: Modified dataset
+    """
+    old_name = dataset.cf["longitude"].name
+    dataset = dataset.cf.rename({old_name: name})
+    dataset[name] = dataset[name].astype("float32")
+    dataset[name].attrs["axis"] = "X"
+    dataset[name].attrs["long_name"] = "longitude"
+    dataset[name].attrs["standard_name"] = "longitude"
+    if dataset[name].units == "degrees_east":
+        pass  # Correct units
+    elif dataset[name].units == "degrees_west":
+        dataset[name] = 360.0 - dataset[name]
+        dataset[name].attrs["units"] = "degrees_east"
+    return dataset
+
+
+def normalize_coord_lat(dataset, name="lat"):
+    """Normalizes latitude coordinate with CF standard values and attributes.
+    :param dataset: Dataset to modify
+    :param name: New name for coordinate, defaults to "lat"
+    :return: Modified dataset
+    """
+    old_name = dataset.cf["latitude"].name
+    dataset = dataset.cf.rename({old_name: name})
+    dataset[name] = dataset[name].astype("float32")
+    dataset[name].attrs["axis"] = "Y"
+    dataset[name].attrs["long_name"] = "latitude"
+    dataset[name].attrs["standard_name"] = "latitude"
+    if dataset[name].units == "degrees_north":
+        pass  # Correct units
+    elif dataset[name].units == "degrees_south":
+        dataset[name] = -dataset[name]
+        dataset[name].attrs["units"] = "degrees_north"
+    return dataset
+
+
+def normalize_coord_plev(dataset, name="plev"):
+    """Normalizes pressure coordinate with CF standard values and attributes.
+    :param dataset: Dataset to modify
+    :param name: New name for coordinate, defaults to "plev"
+    :return: Modified dataset
+    """
+    old_name = dataset.cf["air_pressure"].name
+    dataset = dataset.cf.rename({old_name: name})
+    dataset[name] = dataset[name].astype("float32")
+    dataset[name].attrs["axis"] = "Z"
+    dataset[name].attrs["long_name"] = "air_pressure"
+    dataset[name].attrs["standard_name"] = "air_pressure"
+    if dataset[name].units == "Pa":
+        pass  # Correct units
+    elif dataset[name].units == "millibars":
+        dataset[name] = 100.0 * dataset[name]
+        dataset[name].attrs["units"] = "Pa"
+    elif dataset[name].units == "hPa":
+        dataset[name] = 100.0 * dataset[name]
+        dataset[name].attrs["units"] = "Pa"
+    return dataset
 
 
 def drop_vars_except(dataset, variable):

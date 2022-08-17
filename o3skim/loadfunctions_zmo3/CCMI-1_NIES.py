@@ -10,7 +10,7 @@ from o3skim.settings import VMRO3_UNITS_CONVERSION as CONVERSION
 ## Application logger
 logger = logging.getLogger(__name__)
 
-VARIABLE_NAME = "zmo3"
+VARIABLE_NAME = "mole_fraction_of_ozone_in_air"
 DATA_VARIABLE = DATA_VARIABLE + "_zm"
 LOAD_CHUNKS = None
 
@@ -26,15 +26,26 @@ def load_zmo3(model_path):
     kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
     kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)
+    del dataset["zmo3"].attrs["cell_measures"]
+
+    # Variable name standardization
+    logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{DATA_VARIABLE}'")
+    dataset = dataset.cf.rename({VARIABLE_NAME: DATA_VARIABLE})
+    dataset[DATA_VARIABLE].attrs["standard_name"] = STANDARD_NAME
+
+    # Variable unit standardization
+    logger.debug(f"Normalizing units to '{STANDARD_UNIT}'")
+    dataset[DATA_VARIABLE] /= CONVERSION[dataset[DATA_VARIABLE].units]
+    dataset[DATA_VARIABLE].attrs["units"] = STANDARD_UNIT
+    dataset[DATA_VARIABLE] = dataset[DATA_VARIABLE].astype("float32")
+
+    # Extraction of variable as dataset
+    logger.debug(f"Removing all variable except '{DATA_VARIABLE}'")
+    dataset = utils.drop_vars_except(dataset, DATA_VARIABLE)
 
     # Complete coordinate attributes
     logger.debug("Completing dataset coordinate")
-    del dataset[VARIABLE_NAME].attrs["cell_measures"]
-    utils.complete_coords(dataset)
-
-    # Extraction of variable as dataset
-    logger.debug(f"Removing all variable except '{VARIABLE_NAME}'")
-    dataset = utils.drop_vars_except(dataset, VARIABLE_NAME)
+    dataset = utils.normalize_coords(dataset)
 
     # Deletion of not used coordinates
     logger.debug(f"Removing unused coords from '{list(dataset.coords)}'")
@@ -44,35 +55,12 @@ def load_zmo3(model_path):
     logger.debug(f"Removing all non CF convention attributes")
     utils.delete_non_CFConvention_attributes(dataset)
 
-    # Variable name standardization
-    logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{DATA_VARIABLE}'")
-    dataset = dataset.cf.rename({VARIABLE_NAME: DATA_VARIABLE})
-    dataset[DATA_VARIABLE].attrs["standard_name"] = STANDARD_NAME
-
-    # Coordinates name standardization
-    logger.debug(f"Renaming coords '{dataset.coords}'")
-    dataset = dataset.cf.rename({"lev": "plev"})
-
-    # Variable unit standardization
-    logger.debug(f"Normalizing units to '{STANDARD_UNIT}'")
-    dataset[DATA_VARIABLE] /= CONVERSION[dataset[DATA_VARIABLE].units]
-    dataset[DATA_VARIABLE].attrs["units"] = STANDARD_UNIT
-
     # Load cftime variables to support mean operations
     # See https://github.com/NCAR/esmlab/issues/161
     logger.debug(f"Loading time variable '{dataset.cf['time'].name}'")
     dataset.cf["time"].load()
     if "bounds" in dataset.cf["time"].attrs:
         dataset[dataset.cf["time"].attrs["bounds"]].load()
-
-    # Convert cftime variables to support mean operations
-    logger.debug(f"Converting time coordinate to '<M8[ns]'")
-    dataset["time"] = dataset["time"].astype("<M8[ns]")
-
-    # Convert dtype plev and lat to common float32 to reduce size
-    logger.debug(f"Converting lat&plev coordinates to 'float32'")
-    dataset["lat"] = dataset["lat"].astype("float32")
-    dataset["plev"] = dataset["plev"].astype("float32")
 
     # Processing of skimming operations
     return dataset

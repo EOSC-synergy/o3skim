@@ -28,13 +28,24 @@ def load_tco3(model_path):
     kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
-    # Complete coordinate attributes
-    logger.debug("Completing dataset coordinate")
-    utils.complete_coords(dataset)
+    # Variable name standardization
+    logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{DATA_VARIABLE}'")
+    dataset = dataset.cf.rename({VARIABLE_NAME: DATA_VARIABLE})
+    dataset[DATA_VARIABLE].attrs.update({"standard_name": STANDARD_NAME})
+
+    # Variable unit standardization
+    logger.debug(f"Normalizing units to '{STANDARD_UNIT}'")
+    dataset[DATA_VARIABLE] /= CONVERSION[dataset[DATA_VARIABLE].units]
+    dataset[DATA_VARIABLE].attrs["units"] = STANDARD_UNIT
+    dataset[DATA_VARIABLE] = dataset[DATA_VARIABLE].astype("float32")
 
     # Extraction of variable as dataset
-    logger.debug(f"Removing all variable except '{VARIABLE_NAME}'")
-    dataset = utils.drop_vars_except(dataset, VARIABLE_NAME)
+    logger.debug(f"Removing all variable except '{DATA_VARIABLE}'")
+    dataset = utils.drop_vars_except(dataset, DATA_VARIABLE)
+
+    # Complete coordinate attributes
+    logger.debug("Completing dataset coordinate")
+    dataset = utils.normalize_coords(dataset)
 
     # Deletion of not used coordinates
     logger.debug(f"Removing unused coords from '{list(dataset.coords)}'")
@@ -43,30 +54,6 @@ def load_tco3(model_path):
     # Clean of non cf attributes
     logger.debug(f"Removing all non CF convention attributes")
     utils.delete_non_CFConvention_attributes(dataset)
-
-    # Variable name standardization
-    logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{DATA_VARIABLE}'")
-    dataset = dataset.cf.rename({VARIABLE_NAME: DATA_VARIABLE})
-    dataset[DATA_VARIABLE].attrs.update({"standard_name": STANDARD_NAME})
-
-    # Coordinates name standardization
-    logger.debug(f"Renaming coords '{dataset.coords}'")
-    dataset = dataset.cf.rename({"latitude": "lat"})
-    dataset = dataset.cf.rename({"longitude": "lon"})
-
-   # Variable unit standardization
-    logger.debug(f"Normalizing units to '{STANDARD_UNIT}'")
-    dataset[DATA_VARIABLE] /= CONVERSION[dataset[DATA_VARIABLE].units]
-    dataset[DATA_VARIABLE].attrs["units"] = STANDARD_UNIT
-
-    # Convert dtype lon and lat to common float32 to reduce size
-    logger.debug(f"Converting lat&lon coordinates to 'float32'")
-    dataset["lat"] = dataset["lat"].astype("float32")
-    dataset["lon"] = dataset["lon"].astype("float32")
-
-    # Convert dtype variable to common float32 to reduce size
-    logger.debug(f"Converting {DATA_VARIABLE} var to 'float32'")
-    dataset[DATA_VARIABLE] = dataset[DATA_VARIABLE].astype("float32")
 
     # Fill missing attributes
     dataset.attrs["institution"] = INSTITUTION
