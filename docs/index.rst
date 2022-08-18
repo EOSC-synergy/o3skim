@@ -11,8 +11,9 @@ Getting started
 =========================================
 
 * Which :doc:`getting_started/first_steps` you need to start.
-* How to use :doc:`getting_started/o3norm` to standardize your models.
-* How to use :doc:`getting_started/o3skim` to reduce your models.
+* How to use :doc:`getting_started/load_tco3` to load normalized tco3 models.
+* How to use :doc:`getting_started/load_zmo3` to load normalized zmo3 models.
+* How to use :doc:`getting_started/lon_mean` to reduce model longitude.
 
 .. toctree::
    :maxdepth: 2
@@ -20,24 +21,24 @@ Getting started
    :caption: Getting started
 
    getting_started/first_steps
-   getting_started/o3norm
-   getting_started/o3skim
+   getting_started/load_tco3
+   getting_started/load_zmo3
+   getting_started/lon_mean
 
 
 Developer guide
 =========================================
 
-* Check the :doc:`getting_started/first_steps` before start.
-* Check the :doc:`dev_guide/o3skim` to learn about the functions.
-* Check the :doc:`dev_guide/tests` to extend the functionality.
+* Check the :doc:`dev_guide/extend_models` to extend the functionality.
+* Check the :doc:`dev_guide/testing` to test the package and functions.
 
 .. toctree::
    :maxdepth: 2
    :hidden:
    :caption: Developer guide:
 
-   dev_guide/o3skim
-   dev_guide/tests
+   dev_guide/extend_models
+   dev_guide/testing
 
 
 Authors 

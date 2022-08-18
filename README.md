@@ -45,6 +45,10 @@ Some examples:
  - `CCMI-1_IPSL` matches `CCMI-1_IPSL-refC2` and `CCMI-1_IPSL_IPSL-senC2fGHG`
  - `ECMWF_C3S` matches `ECMWF_C3S` and `ECMWF_C3S_ERA5`
 
+Functions sum-up:
+ - For tco3 load functions, subpackage=`loadfunctions_tco3`, function=`load_tco3(model_path) -> dataset`
+ - For zmo3 load functions, subpackage=`loadfunctions_zmo3`, function=`load_zmo3(model_path) -> dataset`
+
 
 # Testing <a name = "testing"></a>
 Testing is based on [sqa-baseline](https://indigo-dc.github.io/sqa-baseline/) criteria. On top, [tox](https://tox.readthedocs.io/en/latest/) automation is used to simplify the testing process.

@@ -11,8 +11,8 @@ install and run **pip** in your system with at least the following versions:
     =============  ===============
      software       version
     =============  ===============
-     python         >= 3.6.12
-     pip            >= 21.0.1
+     python         >= 3.8.13
+     pip            >= 21.2.4
     =============  ===============
 
 .. note:: Non admin rights? Check how to run conda_ in your machine.
@@ -21,7 +21,7 @@ install and run **pip** in your system with at least the following versions:
 .. _conda: https://docs.conda.io/en/latest
 
 
-Installation
+Installation from source
 ----------------------------------
 
 Once **python3** and **pip** are running in your system, download the package and
@@ -35,9 +35,5 @@ install it using pip:
     $ cd o3skim 
     $ pip install .
     ...
-    Successfully installed o3skim-0.4.0
-
-
-
-
+    Successfully installed o3skim-...
 
