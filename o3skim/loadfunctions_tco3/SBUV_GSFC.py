@@ -43,7 +43,7 @@ def load_tco3(model_path):
     for head, chunk in tables:
         header = head[0:-2].split(" ")  # Split head strings
         year = int(header[0])  # First value in header is the year
-        table = pd.read_table(chunk, sep=DELIMITER, index_col=[0, 1], dtype='float32')
+        table = pd.read_table(chunk, sep=DELIMITER, index_col=[0, 1], dtype="float32")
         lat = np.float32([(l1 + l2) / 2 for l1, l2 in table.index])
         time = [pd.datetime(year, m, 1) for m in range(1, 13)]
         array = xr.DataArray(table, dict(lat=lat, time=time), ["lat", "time"])
