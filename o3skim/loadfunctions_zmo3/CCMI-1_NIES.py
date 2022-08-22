@@ -26,7 +26,6 @@ def load_zmo3(model_path):
     kwargs = dict(data_vars="minimal", concat_dim="time", combine="nested")
     kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)
-    del dataset["zmo3"].attrs["cell_measures"]
 
     # Variable name standardization
     logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{DATA_VARIABLE}'")
