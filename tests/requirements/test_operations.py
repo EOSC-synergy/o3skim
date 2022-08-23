@@ -32,8 +32,10 @@ class VariableRequirements:
 
 class LatSkimRequirements:
     def test_variable_name(self, skimmed, dataset):
-        assert set(dataset.data_vars).issuperset(skimmed.data_vars)
-        
+        for variable in skimmed.data_vars:
+            assert skimmed[variable].name[:] in dataset 
+            assert True  #TODO: Requirement for lat zm?
+
     def test_no_latitude(self, skimmed):
         assert "latitude" not in skimmed.cf.coordinates
 
@@ -48,7 +50,9 @@ class LatSkimRequirements:
 
 class LonSkimRequirements:
     def test_variable_name(self, skimmed, dataset):
-        assert set(dataset.data_vars).issuperset(skimmed.data_vars)
+        for variable in skimmed.data_vars:
+            assert skimmed[variable].name[:-3] in dataset 
+            assert skimmed[variable].name[-3:] == "_zm"
 
     def test_no_longitude(self, skimmed):
         assert "longitude" not in skimmed.cf.coordinates
