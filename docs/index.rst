@@ -1,4 +1,6 @@
-.. rubric:: Data skimming for ozone assessment.
+************************************************
+Data skimming for ozone assessment.
+************************************************
 
 **o3skim** is an open source project and Python package that provides the 
 tools to pre-process, standardize and reduce ozone data from netCDF_ models to
@@ -51,3 +53,20 @@ Authors
 .. _KIT-IMK: https://www.imk.kit.edu/english/index.php
 .. _KIT-SCC: https://www.scc.kit.edu/en/index.php
 
+
+CF conventions
+=========================================
+When skimming ozone data, one of the main challenges is to produce normalized
+datasets from multiple sources that can be used laster into the same automated
+procedures.
+To make this possible, the `CF conventions`_ are designed to promote the
+processing and sharing of files created with the NetCDF. 
+
+However, although conventions provide sensible recommendations and methods,
+in practice not all scientist might follow them strictly. Additionally in
+multiple cases, authors might add personal information or extend datasets
+with variables that interferences with the correct functionality of popular
+python numeric libraries (i.e. xarray_).
+
+.. _`CF conventions`: https://cfconventions.org/
+.. _xarray: https://www.imk.kit.edu/english/index.php
