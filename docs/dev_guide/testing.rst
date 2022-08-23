@@ -50,34 +50,6 @@ To run stylecheck use:
     ...
 
 
-Unit Testing [QC.Uni]
------------------------
-All unit tests are placed inside the package (./o3skim/test). This 
-helps to test easily functions at low level and ensure the functions
-have the expected behavior. 
-To run unit tests use:
-
-.. code-block:: bash
-
-    $ tox -e unittesting
-    ...
-    unittesting: commands succeeded
-    ...
-
-
-This environment also provide a coverage term report for the tests.
-The design of Unit Tests is based on the python unittest_ framework, 
-a simple and extended test framework which ships by default together 
-with python.
-
-.. _unittest: https://tox.readthedocs.io/en/latest/
-
-The usage is very simple and straight forward for simple tests, but
-the difficulty to parametrize and combine multiple test fixtures 
-makes it not suitable for Black-Box testing without a very complex
-customization.
-
-
 Functional Testing [QC.Fun]
 ---------------------------
 Located inside tests package folder (./tests). Functional testing is
