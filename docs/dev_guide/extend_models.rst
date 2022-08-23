@@ -74,7 +74,7 @@ and return the final standardized Dataset.
 For testing, add the sample datasets to **tests/datasets_tco3**.
 
 .. note::
-    Use ``pytest tests/requirements/text_tco3`` to test only
+    Use ``pytest tests/requirements/test_tco3.py`` to test only
     "loadfunctions_tco3" modules.
 
 
@@ -98,5 +98,5 @@ and return the final standardized Dataset.
 For testing, add the sample datasets to **tests/datasets_zmo3**.
 
 .. note::
-    Use ``pytest tests/requirements/text_zmo3`` to test only
+    Use ``pytest tests/requirements/test_zmo3.py`` to test only
     "loadfunctions_zmo3" modules.
