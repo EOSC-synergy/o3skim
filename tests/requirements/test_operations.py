@@ -24,7 +24,7 @@ def dataset(request, dataset_gen):
 class VariableRequirements:
     @mark.parametrize("dataset", ["no_methods"], indirect=True)
     def test_var_attrs(self, dataset, skimmed):
-        assert dataset[VAR].attrs == skimmed[VAR].attrs
+        assert dataset.cf[VAR].attrs == skimmed.cf[VAR].attrs
 
     def test_global_attrs(self, dataset, skimmed):
         assert dataset.attrs == skimmed.attrs
@@ -45,7 +45,7 @@ class LatSkimRequirements:
 
     @mark.parametrize("dataset", ["standard", "no_bounds"], indirect=True)
     def test_cell_methods(self, skimmed):
-        assert "latitude: mean" in skimmed[VAR].attrs["cell_methods"]
+        assert "latitude: mean" in skimmed.cf[VAR].attrs["cell_methods"]
 
 
 class LonSkimRequirements:
@@ -63,7 +63,7 @@ class LonSkimRequirements:
 
     @mark.parametrize("dataset", ["standard", "no_bounds"], indirect=True)
     def test_cell_methods(self, skimmed):
-        assert "longitude: mean" in skimmed[VAR].attrs["cell_methods"]
+        assert "longitude: mean" in skimmed.cf[VAR].attrs["cell_methods"]
 
 
 # Parametrization ---------------------------------------------------
