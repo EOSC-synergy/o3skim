@@ -20,6 +20,13 @@ def dataset(request, dataset_gen):
     return dataset
 
 
+@fixture(scope="class")
+def bounds(dataset):
+    bounds = [dataset[v].attrs.get("bounds", None) for v in dataset.coords]
+    return set(bound for bound in bounds if bound is not None)
+
+
+
 # Requirements ------------------------------------------------------
 class VariableRequirements:
     @mark.parametrize("dataset", ["no_methods"], indirect=True)
@@ -31,10 +38,13 @@ class VariableRequirements:
 
 
 class LatSkimRequirements:
-    def test_variable_name(self, skimmed, dataset):
+    def test_variable_name(self, skimmed, dataset, bounds):
         for variable in skimmed.data_vars:
             assert skimmed[variable].name[:] in dataset 
             assert True  #TODO: Requirement for lat zm?
+
+    def test_boundary_names(self, skimmed, bounds):
+        assert all(bound in skimmed for bound in bounds - {"latitude_bounds"})
 
     def test_no_latitude(self, skimmed):
         assert "latitude" not in skimmed.cf.coordinates
@@ -49,10 +59,13 @@ class LatSkimRequirements:
 
 
 class LonSkimRequirements:
-    def test_variable_name(self, skimmed, dataset):
-        for variable in skimmed.data_vars:
+    def test_variable_names(self, skimmed, dataset, bounds):
+        for variable in set(skimmed.data_vars) - bounds:
             assert skimmed[variable].name[:-3] in dataset 
             assert skimmed[variable].name[-3:] == "_zm"
+
+    def test_boundary_names(self, skimmed, bounds):
+        assert all(bound in skimmed for bound in bounds - {"longitude_bounds"})
 
     def test_no_longitude(self, skimmed):
         assert "longitude" not in skimmed.cf.coordinates

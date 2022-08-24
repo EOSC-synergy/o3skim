@@ -59,8 +59,13 @@ def lon_mean(dataset):
     # Remove bounds if not removed
     dataset = dataset.cf.drop_vars(bounds) if bounds else dataset
 
-    # Return dataset with renamed variables adding '_zm' at the end
-    return dataset.rename({var: f"{var}_zm" for var in dataset.data_vars})
+    # Rename variables (except bounds) adding '_zm' at the end
+    bounds = [dataset[v].attrs.get("bounds", None) for v in dataset.coords]
+    variables = set(dataset.data_vars) - set(bounds)
+    dataset = dataset.rename({var: f"{var}_zm" for var in variables})
+
+    # Return skimmed dataset after applying zonal mean  
+    return dataset
 
 
 def lat_mean(dataset):
