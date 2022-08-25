@@ -28,6 +28,12 @@ def load_tco3(model_path):
     kwargs["chunks"] = LOAD_CHUNKS
     dataset = xr.open_mfdataset(model_path, **kwargs)
 
+    # Check data does not includes ERA5T, see:
+    # https://confluence.ecmwf.int/pages/viewpage.action?pageId=173385064
+    if "expver" in dataset:
+        action = "Please update or delete the ERA5T dataset"
+        raise ValueError(f"ERA5T Not supported, {action}")
+
     # Variable name standardization
     logger.debug(f"Renaming var '{VARIABLE_NAME}' to '{DATA_VARIABLE}'")
     dataset = dataset.cf.rename({VARIABLE_NAME: DATA_VARIABLE})
@@ -58,6 +64,12 @@ def load_tco3(model_path):
     # Fill missing attributes
     dataset.attrs["institution"] = INSTITUTION
     dataset.attrs["source"] = SOURCE
+
+    # Load only time relevant info applying time daily average 
+    time_attrs = dataset.time.attrs
+    dataset = dataset.sortby("time").resample({"time": "D"}).mean()
+    dataset.time.attrs = time_attrs
+    dataset[DATA_VARIABLE].attrs["cell_methods"] = "time: mean"
 
     # Return standard loaded tco3 dataset
     return dataset
