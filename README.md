@@ -6,12 +6,12 @@
 
 <div align="center">
 
-  [![Build Status](https://jenkins.eosc-synergy.eu/buildStatus/icon?job=eosc-synergy-org%2Fo3skim%2Fmaster)](https://jenkins.eosc-synergy.eu/job/eosc-synergy-org/job/o3skim/job/master)
+  [![Build Status](https://jenkins.eosc-synergy.eu/buildStatus/icon?job=eosc-synergy-org%2Fo3skim%2Fmain)](https://jenkins.eosc-synergy.eu/job/eosc-synergy-org/job/o3skim/job/main)
   [![Documentation Status](https://readthedocs.org/projects/o3as/badge/?version=latest)](https://o3as.readthedocs.io/en/latest/?badge=latest)
-  [![pipeline status](https://git.scc.kit.edu/synergy.o3as/o3skim/badges/master/pipeline.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/master)
-  [![coverage status](https://git.scc.kit.edu/synergy.o3as/o3skim/badges/master/coverage.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/master)
-  [![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/master)
-  [![Status](https://img.shields.io/badge/status-building-blue.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/master) 
+  [![pipeline status](https://git.scc.kit.edu/synergy.o3as/o3skim/badges/main/pipeline.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/main)
+  [![coverage status](https://git.scc.kit.edu/synergy.o3as/o3skim/badges/main/coverage.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/main)
+  [![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/main)
+  [![Status](https://img.shields.io/badge/status-building-blue.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/main) 
 
 </div>
 
