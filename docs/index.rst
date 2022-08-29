@@ -27,6 +27,15 @@ Getting started
    getting_started/load_zmo3
    getting_started/lon_mean
 
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: Examples:
+
+   examples/multisource_tco3skim
+   examples/tco3skim_ccmi-1
+   examples/zmo3load_ccmi-1
+
 
 Developer guide
 =========================================
@@ -41,6 +50,10 @@ Developer guide
 
    dev_guide/extend_models
    dev_guide/testing
+
+
+
+
 
 
 Authors 
