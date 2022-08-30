@@ -19,7 +19,6 @@ do not know how to start.
 First, extend testing for your model
 ------------------------------------
 Test are always executed when calling `pytest`, `tox` or any `CICD` means.
-
 In order to ensure your modules follow the normalization requirements,
 you must add a small but still representative dataset for the model load function
 you are about to create.
@@ -44,11 +43,8 @@ will be added to the following list of tests functions to validate your return d
      - Test samples are stored in a public repository, therefore should not contain private information, check attributes.
      - Time for testing and repository size are proportional to the test samples. Minimize datasets as much as possible.
 
-Once the dataset is added, you can run the following tools to start the
-validation process:
-
- - `tox`: To run all tests with a clean python/library installation.
- - `pytest`: To run all tests in your current environments.
+Once the dataset is added, you can follow the details described at
+:doc:`testing` to start the validation process.
 
 
 Second, add your module and load function 
@@ -73,10 +69,6 @@ and return the final standardized Dataset.
 
 For testing, add the sample datasets to **tests/datasets_tco3**.
 
-.. note::
-    Use ``pytest tests/requirements/test_tco3.py`` to test only
-    "loadfunctions_tco3" modules.
-
 
 Load functions for load_zmo3
 """""""""""""""""""""""""""""""
@@ -97,6 +89,3 @@ and return the final standardized Dataset.
 
 For testing, add the sample datasets to **tests/datasets_zmo3**.
 
-.. note::
-    Use ``pytest tests/requirements/test_zmo3.py`` to test only
-    "loadfunctions_zmo3" modules.
