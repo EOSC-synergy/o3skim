@@ -108,13 +108,11 @@ def drop_vars_except(dataset, variable):
     :param dataset: Dataset to modify
     :param variable: Variable to keep on the dataset
     """
-    # Find the bound variables linked to the coordinates
-    bounds = [dataset[v].attrs.get("bounds", None) for v in dataset.coords]
-    bounds = [bound for bound in bounds if bound is not None]
-    # Add variable to set of variables to keep
-    keep_v = set([dataset.cf[variable].name] + bounds)
-    drop_v = [v for v in dataset.data_vars if v not in keep_v]
+    # Bounds does not behave correctly with xarray~=2022.6.0
+    for coordinate in dataset.coords:
+        dataset[coordinate].attrs.pop('bounds', None)
     # Drop variables not used
+    drop_v = [v for v in dataset.data_vars if v != variable]
     return dataset.cf.drop_vars(drop_v)
 
 

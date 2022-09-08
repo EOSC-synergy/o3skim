@@ -63,8 +63,6 @@ def load_tco3(model_path):
                     units=STANDARD_UNIT,
                 ),
             ),
-            "lon_bnds": xr.Variable(["lon", "bnds"], [(0, 360)]),
-            "lat_bnds": xr.Variable(["lat", "bnds"], table.index.to_list()),
         },
         coords={
             "lon": xr.Variable(
@@ -74,7 +72,6 @@ def load_tco3(model_path):
                     axis="X",
                     units="degrees_east",
                     long_name="Longitude of the grid center",
-                    bounds="lon_bnds",
                 ),
             ),
             "lat": xr.Variable(
@@ -84,7 +81,6 @@ def load_tco3(model_path):
                     axis="Y",
                     units="degrees_north",
                     long_name="Latitude of the grid center",
-                    bounds="lat_bnds",
                 ),
             ),
             "time": xr.Variable(
