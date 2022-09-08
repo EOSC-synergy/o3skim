@@ -65,11 +65,12 @@ def load_tco3(model_path):
     dataset.attrs["institution"] = INSTITUTION
     dataset.attrs["source"] = SOURCE
 
-    # Load only time relevant info applying time daily average 
+    # Load only time relevant info applying monthly time average 
     time_attrs = dataset.time.attrs
-    dataset = dataset.sortby("time").resample({"time": "D"}).mean()
+    dataset = dataset.sortby("time").resample({"time": "M"}).mean()
     dataset.time.attrs = time_attrs
-    dataset[DATA_VARIABLE].attrs["cell_methods"] = "time: mean"
+    cell_methods = "time: mean (interval: 30 days)"
+    dataset[DATA_VARIABLE].attrs["cell_methods"] = cell_methods
 
     # Return standard loaded tco3 dataset
     return dataset
