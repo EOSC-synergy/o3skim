@@ -1,4 +1,4 @@
-## Atmosphere mole content of ozone
+# ##Atmosphere mole content of ozone
 """"Content" indicates a quantity per unit area. The "atmosphere content"
 of a quantity refers to the vertical integral from the surface to the top
 of the atmosphere. For the content between specified levels in the atmosphere,
@@ -21,7 +21,7 @@ TCO3_STANDARD_UNIT = "DU"
 TCO3_UNITS_CONVERSION = {"DU": 1, "Dobson units": 1, "kg m**-2": 2.1415e-05}
 
 
-## Mole fraction of ozone in air
+# ## Mole fraction of ozone in air
 """Mole fraction is used in the construction mole_fraction_of_X_in_Y, where
 X is a material constituent of Y.
 """

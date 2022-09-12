@@ -7,7 +7,7 @@ from o3skim.settings import TCO3_STANDARD_NAME as STANDARD_NAME
 from o3skim.settings import TCO3_STANDARD_UNIT as STANDARD_UNIT
 from o3skim.settings import TCO3_UNITS_CONVERSION as CONVERSION
 
-## Application logger
+# Application logger
 logger = logging.getLogger(__name__)
 
 VARIABLE_NAME = "equivalent_thickness_at_stp_of_atmosphere_ozone_content"
@@ -50,7 +50,7 @@ def load_tco3(model_path):
     dataset = utils.drop_unused_coords(dataset)
 
     # Clean non cf attributes
-    logger.debug(f"Removing all non CF convention attributes")
+    logger.debug("Removing all non CF convention attributes")
     utils.delete_non_CFConvention_attributes(dataset)
 
     # Loading cftime variables to support mean operations

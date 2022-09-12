@@ -7,7 +7,7 @@ from o3skim.settings import TCO3_STANDARD_NAME as STANDARD_NAME
 from o3skim.settings import TCO3_STANDARD_UNIT as STANDARD_UNIT
 from o3skim.settings import TCO3_UNITS_CONVERSION as CONVERSION
 
-## Application logger
+# Application logger
 logger = logging.getLogger(__name__)
 
 VARIABLE_NAME = "tco3"
@@ -58,14 +58,14 @@ def load_tco3(model_path):
     dataset = utils.drop_unused_coords(dataset)
 
     # Clean of non cf attributes
-    logger.debug(f"Removing all non CF convention attributes")
+    logger.debug("Removing all non CF convention attributes")
     utils.delete_non_CFConvention_attributes(dataset)
 
     # Fill missing attributes
     dataset.attrs["institution"] = INSTITUTION
     dataset.attrs["source"] = SOURCE
 
-    # Load only time relevant info applying monthly time average 
+    # Load only time relevant info applying monthly time average
     time_attrs = dataset.time.attrs
     dataset = dataset.sortby("time").resample({"time": "M"}).mean()
     dataset.time.attrs = time_attrs

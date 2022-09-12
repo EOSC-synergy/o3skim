@@ -1,5 +1,6 @@
 """Methods and for attributes standardization following cf conventions.
-See https://cfconventions.org/Data/cf-conventions/cf-conventions-1.9/cf-conventions.html#attribute-appendix
+See https://cfconventions.org/Data/cf-conventions/cf-conventions-1.9/\
+cf-conventions.html#attribute-appendix
 """
 import pandas as pd
 import os

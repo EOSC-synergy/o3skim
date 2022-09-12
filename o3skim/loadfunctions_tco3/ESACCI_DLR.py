@@ -9,7 +9,7 @@ from o3skim.settings import TCO3_UNITS_CONVERSION as CONVERSION
 import pandas as pd
 
 
-## Application logger
+# Application logger
 logger = logging.getLogger(__name__)
 
 VARIABLE_NAME = "atmosphere_mole_content_of_ozone"
@@ -58,7 +58,7 @@ def load_tco3(model_path):
     dataset = utils.drop_unused_coords(dataset)
 
     # Clean of non cf attributes
-    logger.debug(f"Removing all non CF convention attributes")
+    logger.debug("Removing all non CF convention attributes")
     utils.delete_non_CFConvention_attributes(dataset)
 
     # Return standard loaded tco3 dataset

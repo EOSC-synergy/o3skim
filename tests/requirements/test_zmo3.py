@@ -10,6 +10,7 @@ from pytest import fixture, mark
 
 DATA_VARIABLE = DATA_VARIABLE + "_zm"
 
+
 # Module fixtures ---------------------------------------------------
 @fixture(scope="class", params=[])
 def model(request):

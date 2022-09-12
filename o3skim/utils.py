@@ -2,8 +2,6 @@
 import io
 import logging
 
-import numpy as np
-
 from o3skim import attributes
 
 logger = logging.getLogger("o3skim.utils")
@@ -130,7 +128,7 @@ def drop_unused_coords(dataset, coords=["X", "Y", "Z", "T"]):
 
 
 def delete_non_CFConvention_attributes(dataset):
-    """Removes those existing attributes which are not in the CF specifications.
+    """Removes attributes that are not in the CF specifications.
     :param dataset: Xarray dataset following CF conventions
     """
     # Clean global attributes

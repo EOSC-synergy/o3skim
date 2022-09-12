@@ -4,6 +4,7 @@ from pytest import fixture, mark
 
 VAR = "atmosphere_mole_content_of_ozone"
 
+
 # Module fixtures ---------------------------------------------------
 @fixture(scope="class", params=["standard", "with_methods", "no_bounds"])
 def dataset(request, dataset_gen):
@@ -26,7 +27,6 @@ def bounds(dataset):
     return set(bound for bound in bounds if bound is not None)
 
 
-
 # Requirements ------------------------------------------------------
 class VariableRequirements:
     @mark.parametrize("dataset", ["no_methods"], indirect=True)
@@ -40,8 +40,8 @@ class VariableRequirements:
 class LatSkimRequirements:
     def test_variable_name(self, skimmed, dataset, bounds):
         for variable in skimmed.data_vars:
-            assert skimmed[variable].name[:] in dataset 
-            assert True  #TODO: Requirement for lat zm?
+            assert skimmed[variable].name[:] in dataset
+            assert True  # TODO: Requirement for lat zm?
 
     def test_boundary_names(self, skimmed, bounds):
         assert all(bound in skimmed for bound in bounds - {"latitude_bounds"})
@@ -61,7 +61,7 @@ class LatSkimRequirements:
 class LonSkimRequirements:
     def test_variable_names(self, skimmed, dataset, bounds):
         for variable in set(skimmed.data_vars) - bounds:
-            assert skimmed[variable].name[:-3] in dataset 
+            assert skimmed[variable].name[:-3] in dataset
             assert skimmed[variable].name[-3:] == "_zm"
 
     def test_boundary_names(self, skimmed, bounds):

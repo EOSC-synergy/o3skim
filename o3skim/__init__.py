@@ -1,7 +1,7 @@
 """O3as package with utilities to handle ozone data skimming."""
 import logging
 
-import cf_xarray as cfxr
+import cf_xarray as cfxr  # noqa # pylint: disable=unused-import
 import xarray as xr
 
 import o3skim.loadfunctions_tco3 as loadfunctions_tco3
@@ -64,7 +64,7 @@ def lon_mean(dataset):
     variables = set(dataset.data_vars) - set(bounds)
     dataset = dataset.rename({var: f"{var}_zm" for var in variables})
 
-    # Return skimmed dataset after applying zonal mean  
+    # Return skimmed dataset after applying zonal mean
     return dataset
 
 

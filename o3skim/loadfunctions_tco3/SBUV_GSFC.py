@@ -10,12 +10,19 @@ from o3skim.settings import TCO3_STANDARD_NAME as STANDARD_NAME
 from o3skim.settings import TCO3_STANDARD_UNIT as STANDARD_UNIT
 from o3skim.settings import TCO3_UNITS_CONVERSION as CONVERSION
 
-## Application logger
+# Application logger
 logger = logging.getLogger(__name__)
 
 
-DELIMITER = "\s+"  # Delimiter character for row values on the table
+DELIMITER = "\\s+"  # Delimiter character for row values on the table
 LOADING_UNITS = "DU"
+
+CONVENTIONS = "CF-1.8"
+TITLE = "SBUV Merged Ozone Data Set (MOD)"
+INSTITUTION = "NASA Goddard Space Flight Center, Greenbelt, MD 20771"
+SOURCE = "https://acd-ext.gsfc.nasa.gov"
+COMMENT = "Text file parsed and extended to follow CF conventions"
+
 
 def load_tco3(model_path):
     """Loads and returns a SBUV DataArray model and the dataset
@@ -38,12 +45,13 @@ def load_tco3(model_path):
         tables = utils.chunkio("SBUV", strio)
 
     # Read tables as dataArrays and concatenate them
-    logger.debug(f"Extracting dataArrays from textfile")
+    logger.debug("Extracting dataArrays from textfile")
     arrays = []
     for head, chunk in tables:
         header = head[0:-2].split(" ")  # Split head strings
         year = int(header[0])  # First value in header is the year
-        table = pd.read_table(chunk, sep=DELIMITER, index_col=[0, 1], dtype="float32")
+        read_kw = dict(sep=DELIMITER, index_col=[0, 1], dtype="float32")
+        table = pd.read_table(chunk, **read_kw)
         lat = np.float32([(l1 + l2) / 2 for l1, l2 in table.index])
         time = [pd.datetime(year, m, 1) for m in range(1, 13)]
         array = xr.DataArray(table, dict(lat=lat, time=time), ["lat", "time"])
@@ -51,12 +59,12 @@ def load_tco3(model_path):
         arrays.append(array)
 
     # Generate dataset from dataArray
-    logger.debug(f"Generating dataset from dataArray")
+    logger.debug("Generating dataset from dataArray")
     ozone = xr.concat(arrays, "time").expand_dims(dim="lon", axis=0)
     dataset = xr.Dataset(
         data_vars={
             DATA_VARIABLE: xr.Variable(
-                *[ozone.dims, ozone.values/CONVERSION[LOADING_UNITS]],
+                *[ozone.dims, ozone.values / CONVERSION[LOADING_UNITS]],
                 attrs=dict(
                     standard_name=STANDARD_NAME,
                     long_name="Total column of ozone in the atmosphere",
@@ -93,11 +101,11 @@ def load_tco3(model_path):
             ),
         },
         attrs=dict(
-            Conventions="CF-1.8",
-            title="SBUV Merged Ozone Data Set (MOD)",
-            institution="NASA Goddard Space Flight Center, Greenbelt, MD 20771",
-            source="https://acd-ext.gsfc.nasa.gov",
-            comment="Text file parsed and extended to follow CF conventions",
+            Conventions=CONVENTIONS,
+            title=TITLE,
+            institution=INSTITUTION,
+            source=SOURCE,
+            comment=COMMENT,
         ),
     )
 
