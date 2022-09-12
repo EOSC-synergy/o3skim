@@ -65,6 +65,21 @@ If you want to test new load modules, create a folder into the corresponding `./
 # Documentation <a name = "doc"></a>
 All o3as project module documents can be found at [o3as.readthedocs.io](https://o3as.readthedocs.io/en/latest/). 
 
+## Build
+Documentation provided on `docs` folder and based on sphinx. See 
+[Sphinx documentation](https://www.sphinx-doc.org/en/master/usage/quickstart.html)
+for more information about how to use it. To install requirements you can run:
+
+```bash
+$ pip install -r requirements/documentation.txt
+```
+
+> Documentation uses pandoc to build html from notebook files, however 
+The pandoc package for python installed bu `requirements/documentation.txt`
+doesn't come with an executable copy of pandoc. Therefore, 
+to build documentation you need to install pandoc on your host distribution, see
+[Building docs fails due to missing pandoc](https://stackoverflow.com/questions/62398231/building-docs-fails-due-to-missing-pandoc).
+
 
 # Authors <a name = "authors"></a>
 - [@V.Kozlov](https://git.scc.kit.edu/eo9869)
