@@ -37,3 +37,9 @@ install it using pip:
     ...
     Successfully installed o3skim-...
 
+.. note:: Some models might need the installation of xarray's IO backends, 
+    (i.e. ['netcdf4', 'h5netcdf']) see:  
+
+    https://docs.xarray.dev/en/stable/user-guide/io.html 
+    https://docs.xarray.dev/en/stable/getting-started-guide/installing.html
+

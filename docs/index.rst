@@ -42,6 +42,7 @@ Developer guide
 
 * Check the :doc:`dev_guide/extend_models` to extend the functionality.
 * Check the :doc:`dev_guide/testing` to test the package and functions.
+* Check the :doc:`dev_guide/commands` to get a collection of useful commands.
 
 .. toctree::
    :maxdepth: 2
@@ -50,10 +51,7 @@ Developer guide
 
    dev_guide/extend_models
    dev_guide/testing
-
-
-
-
+   dev_guide/commands
 
 
 Authors 
