@@ -5,6 +5,7 @@ sources.yaml
 ### VisualStudioCode
 .vscode/*
 !.vscode/launch.json
+!.vscode/settings.json
 
 # Local History for Visual Studio Code
 .history/
