@@ -36,9 +36,9 @@ def __model_loader(package, model):
     if len(modules) == 1:
         return package.__dict__[modules[0]]
     if modules == []:
-        raise ValueError(f"Unknown model '{model}' from {package.__all__}")
+        raise ValueError(f"Unknown routine for model '{model}' from {package.__all__}")
     elif len(modules) > 1:
-        raise ValueError(f"Multiple match '{model}' for {modules}")
+        raise ValueError(f"Multiple routine match for model '{model}' for {modules}")
 
 
 def lon_mean(dataset):
