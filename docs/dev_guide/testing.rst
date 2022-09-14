@@ -77,9 +77,9 @@ To run security checks use:
 
 .. code-block:: bash
 
-    $ tox -e functional
+    $ tox -e qc.sec
     ...
-    functional: commands succeeded
+    qc.sec: commands succeeded
     ...
 
 Security report is printed at terminal.
@@ -102,4 +102,5 @@ documentation based on code.  To run documentation build checks use:
 The HTML pages are build inside in docs/_build.
 
 .. note::
-    Requires pandoc~=2.12 executables in your system.
+    Requires pandoc~=2.12 executables in your system
+    (i.e. :code:`sudo apt install pandoc`).
