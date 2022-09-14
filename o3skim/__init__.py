@@ -37,7 +37,7 @@ def __model_loader(package, model):
         return package.__dict__[modules[0]]
     if modules == []:
         raise ValueError(f"Unknown model '{model}' from {package.__all__}")
-    elif modules.len > 1:
+    elif len(modules) > 1:
         raise ValueError(f"Multiple match '{model}' for {modules}")
 
 
