@@ -31,14 +31,26 @@ def load_zmo3(path, model):
     return load(path)
 
 
+class UnknownRoutine(Exception):
+    def __init__(self, model, package):
+        msg = f"Unknown routine for model '{model}' from {package.__all__}"
+        super().__init__(msg)
+
+
+class MultipleRoutine(Exception):
+    def __init__(self, model, modules):
+        msg = f"Multiple routine match for model '{model}' for {modules}"
+        super().__init__(msg)
+
+
 def __model_loader(package, model):
     modules = [m for m in package.__all__ if m in model]
     if len(modules) == 1:
         return package.__dict__[modules[0]]
     if modules == []:
-        raise ValueError(f"Unknown routine for model '{model}' from {package.__all__}")
+        raise UnknownRoutine(model, package)
     elif len(modules) > 1:
-        raise ValueError(f"Multiple routine match for model '{model}' for {modules}")
+        raise MultipleRoutine(model, package)
 
 
 def lon_mean(dataset):
