@@ -1,0 +1,49 @@
+{
+    "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+    "@type": "SoftwareSourceCode",
+    "codeRepository": "https://git.scc.kit.edu/synergy.o3as/o3skim",
+    "name": "o3skim",
+    "funder": {
+        "@type": "Organization",
+        "name": "Karlsruhe Institute of Technology"
+    },
+    "programmingLanguage": [
+        "Python 3"
+    ],
+    "operatingSystem": [
+        "Linux",
+        "Windows",
+        "macOS"
+    ],
+    "author": [
+        {
+            "@type": "Person",
+            "@id": "https://github.com/BorjaEst",
+            "givenName": "Borja",
+            "familyName": "Esteban",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Steinbuch Centre for Computing, Karlsruhe Institute of Technology"
+            }
+        },
+        {
+            "@type": "Person",
+            "@id": "https://github.com/vykozlov",
+            "givenName": "Valentin",
+            "familyName": "Kozlov",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Steinbuch Centre for Computing, Karlsruhe Institute of Technology"
+            }
+        },
+        {
+            "@type": "Person",
+            "givenName": "Tobias",
+            "familyName": "Kerzenmacher",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Institut für Meteorologie und Klimaforschung, Karlsruhe Institute of Technology"
+            }
+        }
+    ]
+}
