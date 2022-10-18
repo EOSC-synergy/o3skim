@@ -12,15 +12,15 @@ sqa_criteria:
         tox:
           tox_file: /o3skim/tox.ini
           testenv:
-            - stylecheck
-  qc_functional:
+            - qc.sty
+  qc_unit:
     repos:
       o3skim:
         container: testing
         tox:
           tox_file: /o3skim/tox.ini
           testenv:
-              - functional
+              - qc.uni
   qc_security:
     repos:
       o3skim:
@@ -28,7 +28,7 @@ sqa_criteria:
         tox:
           tox_file: /o3skim/tox.ini
           testenv:
-            - bandit
+            - qc.sec
   qc_doc:
     repos:
       o3skim:
@@ -36,7 +36,7 @@ sqa_criteria:
         tox:
           tox_file: /o3skim/tox.ini
           testenv:
-            - docs
+            - qc.doc
 
 #environment:
 #  LANG: C.UTF-8

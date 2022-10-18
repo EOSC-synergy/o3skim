@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
   testing:
-    image: "indigodatacloud/ci-images:python3.6"
+    image: "o3as/ci-images:u20-py38"
     container_name: "testing"
     volumes:
       - type: bind
