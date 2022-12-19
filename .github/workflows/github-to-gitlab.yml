@@ -11,6 +11,7 @@ on:
       - master
       - 'releases/**'
   delete:
+  workflow_dispatch:
 
 
 jobs:
