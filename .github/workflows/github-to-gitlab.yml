@@ -11,6 +11,8 @@ on:
       - master
       - 'releases/**'
   delete:
+  # this to manually trigger workflow:
+  # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
   workflow_dispatch:
 
 
