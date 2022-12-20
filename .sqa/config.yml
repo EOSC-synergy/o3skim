@@ -5,7 +5,7 @@ config:
       branch: main 
 
 sqa_criteria:
-  QC.Sty:
+  qc_style:
     repos:
       o3skim:
         container: testing
@@ -13,7 +13,7 @@ sqa_criteria:
           tox_file: /o3skim/tox.ini
           testenv:
             - qc.sty
-  QC.Uni:
+  qc_coverage:
     repos:
       o3skim:
         container: testing
@@ -21,7 +21,7 @@ sqa_criteria:
           tox_file: /o3skim/tox.ini
           testenv:
               - qc.uni
-  QC.Sec:
+  qc_security:
     repos:
       o3skim:
         container: testing
@@ -29,7 +29,7 @@ sqa_criteria:
           tox_file: /o3skim/tox.ini
           testenv:
             - qc.sec
-  QC.Doc:
+  qc_doc:
     repos:
       o3skim:
         container: testing
