@@ -8,10 +8,10 @@
 
   [![Build Status](https://jenkins.eosc-synergy.eu/buildStatus/icon?job=eosc-synergy-org%2Fo3skim%2Fmain)](https://jenkins.eosc-synergy.eu/job/eosc-synergy-org/job/o3skim/job/main)
   [![Documentation Status](https://readthedocs.org/projects/o3as/badge/?version=latest)](https://o3as.readthedocs.io/en/latest/?badge=latest)
-  [![pipeline status](https://git.scc.kit.edu/synergy.o3as/o3skim/badges/main/pipeline.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/main)
-  [![coverage status](https://git.scc.kit.edu/synergy.o3as/o3skim/badges/main/coverage.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/main)
-  [![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/main)
-  [![Status](https://img.shields.io/badge/status-building-blue.svg)](https://git.scc.kit.edu/synergy.o3as/o3skim/-/commits/main) 
+  [![pipeline status](https://codebase.helmholtz.cloud/m-team/o3as/o3skim/badges/main/pipeline.svg)](https://codebase.helmholtz.cloud/m-team/o3as/o3skim/-/commits/main)
+  [![coverage status](https://codebase.helmholtz.cloud/m-team/o3as/o3skim/badges/main/coverage.svg)](https://codebase.helmholtz.cloud/m-team/o3as/o3skim/-/commits/main)
+  [![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://codebase.helmholtz.cloud/m-team/o3as/o3skim/-/commits/main)
+  [![Status](https://img.shields.io/badge/status-building-blue.svg)](https://codebase.helmholtz.cloud/m-team/o3as/o3skim/-/commits/main) 
 
 </div>
 
@@ -25,7 +25,7 @@
 - [About](#about)
 - [Documentation](https://o3as.readthedocs.io/en/latest)
 - [Authors](#authors)
-- [Issues & ToDo](https://git.scc.kit.edu/synergy.o3as/o3skim/-/issues)
+- [Issues & ToDo](https://codebase.helmholtz.cloud/m-team/o3as/o3skim/-/issues)
 
 # About <a name = "about"></a>
 This project provides the tools to preprocess, standardize and reduce ozone data for later transfer and plot. 

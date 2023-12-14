@@ -1,7 +1,7 @@
 {
     "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
     "@type": "SoftwareSourceCode",
-    "codeRepository": "https://git.scc.kit.edu/synergy.o3as/o3skim",
+    "codeRepository": "https://codebase.helmholtz.cloud/m-team/o3as/o3skim",
     "name": "o3skim",
     "funder": {
         "@type": "Organization",

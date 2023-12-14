@@ -1,7 +1,7 @@
 config:
   project_repos:
     o3skim:
-      repo: 'https://git.scc.kit.edu/synergy.o3as/o3skim.git'
+      repo: 'https://codebase.helmholtz.cloud/m-team/o3as/o3skim.git'
       branch: main 
 
 sqa_criteria:

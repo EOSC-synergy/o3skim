@@ -29,7 +29,7 @@ install it using pip:
 
 .. code-block:: bash
 
-    $ git clone https://git.scc.kit.edu/synergy.o3as/o3skim.git
+    $ git clone https://codebase.helmholtz.cloud/m-team/o3as/o3skim.git
     Cloning into 'o3skim'...
     ...
     $ cd o3skim 
